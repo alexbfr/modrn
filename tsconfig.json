@@ -1,0 +1,19 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "es2017",
+      "ESNext"
+    ],
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "target": "es6",
+    "esModuleInterop": true,
+    "inlineSourceMap": true,
+    "sourceMap": false,
+    "moduleResolution": "Node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}
