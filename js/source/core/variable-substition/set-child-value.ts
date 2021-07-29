@@ -26,7 +26,7 @@ export function setChildValue(self: ModrnHTMLElement, componentInfo: ComponentIn
         if (typeof value === "undefined" || value === null) {
             state.previousChild = null;
         } else if (typeof value === "object" && value instanceof HTMLElement) {
-            state.previousChild = analyzeToFragment(value).fragment;
+            state.previousChild = analyzeToFragment(value);
         } else if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
             const valueNode = document.createElement("span");
             valueNode.textContent = "" + value;

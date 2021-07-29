@@ -1,10 +1,9 @@
 import {Module, RegisteredComponent} from "./component-declaration";
 import {tagify} from "../util/tagify";
 import {logDiagnostic} from "../util/logging";
-import {
-    Stateful,
-} from "../util/state";
+import {Stateful,} from "../util/state";
 import {requestRender} from "./render-queue";
+import {Expression} from "jsep";
 
 export interface ComponentState extends Stateful {
     addedChildElements: WeakSet<ChildNode>;
@@ -23,52 +22,77 @@ export abstract class ModrnHTMLElement extends HTMLElement {
     abstract copyTo(other: ModrnHTMLElement): void;
 }
 
-export enum VariableType {
+export enum MappingType {
     childVariable,
     attribute,
     attributeRef,
     specialAttribute
 }
 
-export type VariableBase<T extends VariableType> = {
-    indexes: number[];
-    type: T;
+export enum ExpressionType {
+    VariableUsage,
+    ComplexExpression,
+    ConstantExpression
 }
 
-export type Variable = VariableBase<VariableType>;
+export type BaseExpression = {
+    expressionType: ExpressionType;
+};
 
-export type ChildVariable = VariableBase<VariableType.childVariable>;
+export type VariableUsageExpression = {
+    expressionType: ExpressionType.VariableUsage;
+    variableName: string;
+} & BaseExpression;
+
+export type ComplexExpression = {
+    expressionType: ExpressionType.ComplexExpression;
+    usedVariableNames: string[];
+    expression: Expression;
+    compiledExpression: (what: unknown) => unknown;
+} & BaseExpression;
+
+export type ConstantExpression = {
+    expressionType: ExpressionType.ConstantExpression;
+    value: unknown;
+} & BaseExpression;
+
+export type VariableMappingBase<T extends MappingType> = {
+    indexes: number[];
+    type: T;
+    expression: BaseExpression;
+}
+
+export type VariableMapping = VariableMappingBase<MappingType>;
+
+export type ChildVariable = VariableMappingBase<MappingType.childVariable>;
 
 export type AttributeVariable = {
     attributeName: string;
     hidden?: boolean;
-} & VariableBase<VariableType.attribute>;
+} & VariableMappingBase<MappingType.attribute>;
 
-export type AttributeRefVariable = VariableBase<VariableType.attributeRef>;
+export type AttributeRefVariable = VariableMappingBase<MappingType.attributeRef>;
 
 export type SpecialAttributeVariable = {
     specialAttributeRegistration: SpecialAttributeRegistration;
     hidden?: boolean;
-} & VariableBase<VariableType.specialAttribute>;
+} & VariableMappingBase<MappingType.specialAttribute>;
 
-export type Variables = {
-    [variableName: string]: Variable[]
-}
-
-export type PotentiallyModifiedRootElement = {
-    potentiallyModifiedRootElement: HTMLElement;
+export type VariableMappings = {
+    [variableName: string]: VariableMapping[]
 }
 
 export type FoundVariables = {
-    variables: Variables;
-} & PotentiallyModifiedRootElement;
+    variables: VariableMappings;
+    newRootElement: HTMLElement;
+};
 
 export type Fragment = {
     childElement: HTMLElement | null;
-    variableDefinitions: Variables | null;
+    variableDefinitions: VariableMappings | null;
 }
 
-export type SpecialAttributeHandlerFn = (elem: HTMLElement) => ModrnHTMLElement;
+export type SpecialAttributeHandlerFn = (elem: HTMLElement) => HTMLElement;
 
 export type SpecialAttributeRegistration = {
     precedence: number;

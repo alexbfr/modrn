@@ -1,11 +1,9 @@
 import {getSpecialAttributeRegistry} from "./register-special-attribute";
-import {VariableNameTuple} from "./variable-types";
-import {SpecialAttributeVariable, VariableType} from "../component-registry";
-import {extractVariableName} from "./helpers";
+import {ExpressionType, MappingType, SpecialAttributeVariable} from "../component-registry";
+import {extractExpression} from "./helpers";
 
-export function hasSpecialAttributes(rootElement: HTMLElement) {
+export function hasSpecialAttributes(rootElement: HTMLElement): boolean {
     const specialAttributeRegistry = getSpecialAttributeRegistry();
-    const result: VariableNameTuple<SpecialAttributeVariable>[] = [];
 
     const attributes = (rootElement as HTMLElement)?.attributes;
     const attributesLength = attributes?.length || 0;
@@ -20,9 +18,9 @@ export function hasSpecialAttributes(rootElement: HTMLElement) {
     return false;
 }
 
-export function findSpecialAttributes(rootElement: HTMLElement, indexes: number[]): VariableNameTuple<SpecialAttributeVariable>[] {
+export function findSpecialAttributes(rootElement: HTMLElement, indexes: number[]): SpecialAttributeVariable[] {
     const specialAttributeRegistry = getSpecialAttributeRegistry();
-    const result: VariableNameTuple<SpecialAttributeVariable>[] = [];
+    const result: SpecialAttributeVariable[] = [];
 
     const attributes = (rootElement as HTMLElement)?.attributes;
     const attributesLength = attributes?.length || 0;
@@ -30,13 +28,16 @@ export function findSpecialAttributes(rootElement: HTMLElement, indexes: number[
         for (let attIdx = 0; attIdx < attributesLength; ++attIdx) {
             const {name, value} = attributes.item(attIdx) || {name: null, value: null};
             if (name && value && specialAttributeRegistry[name]) {
+                const expression = extractExpression(value);
+                if (expression.expressionType === ExpressionType.ConstantExpression) {
+                    throw new Error("Constant expression not allowed in special attribute");
+                }
                 result.push({
-                    variableName: extractVariableName(value),
-                    variable: {
-                        type: VariableType.specialAttribute,
-                        indexes,
-                        specialAttributeRegistration: specialAttributeRegistry[name]
-                    }
+                    type: MappingType.specialAttribute,
+                    indexes,
+                    specialAttributeRegistration: specialAttributeRegistry[name],
+                    expression,
+                    hidden: false
                 });
             }
         }

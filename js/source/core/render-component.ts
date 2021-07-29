@@ -13,7 +13,8 @@ function buildProps(self: ModrnHTMLElement, componentInfo: ComponentInfo): Recor
 
     if (componentInfo.registeredComponent.propTemplate) {
         Object.entries(componentInfo.registeredComponent.propTemplate as Record<string, unknown>)
-            .forEach(([name, propTypeValue]) => { // TODO: check type
+            // TODO: check type
+            .forEach(([name, propTypeValue]) => { // eslint-disable-line @typescript-eslint/no-unused-vars
                 const value = (self.state?.customProps[name] !== undefined) ? self.state?.customProps[name] : self.getAttribute(tagify(name));
                 props[name] = value;
             });

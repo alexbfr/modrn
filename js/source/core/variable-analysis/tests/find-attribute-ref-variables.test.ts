@@ -1,5 +1,6 @@
-import {VariableType} from "../../component-registry";
+import {MappingType} from "../../component-registry";
 import {findAttributeRefVariables} from "../find-attribute-ref-variables";
+import {varUsageExpression} from "./find-child-variables.test";
 
 it("Returns empty list when no refs exist", () => {
 
@@ -43,10 +44,8 @@ it("Returns list when ref is used in attributes", () => {
     const result = findAttributeRefVariables(elemToTest, []);
 
     expect(result).toEqual([{
-        variableName: "variable",
-        variable: {
-            type: VariableType.attributeRef,
-            indexes: []
-        }
+        type: MappingType.attributeRef,
+        indexes: [],
+        expression: varUsageExpression("variable")
     }]);
 });

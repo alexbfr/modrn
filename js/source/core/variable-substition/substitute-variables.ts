@@ -1,16 +1,19 @@
 import {
     AttributeVariable,
     bindToStateContext,
-    ModrnHTMLElement, SpecialAttributeVariable,
-    Variable,
-    Variables,
-    VariableType
+    ComplexExpression,
+    ExpressionType,
+    MappingType,
+    ModrnHTMLElement,
+    SpecialAttributeVariable,
+    VariableMapping,
+    VariableMappings
 } from "../component-registry";
 import {getAttributeValue, setAttributeValue} from "./set-attribute-value";
 import {getChildValue, setChildValue} from "./set-child-value";
 import {changeFromTo} from "../change-tracking/change-from-to";
 import {RefInternal} from "../ref-hooks";
-import {requestRender, requestReRenderDeep} from "../render-queue";
+import {requestReRenderDeep} from "../render-queue";
 
 export type VarOptions = {
     hideByDefault?: boolean;
@@ -19,20 +22,7 @@ export type VarOptions = {
 export type Vars = Record<string, unknown> & { "__options"?: VarOptions };
 
 export function varsWithOptions(vars: Record<string, unknown>, options: VarOptions): Vars {
-    return {...vars, __options: options };
-}
-
-function convertToElement(current: ChildNode, indexes: number[], rootElement: HTMLElement) {
-    const contentsElement = document.createElement("div");
-    contentsElement.style.display = "contents";
-    contentsElement.textContent = current.textContent;
-    const parent = current.parentElement;
-    if (!parent) {
-        throw new Error(`Missing parent for child node with indexes ${indexes} on ${rootElement}`);
-    }
-    parent.insertBefore(contentsElement, current);
-    parent.removeChild(current);
-    return contentsElement;
+    return {...vars, __options: options};
 }
 
 function getNode(rootElement: HTMLElement, indexes: number[]): ChildNode {
@@ -46,16 +36,16 @@ function getNode(rootElement: HTMLElement, indexes: number[]): ChildNode {
     return current as ChildNode;
 }
 
-function wrapFunctionWithContextIfRequired(value: any, originalValue: any) {
+function wrapFunctionWithContextIfRequired(value: unknown) {
     if (typeof value === "function") {
-        if (!("bound" in originalValue)) {
-            value = bindToStateContext(originalValue as () => unknown);
+        if (!("bound" in value)) {
+            value = bindToStateContext(value as () => unknown);
         }
     }
     return value;
 }
 
-export function substituteVariables(self: ModrnHTMLElement, root: HTMLElement, vars: Vars, variableDefinitionsProvided?: Variables, suppressReRender = false): void {
+export function substituteVariables(self: ModrnHTMLElement, root: HTMLElement, vars: Vars, variableDefinitionsProvided?: VariableMappings, suppressReRender = false): void {
 
     const componentInfoProvided = self.componentInfo;
     if (!componentInfoProvided) {
@@ -70,66 +60,72 @@ export function substituteVariables(self: ModrnHTMLElement, root: HTMLElement, v
 
     const hideByDefault = !!vars.__options?.hideByDefault;
 
-    Object.entries(vars).forEach(([variableName, originalValue]) => {
+    Object.keys(vars).forEach(variableName => {
         const matches = variableDefinitions[variableName] || [];
 
-        let value: unknown = originalValue;
-        value = wrapFunctionWithContextIfRequired(value, originalValue);
-        if ((value as Promise<unknown>).then) {
-            (value as Promise<unknown>).then(resolved => setValue(matches, resolved));
-        } else {
-            setValue(matches, value);
+        for (const match of matches) {
+            let value: unknown;
+            if (match.expression.expressionType === ExpressionType.VariableUsage) {
+                value = vars[variableName];
+            } else if (match.expression.expressionType === ExpressionType.ComplexExpression) {
+                value = (match.expression as ComplexExpression).compiledExpression(vars);
+            }
+            value = wrapFunctionWithContextIfRequired(value);
+            if ((value as Promise<unknown>).then) {
+                (value as Promise<unknown>).then(resolved => setValue(match, resolved));
+            } else {
+                setValue(match, value);
+            }
         }
+
     });
 
-    function setValue(matches: Variable[], value: unknown) {
+    function setValue(match: VariableMapping, value: unknown) {
 
         if (!componentInfo) {
             throw new Error(`Can only substitute variables after component info is initialized for ${self} node`);
         }
 
-        for (const match of matches) {
-            const node = getNode(root, match.indexes);
-            if (node instanceof ModrnHTMLElement && node.componentInfo?.registeredComponent?.transparent && !suppressReRender) {
-                requestReRenderDeep(node as HTMLElement);
+        const node = getNode(root, match.indexes);
+        if (node instanceof ModrnHTMLElement && node.componentInfo?.registeredComponent?.transparent && !suppressReRender) {
+            requestReRenderDeep(node as HTMLElement);
+        }
+        switch (match.type) {
+        case MappingType.attributeRef: {
+            if (node instanceof HTMLElement) {
+                const ref = value as RefInternal;
+                ref.__addRef(node);
             }
-            switch (match.type) {
-            case VariableType.attributeRef: {
-                if (node instanceof HTMLElement) {
-                    const ref = value as RefInternal;
-                    ref.__addRef(node);
-                }
-                break;
+            break;
+        }
+        case MappingType.specialAttribute: {
+            const attributeVariable = match as SpecialAttributeVariable;
+            if (!(node instanceof HTMLElement)) {
+                throw new Error(`Special attribute can not be set on regular node (${node}), ${attributeVariable.specialAttributeRegistration.attributeName}`);
             }
-            case VariableType.specialAttribute: {
-                const attributeVariable = match as SpecialAttributeVariable;
-                if (!(node instanceof  HTMLElement)) {
-                    throw new Error(`Special attribute can not be set on regular node (${node}), ${attributeVariable.specialAttributeRegistration.attributeName}`);
-                }
-                const original = getAttributeValue(self, componentInfo, node, attributeVariable.specialAttributeRegistration.attributeName);
-                setAttributeValue(self, componentInfo, node, attributeVariable.specialAttributeRegistration.attributeName, value, true);
-                changeFromTo(original, value, self);
-                break;
+            const original = getAttributeValue(self, componentInfo, node, attributeVariable.specialAttributeRegistration.attributeName);
+            setAttributeValue(self, componentInfo, node, attributeVariable.specialAttributeRegistration.attributeName, value, true);
+            changeFromTo(original, value, self, !suppressReRender && node);
+            break;
+        }
+        case MappingType.attribute: {
+            const attributeVariable = match as AttributeVariable;
+            if (!(node instanceof HTMLElement)) {
+                throw new Error(`Attribute can not be set on regular node (${node}), ${attributeVariable.attributeName}`);
             }
-            case VariableType.attribute: {
-                const attributeVariable = match as AttributeVariable;
-                if (!(node instanceof  HTMLElement)) {
-                    throw new Error(`Attribute can not be set on regular node (${node}), ${attributeVariable.attributeName}`);
-                }
-                const original = getAttributeValue(self, componentInfo, node, attributeVariable.attributeName);
-                setAttributeValue(self, componentInfo, node, attributeVariable.attributeName, value, hideByDefault || !!attributeVariable.hidden);
-                changeFromTo(original, value, self);
-                break;
-            }
-            case VariableType.childVariable: {
-                const original = getChildValue(self, componentInfo, node);
-                setChildValue(self, componentInfo, node, value);
-                changeFromTo(original, value, self);
-                break;
-            }
-            default:
-                throw new Error("Unsupported");
-            }
+            const original = getAttributeValue(self, componentInfo, node, attributeVariable.attributeName);
+            setAttributeValue(self, componentInfo, node, attributeVariable.attributeName, value, hideByDefault || !!attributeVariable.hidden);
+            changeFromTo(original, value, self, !suppressReRender && node);
+            break;
+        }
+        case MappingType.childVariable: {
+            const original = getChildValue(self, componentInfo, node);
+            setChildValue(self, componentInfo, node, value);
+            changeFromTo(original, value, self, !suppressReRender && node);
+            break;
+        }
+        default:
+            throw new Error("Unsupported");
         }
     }
 }

@@ -71,11 +71,11 @@ function createTemplateFromString(source: string) {
     const element = document.createElement("div");
     element.style.display = "contents";
     element.innerHTML = source;
-    return analyzeToFragment(element).fragment;
+    return analyzeToFragment(element);
 }
 
 function createTemplateFromHTMLElement(source: HTMLElement) {
-    return analyzeToFragment(source).fragment;
+    return analyzeToFragment(source);
 }
 
 function resolveIdReferenceIfApplicable(sourceProvided: HTMLElement | string): HTMLElement | string {

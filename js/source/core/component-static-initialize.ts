@@ -1,26 +1,15 @@
 import {RegisteredComponent} from "./component-declaration";
 import {tagify} from "../util/tagify";
-import {
-    Fragment,
-    PotentiallyModifiedRootElement,
-    setStaticInitializationResultForComponent
-} from "./component-registry";
+import {Fragment, setStaticInitializationResultForComponent} from "./component-registry";
 import {logDiagnostic} from "../util/logging";
 import {findVariables} from "./variable-analysis/find-variables";
 import {cloneDeep} from "../util/cloneDeep";
 
-export type FragmentAnalysisResult = {
-    fragment: Fragment;
-} & PotentiallyModifiedRootElement;
-
-export function analyzeToFragment(rootElement: HTMLElement): FragmentAnalysisResult {
+export function analyzeToFragment(rootElement: HTMLElement): Fragment {
     const variables = findVariables(rootElement);
     const childElement = cloneDeep(rootElement);
 
-    return {
-        potentiallyModifiedRootElement: variables.potentiallyModifiedRootElement,
-        fragment: {childElement, variableDefinitions: variables.variables}
-    };
+    return {childElement, variableDefinitions: variables.variables};
 }
 
 export function componentStaticInitialize(componentName: string, component: RegisteredComponent<unknown, unknown>): void {
@@ -32,7 +21,7 @@ export function componentStaticInitialize(componentName: string, component: Regi
     rootElement.style.display = "contents";
     rootElement.innerHTML = component.htmlTemplate;
 
-    const fragment = analyzeToFragment(rootElement).fragment;
+    const fragment = analyzeToFragment(rootElement);
     logDiagnostic(`Element ${componentName} analyzed to`, fragment.variableDefinitions);
     setStaticInitializationResultForComponent(componentName, fragment);
 }

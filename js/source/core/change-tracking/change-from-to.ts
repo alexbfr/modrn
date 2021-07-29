@@ -1,8 +1,17 @@
 import {ModrnHTMLElement} from "../component-registry";
 import {PureStateFunction} from "../../util/state";
 import {ApplyResult, changes, clean} from "./change-types";
+import {requestRender} from "../render-queue";
 
-export function changeFromTo(previous: unknown, now: unknown, forConsumer: ModrnHTMLElement): ApplyResult {
+export function changeFromTo(previous: unknown, now: unknown, forConsumer: ModrnHTMLElement, node: ChildNode | false): ApplyResult {
+    const result = changeFromToRaw(previous, now, forConsumer);
+    if (result.madeChanges && node instanceof ModrnHTMLElement) {
+        requestRender(node as ModrnHTMLElement);
+    }
+    return result;
+}
+
+export function changeFromToRaw(previous: unknown, now: unknown, forConsumer: ModrnHTMLElement): ApplyResult {
     if (previous === now) {
         return {madeChanges: false};
     }

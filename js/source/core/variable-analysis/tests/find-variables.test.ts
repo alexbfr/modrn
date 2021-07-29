@@ -1,5 +1,6 @@
 import {findVariables} from "../find-variables";
-import {AttributeVariable, Variables, VariableType} from "../../component-registry";
+import {AttributeVariable, MappingType, VariableMappings} from "../../component-registry";
+import {varUsageExpression} from "./find-child-variables.test";
 
 it("Finds single child variable", () => {
     const elem = document.createElement("div");
@@ -10,11 +11,12 @@ it("Finds single child variable", () => {
     expect(actual.variables).toEqual({
         "test": [
             {
-                type: VariableType.childVariable,
-                indexes: [0]
+                type: MappingType.childVariable,
+                indexes: [0],
+                expression: varUsageExpression("test")
             }
         ]
-    } as Variables);
+    } as VariableMappings);
 
     expect(elem.innerHTML).toBe("<div></div>");
     expect(elem.childNodes.length).toBe(1);
@@ -29,11 +31,12 @@ it("Finds single child variable and splits prologue", () => {
     expect(actual.variables).toEqual({
         "test": [
             {
-                type: VariableType.childVariable,
-                indexes: [0, 1]
+                type: MappingType.childVariable,
+                indexes: [0, 1],
+                expression: varUsageExpression("test")
             }
         ]
-    } as Variables);
+    } as VariableMappings);
 
     expect(elem.innerHTML).toBe("<div>prologue </div>");
     expect(elem.childNodes.length).toBe(1);
@@ -48,12 +51,14 @@ it("Finds onclick attribute", () => {
     expect(actual.variables).toEqual({
         "clicked": [
             {
-                type: VariableType.attribute,
+                type: MappingType.attribute,
                 attributeName: "onclick",
-                indexes: [0, 1]
+                indexes: [0, 1],
+                hidden: false,
+                expression: varUsageExpression("clicked")
             } as AttributeVariable
         ]
-    } as Variables);
+    } as VariableMappings);
 
     expect(elem.innerHTML).toBe(`<div>Foo bar <button onclick="">Button</button></div>`);
     expect(elem.firstElementChild?.childNodes.length).toBe(2);

@@ -1,9 +1,12 @@
 import {
     addToComponentRegistry,
     ComponentInfo,
-    ComponentRegistry, Fragment,
-    getComponentRegistry, getStateOf,
-    ModrnHTMLElement, register,
+    ComponentRegistry,
+    Fragment,
+    getComponentRegistry,
+    getStateOf,
+    ModrnHTMLElement,
+    register,
     registerAll
 } from "./component-registry";
 import {ModuleResult, RegisteredComponent} from "./component-declaration";
@@ -27,7 +30,7 @@ function extractDynamicChildContent(self: ModrnHTMLElement) {
     const childNodes = childNodesToArray(self).filter(cn => !state.addedChildElements.has(cn));
     if (childNodes.length === 1 && childNodes[0].nodeType === ELEMENT_NODE) {
         logDiagnostic("Extracting previous single child", self);
-        state.previousChild = analyzeToFragment(self.firstElementChild as HTMLElement).fragment;
+        state.previousChild = analyzeToFragment(self.firstElementChild as HTMLElement);
         self.removeChild(self.firstElementChild as HTMLElement);
         logDiagnostic("Done extracting previous single child", self, state.previousChild.childElement);
     } else if (childNodes.length > 0) {
@@ -37,7 +40,7 @@ function extractDynamicChildContent(self: ModrnHTMLElement) {
         for (const childNode of childNodes) {
             container.appendChild(childNode);
         }
-        state.previousChild = analyzeToFragment(container).fragment;
+        state.previousChild = analyzeToFragment(container);
         logDiagnostic("Done extracting previous children", self, state.previousChild.childElement);
     }
 }

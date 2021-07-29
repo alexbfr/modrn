@@ -1,35 +1,39 @@
-import {VariableNameTuple} from "./variable-types";
 import {
-    AttributeVariable, FoundVariables, Fragment,
+    AttributeVariable,
+    ComplexExpression,
+    ExpressionType,
+    FoundVariables,
+    Fragment,
     isRegisteredTagName,
+    MappingType,
     ModrnHTMLElement,
     SpecialAttributeVariable,
-    Variable,
-    Variables,
-    VariableType
+    VariableMapping,
+    VariableMappings,
+    VariableUsageExpression
 } from "../component-registry";
 import {splitTextContentAtVariables} from "./split-text-content-at-variables";
 import {findChildVariables} from "./find-child-variables";
 import {findAttributeVariables} from "./find-attribute-variables";
 import {findAttributeRefVariables} from "./find-attribute-ref-variables";
-import {findSpecialAttributes, hasSpecialAttributes} from "./find-special-attributes";
+import {findSpecialAttributes} from "./find-special-attributes";
 
-function precedenceComparer(s1: VariableNameTuple<SpecialAttributeVariable>, s2: VariableNameTuple<SpecialAttributeVariable>): number {
-    return s1.variable.specialAttributeRegistration.precedence - s2.variable.specialAttributeRegistration.precedence;
+function precedenceComparer(s1: SpecialAttributeVariable, s2: SpecialAttributeVariable): number {
+    return s1.specialAttributeRegistration.precedence - s2.specialAttributeRegistration.precedence;
 }
 
 function analyzeWrappedFragment(
-    rootElementProvided: HTMLElement, indexes: number[], specialAttributes: VariableNameTuple<SpecialAttributeVariable>[]) {
+    rootElementProvided: HTMLElement, indexes: number[], specialAttributes: SpecialAttributeVariable[]) {
 
     let rootElement = rootElementProvided;
-    const result: VariableNameTuple<Variable>[] = [];
+    const result: VariableMapping[] = [];
 
     const specialAttribute = specialAttributes[0];
-    rootElement.removeAttribute(specialAttribute.variable.specialAttributeRegistration.attributeName);
-    rootElement = specialAttribute.variable.specialAttributeRegistration.handler(rootElement);
+    rootElement.removeAttribute(specialAttribute.specialAttributeRegistration.attributeName);
+    rootElement = specialAttribute.specialAttributeRegistration.handler(rootElement);
 
     const variableResult = findVariables(rootElementProvided);
-    const newRootElement = variableResult.potentiallyModifiedRootElement;
+    const newRootElement = variableResult.newRootElement;
 
     const subFragment: Fragment = {
         childElement: newRootElement,
@@ -38,14 +42,12 @@ function analyzeWrappedFragment(
     if (subFragment.variableDefinitions) {
         const subVariables = Object.keys(subFragment.variableDefinitions)
             .map(variableName => ({
-                variable: {
-                    indexes,
-                    attributeName: variableName,
-                    type: VariableType.attribute,
-                    hidden: true
-                },
-                variableName
-            } as VariableNameTuple<AttributeVariable>));
+                indexes,
+                attributeName: variableName,
+                type: MappingType.attribute,
+                hidden: true,
+                expression: {expressionType: ExpressionType.VariableUsage, variableName} as VariableUsageExpression
+            } as AttributeVariable));
         result.push(...subVariables);
     }
 
@@ -65,14 +67,14 @@ function analyzeWrappedFragment(
     };
 }
 
-function analyze(rootElement: HTMLElement, indexes: number[]): VariableNameTuple<Variable>[] {
+function analyze(rootElement: HTMLElement, indexes: number[]): VariableMapping[] {
     const specialAttributes = findSpecialAttributes(rootElement, indexes).sort(precedenceComparer);
 
     if (specialAttributes.length > 0) {
         return analyzeWrappedFragment(rootElement, indexes, specialAttributes).result;
     }
 
-    const result: VariableNameTuple<Variable>[] = [];
+    const result: VariableMapping[] = [];
     result.push(...findChildVariables(rootElement, indexes));
     result.push(...findAttributeVariables(rootElement, indexes));
     result.push(...findAttributeRefVariables(rootElement, indexes));
@@ -82,8 +84,8 @@ function analyze(rootElement: HTMLElement, indexes: number[]): VariableNameTuple
     return result;
 }
 
-function iterateChildren(rootElement: HTMLElement, indexes: number[]): VariableNameTuple<Variable>[] {
-    const result: VariableNameTuple<Variable>[] = [];
+function iterateChildren(rootElement: HTMLElement, indexes: number[]): VariableMapping[] {
+    const result: VariableMapping[] = [];
     splitTextContentAtVariables(rootElement);
     if (!rootElement.firstElementChild) {
         return result;
@@ -99,13 +101,24 @@ function iterateChildren(rootElement: HTMLElement, indexes: number[]): VariableN
     return result;
 }
 
+function allVariableReferencesOf(varMapping: VariableMapping): string[] {
+    switch (varMapping.expression.expressionType) {
+    case ExpressionType.VariableUsage:
+        return [(varMapping.expression as VariableUsageExpression).variableName];
+    case ExpressionType.ComplexExpression:
+        return (varMapping.expression as ComplexExpression).usedVariableNames;
+    default:
+        throw new Error(`Unknown expression type for ${varMapping} (${varMapping.expression.expressionType})`);
+    }
+}
+
 export function findVariables(rootElement: HTMLElement): FoundVariables {
-    const result: Variables = {};
+    const result: VariableMappings = {};
 
     splitTextContentAtVariables(rootElement);
     const specialAttributes = findSpecialAttributes(rootElement, []);
 
-    let vars: VariableNameTuple<Variable>[];
+    let vars: VariableMapping[];
     let newRootElement = rootElement;
 
     if (specialAttributes.length) {
@@ -113,16 +126,18 @@ export function findVariables(rootElement: HTMLElement): FoundVariables {
         vars = analyzed.result;
         newRootElement = analyzed.rootElement;
     } else {
-        vars =  [...analyze(rootElement, []), ...iterateChildren(rootElement, [])];;
+        vars =  [...analyze(rootElement, []), ...iterateChildren(rootElement, [])];
     }
 
-    vars.forEach(value => {
-        const list = result[value.variableName] || (result[value.variableName] = []);
-        list.push(value.variable);
+    vars.forEach(varMapping => {
+        allVariableReferencesOf(varMapping).forEach(variableName => {
+            const list = result[variableName] || (result[variableName] = []);
+            list.push(varMapping);
+        });
     });
 
     return {
         variables: result,
-        potentiallyModifiedRootElement: newRootElement
+        newRootElement: newRootElement
     };
 }

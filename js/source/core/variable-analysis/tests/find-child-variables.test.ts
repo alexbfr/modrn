@@ -1,4 +1,4 @@
-import {VariableType} from "../../component-registry";
+import {ExpressionType, MappingType, VariableUsageExpression} from "../../component-registry";
 import {findChildVariables} from "../find-child-variables";
 
 it("Returns empty list when no variables are used", () => {
@@ -28,7 +28,7 @@ it("Returns list with one element if nothing else is used and index 0", () => {
 
     const result = findChildVariables(elem, []);
 
-    expect(result).toEqual([{variableName: "variable", variable: {type: VariableType.childVariable, indexes: [0]}}]);
+    expect(result).toEqual([{type: MappingType.childVariable, indexes: [0], expression: varUsageExpression("variable")}]);
 });
 
 it("Returns list with one element at index 2", () => {
@@ -38,7 +38,7 @@ it("Returns list with one element at index 2", () => {
 
     const result = findChildVariables(elem, []);
 
-    expect(result).toEqual([{variableName: "variable", variable: {type: VariableType.childVariable, indexes: [2]}}]);
+    expect(result).toEqual([{type: MappingType.childVariable, indexes: [2], expression: varUsageExpression("variable")}]);
 });
 
 it("Returns list with two element for two occurrences", () => {
@@ -49,7 +49,15 @@ it("Returns list with two element for two occurrences", () => {
     const result = findChildVariables(elem, []);
 
     expect(result).toEqual([
-        {variableName: "variable1", variable: {type: VariableType.childVariable, indexes: [2]}},
-        {variableName: "variable2", variable: {type: VariableType.childVariable, indexes: [4]}},
+        {type: MappingType.childVariable, indexes: [2], expression: varUsageExpression("variable1") },
+        {type: MappingType.childVariable, indexes: [4], expression: varUsageExpression("variable2") },
     ]);
 });
+
+export function varUsageExpression(variable: string): VariableUsageExpression {
+    return {
+        expressionType: ExpressionType.VariableUsage,
+        variableName: variable
+    };
+}
+

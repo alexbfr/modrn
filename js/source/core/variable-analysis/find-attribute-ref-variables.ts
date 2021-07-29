@@ -1,9 +1,8 @@
-import {VariableNameTuple} from "./variable-types";
-import {AttributeRefVariable, VariableType} from "../component-registry";
-import {extractVariableName, isRefAttributeName} from "./helpers";
+import {AttributeRefVariable, ExpressionType, MappingType, VariableUsageExpression} from "../component-registry";
+import {extractExpression, isRefAttributeName} from "./helpers";
 
-export function findAttributeRefVariables(rootElement: HTMLElement, indexes: number[]): VariableNameTuple<AttributeRefVariable>[] {
-    const result: VariableNameTuple<AttributeRefVariable>[] = [];
+export function findAttributeRefVariables(rootElement: HTMLElement, indexes: number[]): AttributeRefVariable[] {
+    const result: AttributeRefVariable[] = [];
     const attributes = (rootElement as HTMLElement)?.attributes;
     const attributesLength = attributes?.length || 0;
     if (attributes && attributes?.length > 0) {
@@ -11,12 +10,14 @@ export function findAttributeRefVariables(rootElement: HTMLElement, indexes: num
             const {name, value} = attributes.item(attIdx) || {name: null, value: null};
             if (name && value && isRefAttributeName(name)) {
                 rootElement.removeAttribute(name);
+                const expression = extractExpression(value) as VariableUsageExpression;
+                if (expression.expressionType !== ExpressionType.VariableUsage) {
+                    throw new Error("Ref attribute must be a direct reference");
+                }
                 result.push({
-                    variableName: extractVariableName(value),
-                    variable: {
-                        type: VariableType.attributeRef,
-                        indexes
-                    }
+                    expression,
+                    type: MappingType.attributeRef,
+                    indexes
                 });
             }
         }

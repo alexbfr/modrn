@@ -1,7 +1,7 @@
 import {registerSpecialAttribute} from "../variable-analysis/register-special-attribute";
-import {ModrnHTMLElement, register} from "../component-registry";
-import {declare, m, makeComponent, mArray, mBool, NoProps} from "../component-declaration";
-import {useChild, useChildren} from "../templated-children-hooks";
+import {ModrnHTMLElement} from "../component-registry";
+import {m, makeComponent, mArray} from "../component-declaration";
+import {useChildren} from "../templated-children-hooks";
 import {only} from "../modrn";
 
 const FOR_PRECEDENCE = -1;
@@ -15,7 +15,7 @@ only("modrn-for", forComponent).isSpecialAttribute = true;
 
 registerSpecialAttribute("m-for", forSpecialAttributeHandler, FOR_PRECEDENCE);
 
-function forSpecialAttributeHandler(elem: HTMLElement): ModrnHTMLElement {
+function forSpecialAttributeHandler(): ModrnHTMLElement {
     if (!forComponent.customElementConstructor) {
         throw new Error("Constructor missing for 'for' component");
     }

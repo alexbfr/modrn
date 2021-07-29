@@ -1,6 +1,6 @@
 import {registerSpecialAttribute} from "../variable-analysis/register-special-attribute";
-import {ModrnHTMLElement, register} from "../component-registry";
-import {declare, m, makeComponent, mBool, NoProps} from "../component-declaration";
+import {ModrnHTMLElement} from "../component-registry";
+import {m, makeComponent, mBool} from "../component-declaration";
 import {useChild} from "../templated-children-hooks";
 import {only} from "../modrn";
 import {varsWithOptions} from "../variable-substition/substitute-variables";
@@ -16,7 +16,7 @@ only("modrn-if", ifComponent).isSpecialAttribute = true;
 
 registerSpecialAttribute("m-if", ifSpecialAttributeHandler, IF_PRECEDENCE);
 
-function ifSpecialAttributeHandler(elem: HTMLElement): ModrnHTMLElement {
+function ifSpecialAttributeHandler(): ModrnHTMLElement {
     if (!ifComponent.customElementConstructor) {
         throw new Error("Constructor missing for if component");
     }

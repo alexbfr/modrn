@@ -1,5 +1,6 @@
-import {VariableType} from "../../component-registry";
+import {MappingType} from "../../component-registry";
 import {findAttributeVariables} from "../find-attribute-variables";
+import {varUsageExpression} from "./find-child-variables.test";
 
 it("Returns empty list when no attributes exist", () => {
 
@@ -32,16 +33,15 @@ it("Returns list when variable is used in attributes", () => {
     const result = findAttributeVariables(elemToTest, []);
 
     expect(result).toEqual([{
-        variableName: "variable",
-        variable: {
-            type: VariableType.attribute,
-            attributeName: "att1",
-            indexes: []
-        }
+        type: MappingType.attribute,
+        attributeName: "att1",
+        indexes: [],
+        hidden: false,
+        expression: varUsageExpression("variable")
     }]);
 });
 
-it("Finds onclick attribute", () => {
+it("Finds onclick attribute variable", () => {
     const elem = document.createElement("div");
     elem.innerHTML = `<button onclick="{{variable}}"></button>`;
     const elemToTest = elem.firstElementChild as HTMLElement;
@@ -49,11 +49,10 @@ it("Finds onclick attribute", () => {
     const result = findAttributeVariables(elemToTest, []);
 
     expect(result).toEqual([{
-        variableName: "variable",
-        variable: {
-            type: VariableType.attribute,
-            attributeName: "onclick",
-            indexes: []
-        }
+        type: MappingType.attribute,
+        attributeName: "onclick",
+        indexes: [],
+        hidden: false,
+        expression: varUsageExpression("variable")
     }]);
 });

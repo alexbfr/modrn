@@ -1,8 +1,4 @@
-import {TEXT_NODE, variablePattern} from "./variable-types";
-
-function conditionalTrim(text: string, shouldTrim: boolean) {
-    return shouldTrim ? text.trim() : text;
-}
+import {expressionPattern, TEXT_NODE} from "./variable-types";
 
 export function splitTextContentAtVariables(rootElement: HTMLElement): void {
     let childCount = rootElement.childNodes.length;
@@ -19,8 +15,8 @@ export function splitTextContentAtVariables(rootElement: HTMLElement): void {
             if (endIndex >= 0) {
                 const remainderBefore = textContent.substring(0, startIndex);
                 const value = textContent.substring(startIndex, endIndex + 2);
-                if (!variablePattern.test(value)) {
-                    console.warn(`Invalid variable pattern ${value} at element ${rootElement}`);
+                if (!expressionPattern.test(value)) {
+                    console.warn(`Invalid expression pattern ${value} at element ${rootElement}`);
                     continue;
                 }
                 const remainderAfter = textContent.substring(endIndex + 2);
