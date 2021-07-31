@@ -73,14 +73,19 @@ export type UnregisteredComponentTransparent = {
     transparent: <T extends UnregisteredComponentTransparent & UnregisteredComponentBase>(this: T) => Omit<T, "transparent">
 }
 
+export type UnregisteredComponentDynamicChildren = {
+    dynamicChildren: <T extends UnregisteredComponentDynamicChildren & UnregisteredComponentBase>(this: T) => Omit<T, "dynamicChildren">
+}
+
 export type UnregisteredComponent<T, R> = {
     register: () => RegisteredComponent<T, R>;
-} & UnregisteredComponentHtml & UnregisteredComponentTransparent;
+} & UnregisteredComponentHtml & UnregisteredComponentTransparent & UnregisteredComponentDynamicChildren;
 
 export type AllProps = {allProps: () => Record<string, unknown>};
 
 export type RegisteredComponent<T, R> = {
     transparent: boolean;
+    dynamicChildren: boolean;
     customElementConstructor?: CustomElementConstructor;
     propTemplate: T;
     renderFunction: (props: T & AllProps) => R | null;
@@ -114,9 +119,10 @@ export const NoProps = m({});
 
 export function makeComponent<T, R>(propsType?: Container<T> & T, renderFn?: (props: T & AllProps) => R | null): UnregisteredComponent<T, R> {
 
-    const result: UnregisteredComponent<T, R> = {html, register, transparent};
+    const result: UnregisteredComponent<T, R> = {html, register, transparent, dynamicChildren};
     let htmlTemplate: string;
     let isTransparent = false;
+    let hasDynamicChildren = false;
 
     function html<T extends UnregisteredComponentHtml & UnregisteredComponentBase>(this: T, htmlText: string): Omit<T, "html"> {
         htmlTemplate = htmlText;
@@ -128,9 +134,15 @@ export function makeComponent<T, R>(propsType?: Container<T> & T, renderFn?: (pr
         return result as UnregisteredComponentBase as Omit<T, "transparent">;
     }
 
+    function dynamicChildren<T extends UnregisteredComponentDynamicChildren & UnregisteredComponentBase>(this: T): Omit<T, "dynamicChildren"> {
+        hasDynamicChildren = true;
+        return result as UnregisteredComponentBase as Omit<T, "dynamicChildren">;
+    }
+
     function register(): RegisteredComponent<T, R> {
         return {
             transparent: isTransparent,
+            dynamicChildren: hasDynamicChildren,
             propTemplate: (propsType || m({})) as never,
             renderFunction: renderFn || (() => null),
             htmlTemplate

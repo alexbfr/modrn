@@ -9,7 +9,7 @@ beforeEach(() => clearRenderQueue());
 
 it("Does not render dynamic child content if not explicitly stated", async () => {
 
-    const component1 = makeComponent().html("").register();
+    const component1 = makeComponent().html("").dynamicChildren().register();
     const tag1 = registerAnonymous(component1);
 
     const container = await TestUtils.render("div") as HTMLElement;
@@ -25,7 +25,7 @@ it("Renders plain dynamic child content correctly", async () => {
 
     const component1 = makeComponent(NoProps, () => {
         return {child: useChild({})};
-    }).html("{{child}}").register();
+    }).html("{{child}}").dynamicChildren().register();
     const tag1 = registerAnonymous(component1);
 
     const container = await TestUtils.render("div") as HTMLElement;
@@ -41,7 +41,7 @@ it("Renders plain dynamic child content correctly and returns its ref", async ()
 
     const component1 = makeComponent(NoProps, () => {
         return {child: useChild({})};
-    }).html("{{child}}").register();
+    }).html("{{child}}").dynamicChildren().register();
     const tag1 = registerAnonymous(component1);
 
     const container = await TestUtils.render("div") as HTMLElement;
@@ -57,7 +57,7 @@ it("Correctly applies one simple prop in templated dynamic child", async () => {
 
     const component1 = makeComponent(NoProps, () => {
         return {child: useChild({foo: "bar"})};
-    }).html("{{child}}").register();
+    }).html("{{child}}").dynamicChildren().register();
     const tag1 = registerAnonymous(component1);
 
     const container = await TestUtils.render("div") as HTMLElement;
@@ -75,7 +75,7 @@ it("Correctly applies a collection of templated dynamic children", async () => {
 
     const component1 = makeComponent(NoProps, () => {
         return {children: useChildren(iterateOver, {})};
-    }).html("{{children}}").register();
+    }).html("{{children}}").dynamicChildren().register();
     const tag1 = registerAnonymous(component1);
 
     const container = await TestUtils.render("div") as HTMLElement;
@@ -96,7 +96,7 @@ it("Correctly re-renders a collection of templated dynamic children", async () =
     const component1 = makeComponent(NoProps, () => {
         numberOfRenders++;
         return {children: useChildren(iterateOver, {})};
-    }).html("{{children}}").register();
+    }).html("{{children}}").dynamicChildren().register();
     const tag1 = registerAnonymous(component1);
 
     const container = await TestUtils.render("div") as HTMLElement;
@@ -129,6 +129,7 @@ it("Renders a custom template from a html string", async () => {
         return {templatedChild};
     })
         .html(`<div id="container">{{templatedChild}}</div>`)
+        .dynamicChildren()
         .register();
 
     const tag1 = registerAnonymous(component);
@@ -168,6 +169,7 @@ it("Renders a custom template from a template child element", async () => {
         <div id="container">{{templatedChild}}</div>
         <template id="the-template">quux {{prop}}</template>
 `)
+        .dynamicChildren()
         .register();
 
     const tag1 = registerAnonymous(component);

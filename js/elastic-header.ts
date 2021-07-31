@@ -110,7 +110,7 @@ const draggableHeaderView = makeComponent(m({
         onmouseup="{{stopDrag}}" ontouchend="{{stopDrag}}"
         onmouseleave="{{stopDrag}}">
         <svg class="bg" width="320" height="560">
-          <path d="{{headerPath}}" fill="#3F51B5"></path>
+          <path :d="{{headerPath}}" fill="#3F51B5"></path>
         </svg>
         <div class="header">
           {{header}}

@@ -54,6 +54,10 @@ function waitForDynamicChildContentInitialization(weakSelf: WeakRef<ModrnHTMLEle
 }
 
 function extractDynamicChildContentIfPossible(self: ModrnHTMLElement) {
+    if (!self.componentInfo?.registeredComponent.dynamicChildren) {
+        logDiagnostic(`Not parsing dynamic children for ${self.nodeName}, since dynamicChildren attribute is not set`);
+        return false;
+    }
     if (isDomContentLoaded()) {
         extractDynamicChildContent(self);
     }

@@ -69,7 +69,7 @@ it("Returns multiple refs correctly", async () => {
     expect(resultingRefs[1].getAttribute("id")).toBe("the-ref2");
 });
 
-it("Reacts on dynamic amount if referenced elements", async () => {
+it("Reacts on dynamic amount of referenced elements", async () => {
 
     const singleRefState = createRef();
     let resultingRefs: HTMLElement[] = [];
@@ -82,7 +82,7 @@ it("Reacts on dynamic amount if referenced elements", async () => {
         return {children};
     }).html(`
 <div id="host">{{children}}</div>
-`).register();
+`).dynamicChildren().register();
     const tag1 = registerAnonymous(component1);
 
     const container = await TestUtils.render("div") as HTMLElement;

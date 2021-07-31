@@ -58,7 +58,7 @@ const treeItem = makeComponent(m({treeItem: mObj<TreeItem>(), addItem: mFunction
         <ul m-show="{{isOpen}}" m-if="{{isFolder}}">
           <tree-item
             class="item"
-            m-for="{{item.children}}" m-as="item" tree-item="{{item}}"
+            m-if="{{isOpen}}" m-for="{{item.children}}" m-as="item" tree-item="{{item}}"
             make-folder="{{makeFolder}}" add-item="{{addItem}}"
           ></tree-item>
           <li class="add" onclick="{{addToMe}}">+</li>

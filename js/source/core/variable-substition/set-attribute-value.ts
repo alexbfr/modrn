@@ -1,6 +1,8 @@
 import {ComponentInfo, ModrnHTMLElement} from "../component-registry";
 import {unTagify} from "../../util/tagify";
 
+const hasWarned: Record<string, true> = {};
+
 export function getAttributeValue(self: ModrnHTMLElement, componentInfo: ComponentInfo, node: HTMLElement | SVGElement, attributeNameOriginal: string): unknown {
     if (node instanceof ModrnHTMLElement) {
         const attributeName = unTagify(attributeNameOriginal, true);
@@ -51,7 +53,10 @@ export function setAttributeValue(self: ModrnHTMLElement, componentInfo: Compone
             if (attributeName in node) {
                 (node as unknown as Record<string, unknown>)[attributeName] = value;
             } else {
-                console.warn(`Cannot set attribute ${attributeName} on ${node} of ${self}: event handler does not exist`);
+                if (!hasWarned[node.nodeName + "_" + attributeName]) {
+                    console.warn(`Cannot set attribute ${attributeName} on ${node} of ${self}: event handler does not exist`);
+                    hasWarned[node.nodeName + "_" + attributeName] = true;
+                }
             }
         } else {
             throw new Error(`Cannot set attribute ${attributeName} on ${node} of ${self} to ${value}: cannot map type`);
