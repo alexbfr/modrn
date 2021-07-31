@@ -1,8 +1,8 @@
-import {declare, makeComponent, NoProps} from "./core/component-declaration";
+import {declare, makeComponent, NoProps} from "./source/core/component-declaration";
 import marked from "marked";
-import {createState} from "./util/state";
-import {useState} from "./core/state-hooks";
-import {unsafeHtml} from "./core/variable-substition/unsafe-html";
+import {createState} from "./source/util/state";
+import {useState} from "./source/core/state-hooks";
+import {unsafeHtml} from "./source/core/variable-substition/unsafe-html";
 
 const textState = createState<string>();
 

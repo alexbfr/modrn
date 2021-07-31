@@ -1,6 +1,6 @@
-import {declare, m, makeComponent, mBool, mString} from "./core/component-declaration";
-import {createState} from "./util/state";
-import {useState} from "./core/state-hooks";
+import {declare, m, makeComponent, mBool, mString} from "./source/core/component-declaration";
+import {createState} from "./source/util/state";
+import {useState} from "./source/core/state-hooks";
 
 const propsType = m({
     lesbian: mBool(),

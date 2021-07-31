@@ -31,7 +31,6 @@ it("Renders a simple for loop with false if condition", async () => {
 
     expect(container.innerHTML.startsWith(`<p>Prologue</p>`)).toBeTrue();
     expect(container.innerHTML.endsWith(`<p>Epilogue</p>`)).toBeTrue();
-    console.error(container.innerHTML + "");
     expect(container.innerHTML).not.toContain("foo");
 });
 
@@ -57,7 +56,6 @@ it("Renders a simple for loop with false if condition changing to true", async (
     renderElements();
     expect(getRenderQueueLength()).toBe(0);
 
-    console.error(container.innerHTML + "");
     expect(container.innerHTML).toContain("foo");
 });
 

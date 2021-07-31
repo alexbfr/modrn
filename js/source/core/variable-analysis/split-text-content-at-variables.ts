@@ -1,4 +1,5 @@
 import {expressionPattern, TEXT_NODE} from "./variable-types";
+import {logDiagnostic} from "../../util/logging";
 
 export function splitTextContentAtVariables(rootElement: HTMLElement): void {
     let childCount = rootElement.childNodes.length;
@@ -16,7 +17,7 @@ export function splitTextContentAtVariables(rootElement: HTMLElement): void {
                 const remainderBefore = textContent.substring(0, startIndex);
                 const value = textContent.substring(startIndex, endIndex + 2);
                 if (!expressionPattern.test(value)) {
-                    console.warn(`Invalid expression pattern ${value} at element ${rootElement}`);
+                    logDiagnostic(`Invalid expression pattern ${value} at element ${rootElement}`);
                     continue;
                 }
                 const remainderAfter = textContent.substring(endIndex + 2);

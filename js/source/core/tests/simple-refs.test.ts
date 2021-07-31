@@ -54,7 +54,7 @@ it("Returns multiple refs correctly", async () => {
     const container = await TestUtils.render("div") as HTMLElement;
     container.innerHTML = `<p>Prologue</p>${tag1.tagOpen()}${tag1.tagClose}<p>Epilogue</p>`;
 
-    expect(getRenderQueueLength()).toBe(2);
+    expect(getRenderQueueLength()).toBe(1);
     expect(resultingRefs.length).toEqual(0);
 
     expect(container.innerHTML.startsWith(`<p>Prologue</p>`)).toBeTrue();
@@ -89,7 +89,7 @@ it("Reacts on dynamic amount if referenced elements", async () => {
 
     container.innerHTML = `<p>Prologue</p>${tag1.tagOpen("id = 'tag1'")}<p id="{{item}}" ref="{{ref}}">Dynamic {{item}}</p>${tag1.tagClose}<p>Epilogue</p>`;
 
-    expect(getRenderQueueLength()).toBe(3); // 3 refs added
+    expect(getRenderQueueLength()).toBe(1); // 3 refs added
     expect(resultingRefs.length).toEqual(0);
 
     expect(container.innerHTML.startsWith(`<p>Prologue</p>`)).toBeTrue();

@@ -2,6 +2,8 @@ import {ModrnHTMLElement} from "../component-registry";
 import {PureStateFunction} from "../../util/state";
 import {ApplyResult, changes, clean} from "./change-types";
 import {requestRender} from "../render-queue";
+import {ChildCollection} from "../templated-children-hooks";
+import {isTainted} from "./mark-changed";
 
 export function changeFromTo(previous: unknown, now: unknown, forConsumer: ModrnHTMLElement, node: ChildNode | false): ApplyResult {
     const result = changeFromToRaw(previous, now, forConsumer);
@@ -12,7 +14,25 @@ export function changeFromTo(previous: unknown, now: unknown, forConsumer: Modrn
 }
 
 export function changeFromToRaw(previous: unknown, now: unknown, forConsumer: ModrnHTMLElement): ApplyResult {
+    if (!previous && !now) {
+        return {madeChanges: false};
+    }
+    if (isTainted(now)) {
+        return {madeChanges: true};
+    }
     if (previous === now) {
+        return {madeChanges: false};
+    }
+    if (previous instanceof HTMLElement && (now as ChildCollection).__childCollection) {
+        const children = (now as ChildCollection).elements;
+        if (previous.childNodes.length !== children.length) {
+            return {madeChanges: true};
+        }
+        for (let idx = 0; idx < children.length; ++idx) {
+            if (previous.childNodes.item(idx) !== children[idx]) {
+                return {madeChanges: true};
+            }
+        }
         return {madeChanges: false};
     }
     if (typeof now === "function") {
@@ -35,12 +55,26 @@ export function changeFromToRaw(previous: unknown, now: unknown, forConsumer: Mo
         }
         found.push(new WeakRef<ModrnHTMLElement>(forConsumer));
     }
+    if (Array.isArray(now) && Array.isArray(previous)) {
+        const nowArr = now as unknown[];
+        const previousArr = previous as unknown[];
+        if (nowArr.length === 0 && previousArr.length === 0) {
+            return {madeChanges: false};
+        }
+    }
     return {madeChanges: true};
 }
 
+function getStateId(what: unknown) {
+    if (typeof what === "function") {
+        return (what as PureStateFunction)?.stateId;
+    }
+    return undefined;
+}
+
 function hasFunctionChanged(previous: unknown, valueToSet: unknown) {
-    const previousId = (previous as PureStateFunction<unknown>)?.stateId;
-    const currentId = (valueToSet as PureStateFunction<unknown>)?.stateId;
+    const previousId = getStateId(previous);
+    const currentId = getStateId(valueToSet);
     if (typeof previous === "function" && typeof valueToSet === "function" && previousId && currentId) {
         if (previousId !== currentId) {
             return true;
@@ -49,5 +83,5 @@ function hasFunctionChanged(previous: unknown, valueToSet: unknown) {
         const currentContext = (valueToSet as PureStateFunction<unknown>)?.stateContext?.deref();
         return previousContext !== currentContext;
     }
-    return previous !== valueToSet;
+    return false;
 }

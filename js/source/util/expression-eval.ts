@@ -169,10 +169,7 @@ function evaluate(_node: jsep.Expression, context: object): any {
 
     case "Compound": {
         const compound = (node as Compound);
-        if (compound.body.length === 1) {
-            return evaluate(compound.body[0], context);
-        }
-        return undefined;
+        return compound.body.map(value => evaluate(value, context));
     }
 
     default:

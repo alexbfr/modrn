@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import {registerModule} from "./component-registry";
+import {ChildCollection} from "./templated-children-hooks";
 
 export const sigDate = new Date(0) as Type<Date>;
 export const sigElementRefs = {refs: []} as Type<ElementRefs>;
@@ -30,6 +31,10 @@ export function mNumber(): Type<number> {
     return 0 as Type<number>;
 }
 
+export function mChild(): Type<ChildCollection> {
+    return {__childCollection: true, elements: []};
+}
+
 export function mDate(): Type<Date> {
     return sigDate;
 }
@@ -48,6 +53,10 @@ export function mFunction<T extends Function>(): Type<T> { // eslint-disable-lin
 
 export function mArray<T>(): Type<T[]> {
     return [];
+}
+
+export function mObj<T>(): Type<T> {
+    return null as unknown as T;
 }
 
 export function m<T, K extends keyof T = keyof T>(v: Typed<T, K> & Type<T>): T & Container<T, K>  {

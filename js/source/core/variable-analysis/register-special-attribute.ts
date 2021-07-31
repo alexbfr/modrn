@@ -10,7 +10,7 @@ export function registerSpecialAttribute(attributeName: string, handler: Special
     return specialAttributeRegistry[attributeName] = {
         precedence,
         attributeName,
-        handler
+        handler,
     };
 }
 

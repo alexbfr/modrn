@@ -15,7 +15,8 @@ it("Finds single child variable", () => {
                 indexes: [0],
                 expression: varUsageExpression("test")
             }
-        ]
+        ],
+        __constants: []
     } as VariableMappings);
 
     expect(elem.innerHTML).toBe("<div></div>");
@@ -35,7 +36,8 @@ it("Finds single child variable and splits prologue", () => {
                 indexes: [0, 1],
                 expression: varUsageExpression("test")
             }
-        ]
+        ],
+        __constants: []
     } as VariableMappings);
 
     expect(elem.innerHTML).toBe("<div>prologue </div>");
@@ -57,7 +59,8 @@ it("Finds onclick attribute", () => {
                 hidden: false,
                 expression: varUsageExpression("clicked")
             } as AttributeVariable
-        ]
+        ],
+        __constants: []
     } as VariableMappings);
 
     expect(elem.innerHTML).toBe(`<div>Foo bar <button onclick="">Button</button></div>`);

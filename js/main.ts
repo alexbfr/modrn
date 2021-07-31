@@ -1,9 +1,11 @@
-import "./source/sample";
+import "./sample";
 import {start} from "./source/core/modrn";
-import {myComponentModule} from "./source/sample";
-import {markdownModule} from "./source/markdown";
+import {myComponentModule} from "./sample";
+import {markdownModule} from "./markdown";
+import {treeViewModule} from "./treeview";
+import {elasticHeaderModule} from "./elastic-header";
 
-start(myComponentModule, markdownModule);
+start(myComponentModule, markdownModule, treeViewModule, elasticHeaderModule);
 
 
 // window.setInterval(() => {

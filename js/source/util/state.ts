@@ -14,6 +14,10 @@ export type State<T> = [
     T, (newState: T, silent?: boolean) => T
 ]
 
+export type MutableState<T> = [
+    T, () => void
+]
+
 export interface Stateful {
     getOwner: () => ModrnHTMLElement;
     state: {[name: string]: unknown};
@@ -42,11 +46,10 @@ export function useStateInternal<T, K extends StateToken<T>>(token: K, context: 
     const currentState = context.state[token.id] as T;
 
     function update(newState: T, silent?: boolean) {
-        context.state[token.id] = newState;
         if (!silent) {
-            Object.values(newState).forEach(value => (typeof value === "object") && markChanged(value));
             context.update();
         }
+        context.state[token.id] = newState;
         return newState;
     }
 
@@ -58,7 +61,35 @@ export function useStateInternal<T, K extends StateToken<T>>(token: K, context: 
     return [clone(currentState), update];
 }
 
-export type PureStateFunction<K1=never, K2=never, K3=never, K4=never> = ((...rest: ParamType<K1, K2, K3, K4>) => void) & {stateContext: WeakRef<Stateful>, stateId: string};
+export function getStateInternal<T, K extends StateToken<T>>(token: K, context: Stateful): State<T> {
+    const currentState = context.state[token.id] as T;
+    if (!currentState) {
+        throw new Error("State not yet initialized (useState missing?)");
+    }
+    function update(newState: T, silent?: boolean) {
+        if (!silent) {
+            context.update();
+        }
+        context.state[token.id] = newState;
+        return newState;
+    }
+
+    return [clone(currentState), update];
+}
+
+export function mutableStateInternal<T, K extends StateToken<T>>(token: K, context: Stateful): MutableState<T> {
+    const state = context.state[token.id] as T;
+    if (!state) {
+        throw new Error("State not yet initialized (useState missing?)");
+    }
+    return [state, () => {
+        Object.values(state).forEach(val => markChanged(val));
+        context.update();
+    }];
+}
+
+export type RawStateFunction = {stateContext: WeakRef<Stateful>, stateId: string};
+export type PureStateFunction<K1=never, K2=never, K3=never, K4=never> = ((...rest: ParamType<K1, K2, K3, K4>) => void) & RawStateFunction;
 
 export type WrappedFunction<T, K1=never, K2=never, K3=never, K4=never> = // eslint-disable-line
     (state: T, ...args: ParamType<K1, K2, K3, K4>) => DeepPartialOrFull<T> | undefined | void;

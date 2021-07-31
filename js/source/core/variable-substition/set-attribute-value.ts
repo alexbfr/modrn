@@ -1,7 +1,9 @@
 import {ComponentInfo, ModrnHTMLElement} from "../component-registry";
+import {unTagify} from "../../util/tagify";
 
-export function getAttributeValue(self: ModrnHTMLElement, componentInfo: ComponentInfo, node: HTMLElement, attributeName: string): unknown {
+export function getAttributeValue(self: ModrnHTMLElement, componentInfo: ComponentInfo, node: HTMLElement | SVGElement, attributeNameOriginal: string): unknown {
     if (node instanceof ModrnHTMLElement) {
+        const attributeName = unTagify(attributeNameOriginal, true);
         const state = node?.state;
         if (!state) {
             const initialCustomProps = self.initialCustomProps;
@@ -14,20 +16,22 @@ export function getAttributeValue(self: ModrnHTMLElement, componentInfo: Compone
             }
         }
     }
+    const attributeName = attributeNameOriginal;
     if (attributeName in node) {
         return (node as unknown as Record<string, unknown>)[attributeName];
     }
     return node.getAttribute(attributeName);
 }
 
-export function setAttributeValue(self: ModrnHTMLElement, componentInfo: ComponentInfo, node: HTMLElement, attributeName: string, value: unknown, hidden: boolean): void {
+export function setAttributeValue(self: ModrnHTMLElement, componentInfo: ComponentInfo, node: HTMLElement | SVGElement, attributeName: string, value: unknown, hidden: boolean): void {
+    const untagifiedName = unTagify(attributeName, true);
     if (node instanceof ModrnHTMLElement) {
         const state = node?.state;
         if (!state) {
-            node.initialCustomProps = {...node.initialCustomProps, [attributeName]: value};
+            node.initialCustomProps = {...node.initialCustomProps, [untagifiedName]: value};
         } else
         {
-            state.customProps[attributeName] = value;
+            state.customProps[untagifiedName] = value;
         }
         if (!hidden) {
             node.setAttribute(attributeName, "" + value);
@@ -42,12 +46,12 @@ export function setAttributeValue(self: ModrnHTMLElement, componentInfo: Compone
                 node.removeAttribute(attributeName);
             }
         } else if (typeof value === "undefined" || value === null) {
-            node.setAttribute(attributeName, "");
+            node.removeAttribute(attributeName);
         } else if (typeof value === "function") {
             if (attributeName in node) {
                 (node as unknown as Record<string, unknown>)[attributeName] = value;
             } else {
-                throw new Error(`Cannot set attribute ${attributeName} on ${node} of ${self}: event handler does not exist`);
+                console.warn(`Cannot set attribute ${attributeName} on ${node} of ${self}: event handler does not exist`);
             }
         } else {
             throw new Error(`Cannot set attribute ${attributeName} on ${node} of ${self} to ${value}: cannot map type`);

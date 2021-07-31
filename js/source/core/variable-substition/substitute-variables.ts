@@ -2,6 +2,7 @@ import {
     AttributeVariable,
     bindToStateContext,
     ComplexExpression,
+    ConstantExpression,
     ExpressionType,
     MappingType,
     ModrnHTMLElement,
@@ -14,6 +15,7 @@ import {getChildValue, setChildValue} from "./set-child-value";
 import {changeFromTo} from "../change-tracking/change-from-to";
 import {RefInternal} from "../ref-hooks";
 import {requestReRenderDeep} from "../render-queue";
+import {ApplyResult} from "../change-tracking/change-types";
 
 export type VarOptions = {
     hideByDefault?: boolean;
@@ -58,7 +60,16 @@ export function substituteVariables(self: ModrnHTMLElement, root: HTMLElement, v
         return;
     }
 
-    const hideByDefault = !!vars.__options?.hideByDefault;
+    variableDefinitions["__constants"].forEach(constant => {
+        const value = wrapFunctionWithContextIfRequired((constant.expression as ConstantExpression).value);
+        if (value) {
+            if ((value as Promise<unknown>).then) {
+                (value as Promise<unknown>).then(resolved => setValue(constant, resolved));
+            } else {
+                setValue(constant, value);
+            }
+        }
+    });
 
     Object.keys(vars).forEach(variableName => {
         const matches = variableDefinitions[variableName] || [];
@@ -71,61 +82,77 @@ export function substituteVariables(self: ModrnHTMLElement, root: HTMLElement, v
                 value = (match.expression as ComplexExpression).compiledExpression(vars);
             }
             value = wrapFunctionWithContextIfRequired(value);
-            if ((value as Promise<unknown>).then) {
+            if ((value as Promise<unknown>)?.then) {
                 (value as Promise<unknown>).then(resolved => setValue(match, resolved));
             } else {
                 setValue(match, value);
             }
         }
-
     });
 
-    function setValue(match: VariableMapping, value: unknown) {
+    function setValue(match: VariableMapping, valueProvided: unknown) {
 
         if (!componentInfo) {
             throw new Error(`Can only substitute variables after component info is initialized for ${self} node`);
         }
 
         const node = getNode(root, match.indexes);
-        if (node instanceof ModrnHTMLElement && node.componentInfo?.registeredComponent?.transparent && !suppressReRender) {
-            requestReRenderDeep(node as HTMLElement);
-        }
+        let applyResult: ApplyResult = {madeChanges: false};
+
         switch (match.type) {
         case MappingType.attributeRef: {
             if (node instanceof HTMLElement) {
+                const value = match.valueTransformer ? match.valueTransformer(node, valueProvided) : valueProvided;
                 const ref = value as RefInternal;
                 ref.__addRef(node);
+            }
+            if (node instanceof ModrnHTMLElement && node.componentInfo?.registeredComponent?.transparent && !suppressReRender) {
+                requestReRenderDeep(node as HTMLElement);
             }
             break;
         }
         case MappingType.specialAttribute: {
             const attributeVariable = match as SpecialAttributeVariable;
+            const attributeName = attributeVariable.specialAttributeRegistration.attributeName;
             if (!(node instanceof HTMLElement)) {
-                throw new Error(`Special attribute can not be set on regular node (${node}), ${attributeVariable.specialAttributeRegistration.attributeName}`);
+                throw new Error(`Special attribute can not be set on regular node (${node}), ${attributeName}`);
             }
-            const original = getAttributeValue(self, componentInfo, node, attributeVariable.specialAttributeRegistration.attributeName);
-            setAttributeValue(self, componentInfo, node, attributeVariable.specialAttributeRegistration.attributeName, value, true);
-            changeFromTo(original, value, self, !suppressReRender && node);
+            const value = match.valueTransformer ? match.valueTransformer(node, valueProvided) : valueProvided;
+            applyResult = setAsAttribute(node, attributeName, value);
             break;
         }
         case MappingType.attribute: {
             const attributeVariable = match as AttributeVariable;
-            if (!(node instanceof HTMLElement)) {
-                throw new Error(`Attribute can not be set on regular node (${node}), ${attributeVariable.attributeName}`);
+            const attributeName = attributeVariable.attributeName;
+            if (!(node instanceof HTMLElement || node instanceof SVGElement)) {
+                throw new Error(`Attribute can not be set on regular node (${node}), ${attributeName}`);
             }
-            const original = getAttributeValue(self, componentInfo, node, attributeVariable.attributeName);
-            setAttributeValue(self, componentInfo, node, attributeVariable.attributeName, value, hideByDefault || !!attributeVariable.hidden);
-            changeFromTo(original, value, self, !suppressReRender && node);
+            const value = match.valueTransformer ? match.valueTransformer(node, valueProvided) : valueProvided;
+            applyResult = setAsAttribute(node, attributeName, value);
             break;
         }
         case MappingType.childVariable: {
-            const original = getChildValue(self, componentInfo, node);
-            setChildValue(self, componentInfo, node, value);
-            changeFromTo(original, value, self, !suppressReRender && node);
+            applyResult = setAsChildValue(node as HTMLElement, match, valueProvided);
             break;
         }
         default:
             throw new Error("Unsupported");
         }
+
+        if (applyResult.madeChanges && (node instanceof ModrnHTMLElement && node.componentInfo?.registeredComponent?.transparent && !suppressReRender)) {
+            requestReRenderDeep(node as HTMLElement);
+        }
+    }
+
+    function setAsAttribute(node: HTMLElement | SVGElement, attributeName: string, value: unknown) {
+        const original = getAttributeValue(self, componentInfo, node, attributeName);
+        setAttributeValue(self, componentInfo, node, attributeName, value, true);
+        return changeFromTo(original, value, self, !suppressReRender && node);
+    }
+
+    function setAsChildValue(node: HTMLElement, match: VariableMapping, valueProvided: unknown) {
+        const original = getChildValue(self, componentInfo, node);
+        const value = setChildValue(self, componentInfo, node, match, valueProvided);
+        return changeFromTo(original, value, self, !suppressReRender && node);
     }
 }

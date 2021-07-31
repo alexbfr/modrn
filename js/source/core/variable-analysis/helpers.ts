@@ -20,6 +20,12 @@ import jsep, {
 import {compile} from "../../util/expression-eval";
 
 export function extractExpression(textContent: string): BaseExpression {
+    if (!textContent.startsWith("{{")) {
+        return {
+            expressionType: ExpressionType.ConstantExpression,
+            value: textContent
+        } as ConstantExpression;
+    }
     const text = textContent.substring(2, textContent.length - 2);
     if (variableNamePattern.test(textContent)) {
         return {expressionType: ExpressionType.VariableUsage, variableName: text} as VariableUsageExpression;
@@ -38,7 +44,8 @@ export function extractExpression(textContent: string): BaseExpression {
             expressionType: ExpressionType.ComplexExpression,
             usedVariableNames: variableNames,
             expression,
-            compiledExpression: compiled
+            compiledExpression: compiled,
+            originalExpression: text
         } as ComplexExpression;
     }
 }
@@ -78,7 +85,7 @@ function collectVariableNames(parsed: jsep.Expression, variableNameList: string[
         break;
     }
     case "MemberExpression":
-        [(parsed as MemberExpression).object, (parsed as MemberExpression).property].forEach(element => collectVariableNames(element, variableNameList));
+        collectVariableNames((parsed as MemberExpression).object, variableNameList);
         break;
     case "Literal":
     case "ThisExpression":

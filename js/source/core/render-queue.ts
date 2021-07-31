@@ -2,6 +2,7 @@ import {ModrnHTMLElement} from "./component-registry";
 import {logDiagnostic, logWarn} from "../util/logging";
 import {renderComponent} from "./render-component";
 import {isTestingModeActive} from "../util/wait-until-dom-content-loaded";
+import {clearTainted} from "./change-tracking/mark-changed";
 
 type RenderQueueElement = {
     element: WeakRef<ModrnHTMLElement>;
@@ -10,6 +11,7 @@ type RenderQueueElement = {
 const frameUpdateQueue: (() => void)[] = [];
 const renderQueue: RenderQueueElement[] = [];
 let alreadyRendered: WeakSet<ModrnHTMLElement> = new WeakSet<ModrnHTMLElement>();
+let alreadyRequested: WeakSet<ModrnHTMLElement> = new WeakSet<ModrnHTMLElement>();
 
 let requestedFrameUpdateNumber: number | null = null;
 
@@ -33,16 +35,23 @@ export function requestFrameUpdate(callback: () => void): void {
 
 export function requestReRenderDeep(self: HTMLElement): void {
     if (self instanceof ModrnHTMLElement) {
-        renderQueue.push({element: new WeakRef(self)});
+        requestRender(self);
     }
-    let pivot = self.firstElementChild;
-    while (pivot) {
-        const current = pivot;
-        pivot = self.nextElementSibling;
-        if (current.nodeType === 3) {
-            requestReRenderDeep(current as HTMLElement);
-        }
-    }
+    return;
+    // if (self instanceof ModrnHTMLElement && (self as ModrnHTMLElement).componentInfo?.registeredComponent.transparent) {
+    //     console.info("DEEP: ", self);
+    //     renderQueue.push({element: new WeakRef(self)});
+    // } else {
+    //     return;
+    // }
+    // let pivot = self.firstElementChild;
+    // while (pivot) {
+    //     const current = pivot;
+    //     pivot = pivot.nextElementSibling;
+    //     if (current.nodeType === 3) {
+    //         requestReRenderDeep(current as HTMLElement);
+    //     }
+    // }
 }
 
 export function requestRender(selfProvided: ModrnHTMLElement | string): void {
@@ -50,6 +59,10 @@ export function requestRender(selfProvided: ModrnHTMLElement | string): void {
     if (!self.componentInfo) {
         throw new Error(`${selfProvided} could not be resolved to a ModrnHTMLElement`);
     }
+    if (alreadyRequested.has(self)) {
+        return;
+    }
+    alreadyRequested.add(self);
     renderQueue.push({element: new WeakRef(self)});
     if (self.componentInfo.registeredComponent.transparent) {
         requestReRenderDeep(self);
@@ -58,6 +71,9 @@ export function requestRender(selfProvided: ModrnHTMLElement | string): void {
 }
 
 function render(element: ModrnHTMLElement) {
+    if (alreadyRendered.has(element)) {
+        return;
+    }
     alreadyRendered.add(element);
     logDiagnostic("Rendering: ", element.nodeName + "#" + element.id);
     renderComponent(element);
@@ -68,8 +84,11 @@ export function clearRenderQueue(): void {
     renderQueue.splice(0, renderQueue.length);
 }
 
+let frameCount = 0;
 function justRender() {
+    console.info("FRAME", frameCount++);
     alreadyRendered = new WeakSet<ModrnHTMLElement>();
+    alreadyRequested = new WeakSet<ModrnHTMLElement>();
     const toRender = [...renderQueue];
     renderQueue.splice(0, toRender.length);
     const elementsToRender = toRender.map(item => item.element.deref()).filter(item => item !== undefined);
@@ -91,6 +110,7 @@ export function renderElements(): void {
             logWarn("Renderqueue not empty after 10 retries");
         }
     }
+    clearTainted();
 }
 
 export function getRenderQueueLength(): number {

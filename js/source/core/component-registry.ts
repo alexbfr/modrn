@@ -48,6 +48,7 @@ export type ComplexExpression = {
     expressionType: ExpressionType.ComplexExpression;
     usedVariableNames: string[];
     expression: Expression;
+    originalExpression?: string;
     compiledExpression: (what: unknown) => unknown;
 } & BaseExpression;
 
@@ -56,10 +57,13 @@ export type ConstantExpression = {
     value: unknown;
 } & BaseExpression;
 
+export type ValueTransformerFn = <T>(node: Node, value: T) => T;
+
 export type VariableMappingBase<T extends MappingType> = {
     indexes: number[];
     type: T;
     expression: BaseExpression;
+    valueTransformer?: ValueTransformerFn;
 }
 
 export type VariableMapping = VariableMappingBase<MappingType>;
@@ -79,7 +83,8 @@ export type SpecialAttributeVariable = {
 } & VariableMappingBase<MappingType.specialAttribute>;
 
 export type VariableMappings = {
-    [variableName: string]: VariableMapping[]
+    [variableName: string]: VariableMapping[];
+    __constants: VariableMapping[];
 }
 
 export type FoundVariables = {
@@ -92,12 +97,18 @@ export type Fragment = {
     variableDefinitions: VariableMappings | null;
 }
 
-export type SpecialAttributeHandlerFn = (elem: HTMLElement) => HTMLElement;
+export type SpecialAttributeHandlerFnResult = {
+    transformedElement?: HTMLElement;
+    valueTransformer?: (element: HTMLElement, value: unknown) => unknown;
+}
+
+export type SpecialAttributeHandlerFn = (elem: HTMLElement) => SpecialAttributeHandlerFnResult;
 
 export type SpecialAttributeRegistration = {
     precedence: number;
     attributeName: string;
     handler: SpecialAttributeHandlerFn;
+    hidden?: boolean;
 }
 
 export type ComponentInfo = {
@@ -112,9 +123,9 @@ export type ComponentRegistry = {
     [componentName: string]: ComponentInfo;
 }
 
+const componentByRegisteredComponent = new WeakMap<RegisteredComponent<unknown, unknown>, ComponentInfo>();
 const componentRegistry: ComponentRegistry = {};
 const componentsToRegister: ComponentInfo[] = [];
-
 
 export function addToComponentRegistry(componentName: string, component: RegisteredComponent<unknown, unknown>): ComponentInfo {
     const tagName = tagify(componentName).toLowerCase();
@@ -127,6 +138,7 @@ export function addToComponentRegistry(componentName: string, component: Registe
     };
     componentsToRegister.push(componentInfo);
     componentRegistry[tagName] = componentInfo;
+    componentByRegisteredComponent.set(component, componentInfo);
     return componentInfo;
 }
 
@@ -149,11 +161,18 @@ export function getComponentRegistry(): ComponentRegistry {
     return {...componentRegistry};
 }
 
+export function getComponentInfoOf(registeredComponent: RegisteredComponent<unknown, unknown>): ComponentInfo | undefined {
+    return componentByRegisteredComponent.get(registeredComponent);
+}
+
 export type HasConnectedFunction = (self: ModrnHTMLElement, componentInfo: ComponentInfo) => void;
 export type NotifyChildrenChangedFunction = (self: ModrnHTMLElement, componentInfo: ComponentInfo, childFragment: Fragment) => void;
 
 export function register(componentInfo: ComponentInfo, hasConnectedFn: HasConnectedFunction, notifyChildrenChangedFn: NotifyChildrenChangedFunction): CustomElementConstructor {
     const tagName = componentInfo.tagName;
+    if (componentRegistry[tagName]?.registeredComponent === componentInfo.registeredComponent && componentInfo.registeredComponent.customElementConstructor) {
+        return componentInfo.registeredComponent.customElementConstructor;
+    }
     logDiagnostic(`Registering component ${tagName}`);
     const customElementConstructor = class extends ModrnHTMLElement {
         constructor() {

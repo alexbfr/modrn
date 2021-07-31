@@ -1,4 +1,4 @@
-import {ComponentState, Fragment, getCurrentStateContext} from "./component-registry";
+import {ComponentState, Fragment, getComponentInfoOf, getCurrentStateContext} from "./component-registry";
 import {substituteVariables} from "./variable-substition/substitute-variables";
 import {createState, StateToken} from "../util/state";
 import {useState} from "./state-hooks";
@@ -95,11 +95,16 @@ function resolveIdReferenceIfApplicable(sourceProvided: HTMLElement | string): H
     return source;
 }
 
-export function useTemplate(sourceProvided: HTMLElement | string, childProps?: Record<string, unknown>, childStateToken = defaultChildrenState): ChildCollection {
+export function useTemplate(sourceProvided: HTMLElement | string | RegisteredComponent<unknown, unknown>, childProps?: Record<string, unknown>, childStateToken = defaultChildrenState): ChildCollection {
+
+    if ((sourceProvided as RegisteredComponent<unknown, unknown>).htmlTemplate) {
+        return useModrnChild(childStateToken, sourceProvided as RegisteredComponent<unknown, unknown>, childProps || {});
+    }
+
     const childrenState = useState(defaultTemplatedChildrenState, {source: ""} as TemplatedChildrenByKey);
     let state = childrenState[0];
     const setState = childrenState[1];
-    const source = resolveIdReferenceIfApplicable(sourceProvided);
+    const source = resolveIdReferenceIfApplicable(sourceProvided as (HTMLElement | string));
 
     if (source !== state.source) {
         if (typeof source === "string") {
@@ -123,12 +128,26 @@ export function useChild(childProps: Record<string, unknown> | null, childStateT
     return useTemplatedChildren(childStateToken, (previousChild && childProps) ? [null] : [], () => ({key: "__1", props: childProps || {}}));
 }
 
+export function useModrnChild<T, R>(childStateToken: ChildrenStateToken, component: RegisteredComponent<T, R>, props: (T & Record<string, unknown>) | null): ChildCollection {
+    const fragment = getComponentInfoOf(component)?.content;
+    if (!props || !fragment) {
+        return useTemplatedChildren(childStateToken, [], () => ({key: "__1", props: {}}));
+    }
+    return useTemplatedChildren(childStateToken, [null], () => {
+        return {
+            key: "__1",
+            props,
+            template: fragment
+        };
+    });
+}
+
 const useChildrenState = createChildrenState();
 
-export function useChildren<T>(iterateOver: T[], basicChildProps: Record<string, unknown>, itemAs = "item", childStateToken = useChildrenState): ChildCollection {
+export function useChildren<T>(iterateOver: T[], basicChildProps: Record<string, unknown>, itemAs = "item", indexAs="index", childStateToken = useChildrenState): ChildCollection {
     return useTemplatedChildren(childStateToken, iterateOver, (item, index) => ({
         key: "" + index,
-        props: {...basicChildProps, [itemAs]: item}
+        props: {...basicChildProps, [itemAs]: item, [indexAs]: index}
     }));
 }
 
@@ -162,12 +181,14 @@ export function useTemplatedChildren<T, P extends Record<string, unknown>>(
         const oldChildTemplateId = oldChild && getTemplateId(oldChild.child);
         const newChildTemplateId = getTemplateId(template.childElement);
         let childToApplyPropsOn: HTMLElement;
+        let suppress = false;
         if (oldChildTemplateId !== newChildTemplateId) {
             childToApplyPropsOn = cloneDeep(template.childElement);
+            suppress = true;
         } else {
             childToApplyPropsOn = oldChild.child;
         }
-        substituteVariables(getOwner(), childToApplyPropsOn, configuration.props, template.variableDefinitions, true);
+        substituteVariables(getOwner(), childToApplyPropsOn, configuration.props, template.variableDefinitions, suppress);
         result.elements.push(childToApplyPropsOn);
         childrenByKey[configuration.key] = {
             child: childToApplyPropsOn,
