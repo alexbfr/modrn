@@ -3,11 +3,14 @@ import {logDiagnostic} from "../../util/logging";
 
 export function splitTextContentAtVariables(rootElement: HTMLElement): void {
     let childCount = rootElement.childNodes.length;
+    let previousWasSplit = false;
     for (let idx = 0; idx < childCount; ++idx) {
         const child = rootElement.childNodes.item(idx);
         let startIndex: number;
-        const textContent = child.textContent?.trim();
+        const textContent = previousWasSplit ? child.textContent?.trimRight() : child.textContent?.trim();
+        previousWasSplit = false;
         if (child.nodeType === TEXT_NODE && textContent && (startIndex = textContent.indexOf("{{")) >= 0) {
+            previousWasSplit = true;
             const endIndex = textContent.indexOf("}}", startIndex + 2);
             if (startIndex === 0 && endIndex === textContent.length - 2) {
                 child.textContent = textContent;
@@ -31,7 +34,6 @@ export function splitTextContentAtVariables(rootElement: HTMLElement): void {
                     const nextNode1 = document.createTextNode(remainderAfter);
                     rootElement.insertBefore(nextNode1, child.nextSibling);
                     childCount++;
-                    idx++;
                 }
                 child.textContent = value;
             }

@@ -12,7 +12,7 @@ const forComponent = makeComponent(m({mFor: mArray<unknown>(), mAs: mString(), m
     delete allProps.mFor;
     delete allProps.mAs;
     delete allProps.mIndexAs;
-    const children = useChildren(mFor, allProps, mAs || "item", mIndexAs || "index");
+    const children = useChildren(mFor || [], allProps, mAs || "item", mIndexAs || "index");
     return {children};
 }).html(`{{children}}`).transparent().register();
 

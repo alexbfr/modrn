@@ -72,7 +72,7 @@ it("Does not trim in the middle", () => {
     expect(elem.childNodes.length).toBe(1);
     splitTextContentAtVariables(elem);
     expect(elem.innerHTML).toBe("{{first}}  {{second}}");
-    expect(elem.childNodes.length).toBe(2);
+    expect(elem.childNodes.length).toBe(3);
 });
 
 it("Ignores sub-elements", () => {

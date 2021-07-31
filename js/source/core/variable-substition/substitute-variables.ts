@@ -4,6 +4,7 @@ import {
     ComplexExpression,
     ConstantExpression,
     ExpressionType,
+    FunctionReferenceExpression,
     MappingType,
     ModrnHTMLElement,
     SpecialAttributeVariable,
@@ -16,6 +17,7 @@ import {changeFromTo} from "../change-tracking/change-from-to";
 import {RefInternal} from "../ref-hooks";
 import {requestReRenderDeep} from "../render-queue";
 import {ApplyResult} from "../change-tracking/change-types";
+import {logWarn} from "../../util/logging";
 
 export type VarOptions = {
     hideByDefault?: boolean;
@@ -79,7 +81,14 @@ export function substituteVariables(self: ModrnHTMLElement, root: HTMLElement, v
             if (match.expression.expressionType === ExpressionType.VariableUsage) {
                 value = vars[variableName];
             } else if (match.expression.expressionType === ExpressionType.ComplexExpression) {
-                value = (match.expression as ComplexExpression).compiledExpression(vars);
+                try {
+                    value = (match.expression as ComplexExpression).compiledExpression(vars);
+                } catch (err) {
+                    logWarn(`Couldn't evaluate expression on ${self} triggered by ${variableName}`);
+                    value = undefined;
+                }
+            } else if (match.expression.expressionType === ExpressionType.FunctionReferenceExpression) {
+                value = () => (match.expression as FunctionReferenceExpression).compiledExpression(vars);
             }
             value = wrapFunctionWithContextIfRequired(value);
             if ((value as Promise<unknown>)?.then) {

@@ -1,27 +1,7 @@
 import {declare, m, makeComponent, mChild, NoProps} from "./source/core/component-declaration";
 import {createState} from "./source/util/state";
 import {getState, mutableState, useState} from "./source/core/state-hooks";
-import {createChildrenState, useModrnChild} from "./source/core/templated-children-hooks";
-
-const headerComponent = makeComponent().html(`
-    <h1>Elastic Draggable SVG Header</h1>
-    <p>
-        with <a href="http://vuejs.org">Vue.js</a> +
-        <a href="http://dynamicsjs.com">dynamics.js</a>
-    </p>
-`).register();
-
-const contentComponent = makeComponent().html(`
-    <p>
-        Note this is just an effect demo - there are of course many
-        additional details if you want to use this in production, e.g.
-        handling responsive sizes, reload threshold and content scrolling.
-        Those are out of scope for this quick little hack. However, the idea
-        is that you can hide them as internal details of a Vue.js component
-        and expose a simple Web-Component-like interface.
-    </p>
-`)
-    .register();
+import {createChildrenState, useTemplate} from "./source/core/templated-children-hooks";
 
 const draggableHeaderInitialState = {
     dragging: false,
@@ -53,11 +33,11 @@ const draggableHeaderView = makeComponent(m({
 }), ({header, content}) => {
     const [{c}] = useState(draggableHeaderState, draggableHeaderInitialState);
 
-    const headerPath = "M0,0 L320,0 320,160" + "Q" + c.x + "," + c.y + " 0,160";
+    const headerPath = `M0,0 L320,0 320,160Q${c.x},${c.y} 0,160`;
 
     const dy = c.y - 160;
     const dampen = dy > 0 ? 2 : 4;
-    const contentPosition = "transform: translate3d(0," + dy / dampen + "px,0)";
+    const contentPosition = `transform: translate3d(0,${dy / dampen}px,0)`;
 
     function startDrag(evt: MouseEvent | TouchEvent) {
         const [state, setState] = getState(draggableHeaderState);
@@ -126,16 +106,31 @@ const headerChild = createChildrenState();
 const contentChild = createChildrenState();
 
 const elasticHeader = makeComponent(NoProps, () => {
-    const header = useModrnChild(headerChild, headerComponent, {});
-    const content = useModrnChild(contentChild, contentComponent, {});
+    const header = useTemplate("#header", {}, headerChild);
+    const content = useTemplate("#content", {}, contentChild);
     return {header, content};
 }).html(`
     <draggable-header-view header="{{header}}" content="{{content}}"></draggable-header-view>
+    <template id="header">
+        <h1>Elastic Draggable SVG Header</h1>
+        <p>
+            with <a href="http://modrnts.org">Modrn.ts</a> +
+            <a href="http://dynamicsjs.com">dynamics.js</a>
+        </p>
+    </template>
+    <template id="content">
+        <p>
+            Note this is just an effect demo - there are of course many
+            additional details if you want to use this in production, e.g.
+            handling responsive sizes, reload threshold and content scrolling.
+            Those are out of scope for this quick little hack. However, the idea
+            is that you can hide them as internal details of a Vue.js component
+            and expose a simple Web-Component-like interface.
+        </p>
+    </template>
 `).register();
 
 export const elasticHeaderModule = declare({
     draggableHeaderView,
-    headerComponent,
-    contentComponent,
     elasticHeader
 });

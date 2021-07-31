@@ -2,8 +2,8 @@ import "reflect-metadata";
 import {registerModule} from "./component-registry";
 import {ChildCollection} from "./templated-children-hooks";
 
-export const sigDate = new Date(0) as Type<Date>;
-export const sigElementRefs = {refs: []} as Type<ElementRefs>;
+export const sigDate = new Date(0) as Date;
+export const sigElementRefs = {refs: []} as ElementRefs;
 export const sigEventHandler = (): void => void 0;
 export const sigFunction = (): void => void 0;
 
@@ -11,55 +11,49 @@ export type ElementRefs = {
     refs: HTMLElement[];
 }
 
-export type Type<T> = T;
+export type Container = { "__typed": true };
 
-export type Typed<T, K extends keyof T = keyof T> = {
-    [name in K]: Type<T[K]>
-};
-
-export type Container <T, K extends keyof T = keyof T> = Typed<T, K> & { "__typed": true };
-
-export function mBool(): Type<boolean> {
-    return false as Type<boolean>;
+export function mBool(): boolean {
+    return false as boolean;
 }
 
-export function mString(): Type<string> {
-    return "" as Type<string>;
+export function mString<T extends string>(): T {
+    return "" as T;
 }
 
-export function mNumber(): Type<number> {
-    return 0 as Type<number>;
+export function mNumber(): number {
+    return 0 as number;
 }
 
-export function mChild(): Type<ChildCollection> {
+export function mChild(): ChildCollection {
     return {__childCollection: true, elements: []};
 }
 
-export function mDate(): Type<Date> {
+export function mDate(): Date {
     return sigDate;
 }
 
-export function mRef(): Type<ElementRefs> {
+export function mRef(): ElementRefs {
     return sigElementRefs;
 }
 
-export function mEventHandler(): Type<(e: Event) => void> {
+export function mEventHandler(): (e: Event) => void {
     return sigEventHandler;
 }
 
-export function mFunction<T extends Function>(): Type<T> { // eslint-disable-line
+export function mFunction<T extends Function>(): T { // eslint-disable-line
     return sigFunction as unknown as T;
 }
 
-export function mArray<T>(): Type<T[]> {
+export function mArray<T>(): T[] {
     return [];
 }
 
-export function mObj<T>(): Type<T> {
+export function mObj<T>(): T {
     return null as unknown as T;
 }
 
-export function m<T, K extends keyof T = keyof T>(v: Typed<T, K> & Type<T>): T & Container<T, K>  {
+export function m<T>(v: T): T & Container {
     return {...v, __typed: true};
 }
 
@@ -117,7 +111,7 @@ export function declare<M, K extends keyof M>(module: Module<M, K>): ModuleResul
 
 export const NoProps = m({});
 
-export function makeComponent<T, R>(propsType?: Container<T> & T, renderFn?: (props: T & AllProps) => R | null): UnregisteredComponent<T, R> {
+export function makeComponent<T, R>(propsType?: Container & T, renderFn?: (props: T & AllProps) => R | null): UnregisteredComponent<T, R> {
 
     const result: UnregisteredComponent<T, R> = {html, register, transparent, dynamicChildren};
     let htmlTemplate: string;

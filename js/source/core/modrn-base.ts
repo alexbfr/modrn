@@ -98,6 +98,10 @@ export function componentHasConnected(self: ModrnHTMLElement, componentInfo: Com
     }
 }
 
+export function componentHasDisconnected(self: ModrnHTMLElement): void {
+    (self.state?.disconnected || []).forEach(fn => fn());
+}
+
 export function childrenChanged(self: ModrnHTMLElement, componentInfo: ComponentInfo, childFragment: Fragment): void {
     if (!self.state) {
         self.initialPreviousChild = childFragment;
@@ -109,7 +113,7 @@ export function childrenChanged(self: ModrnHTMLElement, componentInfo: Component
 export function only(componentName: string, component: RegisteredComponent<unknown, unknown>): ComponentInfo {
 
     const componentInfo = addToComponentRegistry(componentName, component);
-    register(componentInfo, componentHasConnected, childrenChanged);
+    register(componentInfo, componentHasConnected, childrenChanged, componentHasDisconnected);
     componentStaticInitialize(componentInfo.componentName, componentInfo.registeredComponent);
     return componentInfo;
 }

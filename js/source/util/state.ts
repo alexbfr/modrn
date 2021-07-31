@@ -22,6 +22,7 @@ export interface Stateful {
     getOwner: () => ModrnHTMLElement;
     state: {[name: string]: unknown};
     update: () => void;
+    disconnected: (() => void)[];
 }
 
 // <T> is required to make tokens typesafe
@@ -41,7 +42,7 @@ function clone<T>(initial: T): T {
     return initial;
 }
 
-export function useStateInternal<T, K extends StateToken<T>>(token: K, context: Stateful, initial: T): State<T> {
+export function useStateInternal<T, K extends StateToken<T>>(token: K, context: Stateful, initial: T | (() => T)): State<T> {
 
     const currentState = context.state[token.id] as T;
 
@@ -54,7 +55,8 @@ export function useStateInternal<T, K extends StateToken<T>>(token: K, context: 
     }
 
     if (!currentState) {
-        const result = context.state[token.id] = clone(initial);
+        const data = (typeof initial === "function") ? (initial as (() => T))() : initial;
+        const result = context.state[token.id] = clone(data);
         return [clone(result), update];
     }
 

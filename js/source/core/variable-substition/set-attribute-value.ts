@@ -39,7 +39,11 @@ export function setAttributeValue(self: ModrnHTMLElement, componentInfo: Compone
             node.setAttribute(attributeName, "" + value);
         }
     } else {
-        if (typeof value === "string" || typeof value === "number") {
+        if (attributeName in node) {
+            (node as unknown as Record<string, unknown>)[attributeName] = value;
+        } else if (attributeName === "checked") {
+            (node as HTMLInputElement).checked = !!value;
+        } else if (typeof value === "string" || typeof value === "number") {
             node.setAttribute(attributeName, "" + value);
         } else if (typeof value === "boolean") {
             if (value) {
@@ -47,7 +51,7 @@ export function setAttributeValue(self: ModrnHTMLElement, componentInfo: Compone
             } else {
                 node.removeAttribute(attributeName);
             }
-        } else if (typeof value === "undefined" || value === null) {
+        } else if (typeof value === "undefined" || value === null || value === false) {
             node.removeAttribute(attributeName);
         } else if (typeof value === "function") {
             if (attributeName in node) {

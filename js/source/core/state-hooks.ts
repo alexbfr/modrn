@@ -11,7 +11,7 @@ import {
 } from "../util/state";
 import {getCurrentStateContext} from "./component-registry";
 
-export function useState<T, K extends StateToken<T>>(token: K, initial: K["dummy"]): State<K["dummy"]> {
+export function useState<T, K extends StateToken<T>>(token: K, initial: K["dummy"] | (() => K["dummy"])): State<K["dummy"]> {
     const state = getCurrentStateContext();
     return useStateInternal(token, state, initial);
 }

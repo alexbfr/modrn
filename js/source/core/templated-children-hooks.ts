@@ -104,10 +104,18 @@ export function useTemplate(sourceProvided: HTMLElement | string | RegisteredCom
     const childrenState = useState(defaultTemplatedChildrenState, {source: ""} as TemplatedChildrenByKey);
     let state = childrenState[0];
     const setState = childrenState[1];
-    const source = resolveIdReferenceIfApplicable(sourceProvided as (HTMLElement | string));
+    let source = resolveIdReferenceIfApplicable(sourceProvided as (HTMLElement | string));
 
     if (source !== state.source) {
         if (typeof source === "string") {
+            if (source.startsWith("#")) {
+                const byId = getCurrentStateContext()?.getOwner()?.componentInfo?.content?.childElement?.querySelector(source);
+                if (byId instanceof HTMLElement) {
+                    source = byId.innerHTML;
+                } else {
+                    throw new Error(`Couldn't find template by selector ${source} on element ${sourceProvided}`);
+                }
+            }
             const template = stringTemplateMap[source] || (stringTemplateMap[source] = createTemplateFromString(source));
             state = setState({...state, template}, true);
         } else {

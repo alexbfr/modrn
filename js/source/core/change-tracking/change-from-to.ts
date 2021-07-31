@@ -4,6 +4,7 @@ import {ApplyResult, changes, clean} from "./change-types";
 import {requestRender} from "../render-queue";
 import {ChildCollection} from "../templated-children-hooks";
 import {isTainted} from "./mark-changed";
+import {RefInternal} from "../ref-hooks";
 
 export function changeFromTo(previous: unknown, now: unknown, forConsumer: ModrnHTMLElement, node: ChildNode | false): ApplyResult {
     const result = changeFromToRaw(previous, now, forConsumer);
@@ -21,6 +22,22 @@ export function changeFromToRaw(previous: unknown, now: unknown, forConsumer: Mo
         return {madeChanges: true};
     }
     if (previous === now) {
+        return {madeChanges: false};
+    }
+    if ((previous as RefInternal)?.__addRef && (now as RefInternal)?.__addRef) {
+        const prevRefs = previous as RefInternal;
+        const nowRefs = now as RefInternal;
+        if (prevRefs.length !== nowRefs.length) {
+            return {madeChanges: true};
+        }
+        const len = prevRefs.length;
+        for (let idx = 0; idx < len; idx++) {
+            const p = prevRefs[idx];
+            const n = nowRefs[idx];
+            if (p !== n) {
+                return {madeChanges: true};
+            }
+        }
         return {madeChanges: false};
     }
     if (previous instanceof HTMLElement && (now as ChildCollection).__childCollection) {

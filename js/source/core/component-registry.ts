@@ -32,7 +32,8 @@ export enum MappingType {
 export enum ExpressionType {
     VariableUsage,
     ComplexExpression,
-    ConstantExpression
+    ConstantExpression,
+    FunctionReferenceExpression
 }
 
 export type BaseExpression = {
@@ -46,6 +47,14 @@ export type VariableUsageExpression = {
 
 export type ComplexExpression = {
     expressionType: ExpressionType.ComplexExpression;
+    usedVariableNames: string[];
+    expression: Expression;
+    originalExpression?: string;
+    compiledExpression: (what: unknown) => unknown;
+} & BaseExpression;
+
+export type FunctionReferenceExpression = {
+    expressionType: ExpressionType.FunctionReferenceExpression;
     usedVariableNames: string[];
     expression: Expression;
     originalExpression?: string;
@@ -167,8 +176,12 @@ export function getComponentInfoOf(registeredComponent: RegisteredComponent<unkn
 
 export type HasConnectedFunction = (self: ModrnHTMLElement, componentInfo: ComponentInfo) => void;
 export type NotifyChildrenChangedFunction = (self: ModrnHTMLElement, componentInfo: ComponentInfo, childFragment: Fragment) => void;
+export type DisconnectedFunction = (self: ModrnHTMLElement, componentInfo: ComponentInfo) => void;
 
-export function register(componentInfo: ComponentInfo, hasConnectedFn: HasConnectedFunction, notifyChildrenChangedFn: NotifyChildrenChangedFunction): CustomElementConstructor {
+export function register(componentInfo: ComponentInfo,
+    hasConnectedFn: HasConnectedFunction,
+    notifyChildrenChangedFn: NotifyChildrenChangedFunction,
+    disconnectedFn: DisconnectedFunction): CustomElementConstructor {
     const tagName = componentInfo.tagName;
     if (componentRegistry[tagName]?.registeredComponent === componentInfo.registeredComponent && componentInfo.registeredComponent.customElementConstructor) {
         return componentInfo.registeredComponent.customElementConstructor;
@@ -181,7 +194,13 @@ export function register(componentInfo: ComponentInfo, hasConnectedFn: HasConnec
         }
 
         connectedCallback() {
-            hasConnectedFn(this, componentInfo);
+            if (this.isConnected) {
+                hasConnectedFn(this, componentInfo);
+            }
+        }
+
+        disconnectedCallback() {
+            disconnectedFn(this, componentInfo);
         }
 
         notifyChildrenChanged(childFragment: Fragment) {
@@ -205,11 +224,11 @@ export function register(componentInfo: ComponentInfo, hasConnectedFn: HasConnec
     return customElementConstructor;
 }
 
-export function registerAll(hasConnectedFn: HasConnectedFunction, notifyChildrenChangedFn: NotifyChildrenChangedFunction): void {
+export function registerAll(hasConnectedFn: HasConnectedFunction, notifyChildrenChangedFn: NotifyChildrenChangedFunction, disconnectedFn: DisconnectedFunction): void {
     const componentsToRegisterCopy = [...componentsToRegister];
     componentsToRegister.splice(0, componentsToRegister.length);
     componentsToRegisterCopy.forEach(componentInfo => {
-        register(componentInfo, hasConnectedFn, notifyChildrenChangedFn);
+        register(componentInfo, hasConnectedFn, notifyChildrenChangedFn, disconnectedFn);
     });
 }
 
@@ -221,6 +240,7 @@ function createEmptyState(self: ModrnHTMLElement): ComponentState {
             previousChild: null,
             customProps: self.initialCustomProps || {},
             state: {},
+            disconnected: [],
             update: self.update.bind(self),
             getOwner: () => self
         };

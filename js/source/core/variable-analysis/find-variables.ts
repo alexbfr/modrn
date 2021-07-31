@@ -4,6 +4,7 @@ import {
     ExpressionType,
     FoundVariables,
     Fragment,
+    FunctionReferenceExpression,
     isRegisteredTagName,
     MappingType,
     ModrnHTMLElement,
@@ -134,6 +135,8 @@ function allVariableReferencesOf(varMapping: VariableMapping): string[] {
         return (varMapping.expression as ComplexExpression).usedVariableNames;
     case ExpressionType.ConstantExpression:
         return [];
+    case ExpressionType.FunctionReferenceExpression:
+        return (varMapping.expression as FunctionReferenceExpression).usedVariableNames;
     default:
         throw new Error(`Unknown expression type for ${varMapping} (${varMapping.expression.expressionType})`);
     }

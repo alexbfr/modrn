@@ -7,6 +7,7 @@ function classSpecialAttributeHandler(): SpecialAttributeHandlerFnResult {
 
     function valueTransformer(elem: HTMLElement, value: unknown): unknown {
         if (!value) {
+            elem.className = "";
             return undefined;
         } if (typeof value === "string") {
             elem.className = value;

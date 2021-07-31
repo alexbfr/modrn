@@ -4,6 +4,7 @@ import {
     ComplexExpression,
     ConstantExpression,
     ExpressionType,
+    FunctionReferenceExpression,
     VariableUsageExpression
 } from "../component-registry";
 import jsep, {
@@ -26,7 +27,23 @@ export function extractExpression(textContent: string): BaseExpression {
             value: textContent
         } as ConstantExpression;
     }
-    const text = textContent.substring(2, textContent.length - 2);
+    const text = textContent.substring(2, textContent.length - 2).trim();
+    if (text.startsWith("&")) {
+        const expression = jsep(text.substring(1));
+        if (expression.type !== "CallExpression") {
+            throw new Error(`Cannot parse ${text} as a function reference`);
+        }
+        const variableNames: string[] = [];
+        collectVariableNames(expression, variableNames);
+        const compiled = compile(expression);
+        return {
+            expressionType: ExpressionType.FunctionReferenceExpression,
+            usedVariableNames: variableNames,
+            expression,
+            compiledExpression: compiled,
+            originalExpression: text
+        } as FunctionReferenceExpression;
+    }
     if (variableNamePattern.test(textContent)) {
         return {expressionType: ExpressionType.VariableUsage, variableName: text} as VariableUsageExpression;
     } else {

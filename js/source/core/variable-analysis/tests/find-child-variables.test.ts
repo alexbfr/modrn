@@ -53,7 +53,6 @@ it("Returns list with two element for two occurrences", () => {
         {type: MappingType.childVariable, indexes: [4], expression: varUsageExpression("variable2") },
     ]);
 });
-
 export function varUsageExpression(variable: string): VariableUsageExpression {
     return {
         expressionType: ExpressionType.VariableUsage,
