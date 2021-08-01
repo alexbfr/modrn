@@ -1,5 +1,6 @@
 import {ComponentInfo, ModrnHTMLElement} from "../component-registry";
 import {unTagify} from "../../util/tagify";
+import {nodeInfo} from "./set-child-value";
 
 const hasWarned: Record<string, true> = {};
 
@@ -39,7 +40,7 @@ export function setAttributeValue(self: ModrnHTMLElement, componentInfo: Compone
             node.setAttribute(attributeName, "" + value);
         }
     } else {
-        if (attributeName in node) {
+        if (!(node instanceof SVGElement) && attributeName in node) {
             (node as unknown as Record<string, unknown>)[attributeName] = value;
         } else if (attributeName === "checked") {
             (node as HTMLInputElement).checked = !!value;
@@ -58,12 +59,12 @@ export function setAttributeValue(self: ModrnHTMLElement, componentInfo: Compone
                 (node as unknown as Record<string, unknown>)[attributeName] = value;
             } else {
                 if (!hasWarned[node.nodeName + "_" + attributeName]) {
-                    console.warn(`Cannot set attribute ${attributeName} on ${node} of ${self}: event handler does not exist`);
+                    console.warn(`Cannot set attribute ${attributeName} on ${nodeInfo(node)} of ${nodeInfo(self)}: event handler does not exist`);
                     hasWarned[node.nodeName + "_" + attributeName] = true;
                 }
             }
         } else {
-            throw new Error(`Cannot set attribute ${attributeName} on ${node} of ${self} to ${value}: cannot map type`);
+            throw new Error(`Cannot set attribute ${attributeName} on ${nodeInfo(node)} of ${nodeInfo(self)} to ${value}: cannot map type`);
         }
     }
 }

@@ -1,8 +1,8 @@
-import {makeComponent, NoProps} from "../../component-declaration";
-import {registerAnonymous} from "../../tests/anon";
-import {TestUtils} from "../../../test-utils/test-utils";
-import {getRenderQueueLength, renderElements, requestRender} from "../../render-queue";
-import {ModrnHTMLElement} from "../../component-registry";
+import {makeComponent, NoProps} from "../../core/component-declaration";
+import {registerAnonymous} from "../../core/tests/anon";
+import {TestUtils} from "../../test-utils/test-utils";
+import {getRenderQueueLength, renderElements, requestRender} from "../../core/render-queue";
+import {ModrnHTMLElement} from "../../core/component-registry";
 
 it("Renders a simple for loop with true if condition", async () => {
 

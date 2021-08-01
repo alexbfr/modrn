@@ -9,14 +9,29 @@ it("Finds single child variable", () => {
     const actual = findVariables(elem);
 
     expect(actual.variables).toEqual({
-        "test": [
-            {
-                type: MappingType.childVariable,
-                indexes: [0],
-                expression: varUsageExpression("test")
+        all: {
+            "test": [
+                {
+                    type: MappingType.childVariable,
+                    indexes: [0],
+                    expression: varUsageExpression("test")
+                }
+            ],
+            __constants: []
+        },
+        sorted: [{
+            indexes: [0],
+            mappings: {
+                "test": [
+                    {
+                        type: MappingType.childVariable,
+                        indexes: [0],
+                        expression: varUsageExpression("test")
+                    }
+                ],
+                __constants: []
             }
-        ],
-        __constants: []
+        }]
     } as VariableMappings);
 
     expect(elem.innerHTML).toBe("<div></div>");
@@ -30,14 +45,29 @@ it("Finds single child variable and splits prologue", () => {
     const actual = findVariables(elem);
 
     expect(actual.variables).toEqual({
-        "test": [
-            {
-                type: MappingType.childVariable,
-                indexes: [0, 1],
-                expression: varUsageExpression("test")
+        all: {
+            "test": [
+                {
+                    type: MappingType.childVariable,
+                    indexes: [0, 1],
+                    expression: varUsageExpression("test")
+                }
+            ],
+            __constants: []
+        },
+        sorted: [{
+            indexes: [0, 1],
+            mappings: {
+                "test": [
+                    {
+                        type: MappingType.childVariable,
+                        indexes: [0, 1],
+                        expression: varUsageExpression("test")
+                    }
+                ],
+                __constants: []
             }
-        ],
-        __constants: []
+        }]
     } as VariableMappings);
 
     expect(elem.innerHTML).toBe("<div>prologue </div>");
@@ -51,16 +81,33 @@ it("Finds onclick attribute", () => {
     const actual = findVariables(elem);
 
     expect(actual.variables).toEqual({
-        "clicked": [
-            {
-                type: MappingType.attribute,
-                attributeName: "onclick",
-                indexes: [0, 1],
-                hidden: false,
-                expression: varUsageExpression("clicked")
-            } as AttributeVariable
-        ],
-        __constants: []
+        all: {
+            "clicked": [
+                {
+                    type: MappingType.attribute,
+                    attributeName: "onclick",
+                    indexes: [0, 1],
+                    hidden: false,
+                    expression: varUsageExpression("clicked")
+                } as AttributeVariable
+            ],
+            __constants: []
+        },
+        sorted: [{
+            indexes: [0, 1],
+            mappings: {
+                "clicked": [
+                    {
+                        type: MappingType.attribute,
+                        attributeName: "onclick",
+                        indexes: [0, 1],
+                        hidden: false,
+                        expression: varUsageExpression("clicked")
+                    } as AttributeVariable
+                ],
+                __constants: []
+            }
+        }]
     } as VariableMappings);
 
     expect(elem.innerHTML).toBe(`<div>Foo bar <button onclick="">Button</button></div>`);

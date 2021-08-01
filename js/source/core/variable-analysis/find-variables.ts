@@ -10,7 +10,7 @@ import {
     ModrnHTMLElement,
     SpecialAttributeVariable,
     VariableMapping,
-    VariableMappings,
+    VariableMappings, VariablesByNodeIndex,
     VariableUsageExpression
 } from "../component-registry";
 import {splitTextContentAtVariables} from "./split-text-content-at-variables";
@@ -19,6 +19,36 @@ import {findAttributeVariables} from "./find-attribute-variables";
 import {findAttributeRefVariables} from "./find-attribute-ref-variables";
 import {findSpecialAttributes} from "./find-special-attributes";
 import {tagify} from "../../util/tagify";
+import {addBinaryOp, compile, lazy} from "../../util/expression-eval";
+import jsep from "../../jsep/jsep";
+import Expression = jsep.Expression;
+import Identifier = jsep.Identifier;
+import Compound = jsep.Compound;
+
+function evalLambda(a: any, b: any, nodeA: Expression, nodeB: Expression, ctx: any): any {
+    if (nodeA.type !== "Identifier" && nodeA.type !== "Compound") {
+        throw new Error("Left-hand side must be an identifier or argument list");
+    }
+
+    const names = nodeA.type === "Identifier" ? [(nodeA as Identifier).name] : ((nodeA as Compound).body.map(node => {
+        if (node.type !== "Identifier") {
+            throw new Error("Argument list must only consist of identifiers");
+        }
+        return (node as Identifier).name;
+    }));
+
+    const compiled = compile(nodeB);
+    return (...params: any[]) => {
+        const subContext = {...ctx};
+        for (let idx = 0; idx < names.length; ++idx) {
+            subContext[names[idx]] = (idx < params.length) ? params[idx] : undefined;
+        }
+        return compiled(subContext);
+    };
+}
+(evalLambda as lazy).lazy = true;
+
+addBinaryOp("=>", 20, evalLambda);
 
 function precedenceComparer(s1: SpecialAttributeVariable, s2: SpecialAttributeVariable): number {
     return s1.specialAttributeRegistration.precedence - s2.specialAttributeRegistration.precedence;
@@ -53,7 +83,7 @@ function analyzeWrappedFragment(
             variableDefinitions: variableResult.variables
         };
         if (subFragment.variableDefinitions) {
-            const subVariables = Object.keys(subFragment.variableDefinitions)
+            const subVariables = Object.keys(subFragment.variableDefinitions.all)
                 .map(variableName => ({
                     indexes,
                     attributeName: tagify(variableName),
@@ -80,13 +110,14 @@ function analyzeWrappedFragment(
     }
     specialAttributes.splice(0, 1);
     result.push({
-        type: MappingType.attribute,
+        type: MappingType.specialAttribute,
         hidden: false,
         indexes,
-        attributeName: specialAttribute.specialAttributeRegistration.attributeName,
+        attributeName: specialAttributeHandlerResult.remapAttributeName ? specialAttributeHandlerResult.remapAttributeName(specialAttribute.attributeName) : specialAttribute.attributeName,
         expression: specialAttribute.expression,
+        specialAttributeRegistration: specialAttribute.specialAttributeRegistration,
         valueTransformer: specialAttributeHandlerResult.valueTransformer
-    } as AttributeVariable);
+    } as SpecialAttributeVariable);
     return analyzeWrappedFragment(rootElementProvided, indexes, specialAttributes, result);
 }
 
@@ -143,9 +174,15 @@ function allVariableReferencesOf(varMapping: VariableMapping): string[] {
 }
 
 export function findVariables(rootElement: HTMLElement): FoundVariables {
-    const result: VariableMappings = {
+    const allMappings: {
+        [variableName: string]: VariableMapping[],
+        __constants: VariableMapping[]
+    } = {
         __constants: []
     };
+    const result: {
+        [indexString: string]: VariablesByNodeIndex
+    } = {};
 
     splitTextContentAtVariables(rootElement);
     const specialAttributes = findSpecialAttributes(rootElement, []);
@@ -163,17 +200,30 @@ export function findVariables(rootElement: HTMLElement): FoundVariables {
     }
 
     vars.forEach(varMapping => {
+        const indexesString = varMapping.indexes.join(",");
+        const where = result[indexesString] || (result[indexesString] = {
+            indexes: varMapping.indexes,
+            mappings: {__constants: []}
+        });
         if (varMapping.expression.expressionType === ExpressionType.ConstantExpression) {
-            result.__constants.push(varMapping);
+            where.mappings.__constants.push(varMapping);
+            allMappings.__constants.push(varMapping);
         }
         allVariableReferencesOf(varMapping).forEach(variableName => {
-            const list = result[variableName] || (result[variableName] = []);
+            const list = where.mappings[variableName] || (where.mappings[variableName] = []);
             list.push(varMapping);
+            const allList = allMappings[variableName] || (allMappings[variableName] = []);
+            allList.push(varMapping);
         });
     });
 
     return {
-        variables: result,
+        variables: {
+            sorted: Object.entries(result)
+                .sort(([name1], [name2]) => name1.localeCompare(name2))
+                .map(([name, vars]) => vars),
+            all: allMappings
+        },
         newRootElement: newRootElement
     };
 }

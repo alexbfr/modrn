@@ -1,8 +1,8 @@
-import {clearRenderQueue} from "../../render-queue";
-import {makeComponent, NoProps} from "../../component-declaration";
-import {registerAnonymous} from "../../tests/anon";
-import {TestUtils} from "../../../test-utils/test-utils";
-import {nextId} from "../../../util/next-id";
+import {clearRenderQueue} from "../../core/render-queue";
+import {makeComponent, NoProps} from "../../core/component-declaration";
+import {registerAnonymous} from "../../core/tests/anon";
+import {TestUtils} from "../../test-utils/test-utils";
+import {nextId} from "../../util/next-id";
 
 beforeEach(clearRenderQueue);
 

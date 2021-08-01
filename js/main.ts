@@ -1,13 +1,12 @@
-import "./sample";
 import {start} from "./source/core/modrn";
-import {myComponentModule} from "./sample";
 import {markdownModule} from "./markdown";
 import {treeViewModule} from "./treeview";
 import {elasticHeaderModule} from "./elastic-header";
 import {githubCommitsModule} from "./github-commits";
 import {todoMvcModule} from "./todo-mvc";
+import {polygraphModule} from "./polygraph";
 
-start(myComponentModule, markdownModule, treeViewModule, elasticHeaderModule, githubCommitsModule, todoMvcModule);
+start(markdownModule, treeViewModule, elasticHeaderModule, githubCommitsModule, todoMvcModule, polygraphModule);
 
 
 // window.setInterval(() => {

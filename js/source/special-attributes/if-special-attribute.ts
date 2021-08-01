@@ -1,9 +1,9 @@
-import {registerSpecialAttribute} from "../variable-analysis/register-special-attribute";
-import {ModrnHTMLElement, SpecialAttributeHandlerFnResult} from "../component-registry";
-import {m, makeComponent, mBool} from "../component-declaration";
-import {useChild} from "../templated-children-hooks";
-import {varsWithOptions} from "../variable-substition/substitute-variables";
-import {only} from "../modrn-base";
+import {registerSpecialAttribute} from "../core/variable-analysis/register-special-attribute";
+import {ModrnHTMLElement, SpecialAttributeHandlerFnResult} from "../core/component-registry";
+import {m, makeComponent, mBool} from "../core/component-declaration";
+import {useChild} from "../core/templated-children-hooks";
+import {varsWithOptions} from "../core/variable-substition/substitute-variables";
+import {only} from "../core/modrn-base";
 
 const IF_PRECEDENCE = -2;
 

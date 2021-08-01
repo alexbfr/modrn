@@ -1,8 +1,8 @@
-import {registerSpecialAttribute} from "../variable-analysis/register-special-attribute";
-import {SpecialAttributeHandlerFnResult} from "../component-registry";
-import {createState} from "../../util/state";
-import {useState} from "../state-hooks";
-import {useDisconnect} from "../event-hooks";
+import {registerSpecialAttribute} from "../core/variable-analysis/register-special-attribute";
+import {SpecialAttributeHandlerFnResult} from "../core/component-registry";
+import {createState} from "../util/state";
+import {useState} from "../core/state-hooks";
+import {useDisconnect} from "../core/event-hooks";
 
 export const autofocusSpecialAttributeRegistration = registerSpecialAttribute("m-autofocus", autofocusSpecialAttributeHandler, 1000000).hidden = true;
 

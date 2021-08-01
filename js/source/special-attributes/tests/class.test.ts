@@ -1,9 +1,9 @@
-import {clearRenderQueue, renderElements, requestRender} from "../../render-queue";
-import {makeComponent, NoProps} from "../../component-declaration";
-import {registerAnonymous} from "../../tests/anon";
-import {TestUtils} from "../../../test-utils/test-utils";
+import {clearRenderQueue, renderElements, requestRender} from "../../core/render-queue";
+import {makeComponent, NoProps} from "../../core/component-declaration";
+import {registerAnonymous} from "../../core/tests/anon";
+import {TestUtils} from "../../test-utils/test-utils";
 import {classSpecialAttributeRegistration} from "../class-special-attribute";
-import {ModrnHTMLElement} from "../../component-registry";
+import {ModrnHTMLElement} from "../../core/component-registry";
 
 classSpecialAttributeRegistration;
 

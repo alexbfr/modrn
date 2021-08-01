@@ -1,8 +1,8 @@
-import {clearRenderQueue, getRenderQueueLength, renderElements} from "../../render-queue";
-import {makeComponent, NoProps} from "../../component-declaration";
-import {registerAnonymous} from "../../tests/anon";
-import {TestUtils} from "../../../test-utils/test-utils";
-import {createRef, Ref, useRef} from "../../ref-hooks";
+import {clearRenderQueue, getRenderQueueLength, renderElements} from "../../core/render-queue";
+import {makeComponent, NoProps} from "../../core/component-declaration";
+import {registerAnonymous} from "../../core/tests/anon";
+import {TestUtils} from "../../test-utils/test-utils";
+import {createRef, Ref, useRef} from "../../core/ref-hooks";
 
 beforeEach(clearRenderQueue);
 

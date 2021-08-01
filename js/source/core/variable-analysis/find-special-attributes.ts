@@ -26,14 +26,17 @@ export function findSpecialAttributes(rootElement: HTMLElement, indexes: number[
     const attributesLength = attributes?.length || 0;
     if (attributes && attributes?.length > 0) {
         for (let attIdx = 0; attIdx < attributesLength; ++attIdx) {
-            const {name, value} = attributes.item(attIdx) || {name: null, value: null};
-            if (name && value && specialAttributeRegistry[name]) {
+            const {name: fullName, value} = attributes.item(attIdx) || {name: null, value: null};
+            const indexOfColon = (fullName || "").indexOf(":");
+            const name = (indexOfColon >= 0) ? fullName?.substring(0, indexOfColon) : fullName;
+            if (name && fullName && value && specialAttributeRegistry[name]) {
                 const expression = extractExpression(value);
                 result.push({
                     type: MappingType.specialAttribute,
                     indexes,
                     specialAttributeRegistration: specialAttributeRegistry[name],
                     expression,
+                    attributeName: fullName,
                     hidden: specialAttributeRegistry[name].hidden
                 });
             }

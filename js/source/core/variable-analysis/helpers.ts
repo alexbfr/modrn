@@ -7,18 +7,17 @@ import {
     FunctionReferenceExpression,
     VariableUsageExpression
 } from "../component-registry";
-import jsep, {
-    ArrayExpression,
-    BinaryExpression,
-    CallExpression,
-    Compound,
-    ConditionalExpression,
-    Identifier,
-    LogicalExpression,
-    MemberExpression,
-    UnaryExpression
-} from "jsep";
 import {compile} from "../../util/expression-eval";
+import jsep, {Jsep} from "../../jsep/jsep";
+import ArrayExpression = jsep.ArrayExpression;
+import BinaryExpression = jsep.BinaryExpression;
+import CallExpression = jsep.CallExpression;
+import Compound = jsep.Compound;
+import Identifier = jsep.Identifier;
+import MemberExpression = jsep.MemberExpression;
+import UnaryExpression = jsep.UnaryExpression;
+import LogicalExpression = jsep.LogicalExpression;
+import ConditionalExpression = jsep.ConditionalExpression;
 
 export function extractExpression(textContent: string): BaseExpression {
     if (!textContent.startsWith("{{")) {
@@ -29,7 +28,7 @@ export function extractExpression(textContent: string): BaseExpression {
     }
     const text = textContent.substring(2, textContent.length - 2).trim();
     if (text.startsWith("&")) {
-        const expression = jsep(text.substring(1));
+        const expression = Jsep.parse(text.substring(1));
         if (expression.type !== "CallExpression") {
             throw new Error(`Cannot parse ${text} as a function reference`);
         }
@@ -41,14 +40,14 @@ export function extractExpression(textContent: string): BaseExpression {
             usedVariableNames: variableNames,
             expression,
             compiledExpression: compiled,
-            originalExpression: text
+            originalExpression: "&" + text
         } as FunctionReferenceExpression;
     }
     if (variableNamePattern.test(textContent)) {
         return {expressionType: ExpressionType.VariableUsage, variableName: text} as VariableUsageExpression;
     } else {
         const variableNames: string[] = [];
-        const expression = jsep(text);
+        const expression = Jsep.parse(text);
         collectVariableNames(expression, variableNames);
         const compiled = compile(expression);
         if (variableNames.length === 0) {

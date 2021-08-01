@@ -13,6 +13,9 @@ export function findChildVariables(rootElement: HTMLElement, indexes: number[]):
         }
         const textContent = childNode.textContent;
         if (textContent && textContent.startsWith("{{") && textContent.endsWith("}}")) {
+            if (rootElement instanceof SVGElement && (rootElement.textContent?.indexOf("axisLabels") || -1) >= 0) {
+                debugger;
+            }
             childNode.textContent = "";
             const newIndexes = [...indexes, idx];
             const expression = extractExpression(textContent);

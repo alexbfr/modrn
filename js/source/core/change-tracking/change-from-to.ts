@@ -1,4 +1,4 @@
-import {ModrnHTMLElement} from "../component-registry";
+import {BoundFn, ModrnHTMLElement} from "../component-registry";
 import {PureStateFunction} from "../../util/state";
 import {ApplyResult, changes, clean} from "./change-types";
 import {requestRender} from "../render-queue";
@@ -89,7 +89,10 @@ function getStateId(what: unknown) {
     return undefined;
 }
 
-function hasFunctionChanged(previous: unknown, valueToSet: unknown) {
+export function hasFunctionChanged(previous: unknown, valueToSet: unknown) {
+    if ((valueToSet as BoundFn<never, never>).dynamic) {
+        return true;
+    }
     const previousId = getStateId(previous);
     const currentId = getStateId(valueToSet);
     if (typeof previous === "function" && typeof valueToSet === "function" && previousId && currentId) {

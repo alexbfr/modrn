@@ -3,7 +3,8 @@ import {tagify} from "../util/tagify";
 import {logDiagnostic} from "../util/logging";
 import {Stateful,} from "../util/state";
 import {requestRender} from "./render-queue";
-import {Expression} from "jsep";
+import jsep from "../jsep/jsep";
+import Expression = jsep.Expression;
 
 export interface ComponentState extends Stateful {
     addedChildElements: WeakSet<ChildNode>;
@@ -13,6 +14,7 @@ export interface ComponentState extends Stateful {
 }
 
 export abstract class ModrnHTMLElement extends HTMLElement {
+    svgRoot?: SVGElement;
     componentInfo?: ComponentInfo;
     state?: ComponentState;
     initialPreviousChild?: Fragment;
@@ -49,7 +51,7 @@ export type ComplexExpression = {
     expressionType: ExpressionType.ComplexExpression;
     usedVariableNames: string[];
     expression: Expression;
-    originalExpression?: string;
+    originalExpression: string;
     compiledExpression: (what: unknown) => unknown;
 } & BaseExpression;
 
@@ -57,7 +59,7 @@ export type FunctionReferenceExpression = {
     expressionType: ExpressionType.FunctionReferenceExpression;
     usedVariableNames: string[];
     expression: Expression;
-    originalExpression?: string;
+    originalExpression: string;
     compiledExpression: (what: unknown) => unknown;
 } & BaseExpression;
 
@@ -72,7 +74,7 @@ export type VariableMappingBase<T extends MappingType> = {
     indexes: number[];
     type: T;
     expression: BaseExpression;
-    valueTransformer?: ValueTransformerFn;
+    valueTransformer?: ValueTransformerFn | SpecialAttributeValueTransformerFn;
 }
 
 export type VariableMapping = VariableMappingBase<MappingType>;
@@ -88,13 +90,25 @@ export type AttributeRefVariable = VariableMappingBase<MappingType.attributeRef>
 
 export type SpecialAttributeVariable = {
     specialAttributeRegistration: SpecialAttributeRegistration;
+    attributeName: string;
     hidden?: boolean;
 } & VariableMappingBase<MappingType.specialAttribute>;
 
+export type VariablesByNodeIndex = {
+    indexes: number[],
+    mappings: {
+        [variableName: string]: VariableMapping[],
+        __constants: VariableMapping[]
+    }
+};
+
 export type VariableMappings = {
-    [variableName: string]: VariableMapping[];
-    __constants: VariableMapping[];
-}
+    all: {
+            [variableName: string]: VariableMapping[],
+            __constants: VariableMapping[]
+        },
+    sorted: VariablesByNodeIndex[];
+};
 
 export type FoundVariables = {
     variables: VariableMappings;
@@ -106,14 +120,18 @@ export type Fragment = {
     variableDefinitions: VariableMappings | null;
 }
 
+export type SpecialAttributeValueTransformerFn = (element: HTMLElement, valuesBySlot: Record<string, unknown>) => unknown;
+
 export type SpecialAttributeHandlerFnResult = {
     transformedElement?: HTMLElement;
-    valueTransformer?: (element: HTMLElement, value: unknown) => unknown;
+    valueTransformer?: SpecialAttributeValueTransformerFn;
+    remapAttributeName?: (attributeNameProvided: string) => string;
 }
 
 export type SpecialAttributeHandlerFn = (elem: HTMLElement) => SpecialAttributeHandlerFnResult;
 
 export type SpecialAttributeRegistration = {
+    id: string;
     precedence: number;
     attributeName: string;
     handler: SpecialAttributeHandlerFn;
@@ -273,6 +291,12 @@ export function withState<T, R>(state: Stateful, fn: (...params: T[]) => R, ...p
     }
 }
 
+export function dynamic<T, R>(fn: (...params: T[]) => R, ...params: T[]): (...params: T[]) => R { // eslint-disable-line
+    const result = bindToStateContext(fn) as BoundFn<T, R>;
+    result.dynamic = true;
+    return result;
+}
+
 export function bindToStateContext<T, R>(fn: (...params: T[]) => R, ...params: T[]): (...params: T[]) => R { // eslint-disable-line
     if ("bound" in fn) {
         return fn;
@@ -281,7 +305,13 @@ export function bindToStateContext<T, R>(fn: (...params: T[]) => R, ...params: T
         throw new Error("Cannot bind to current state context since none exists");
     }
     const boundCurrentStateContext = currentStateContext;
-    const result = (...params: any[]) => withState(boundCurrentStateContext, fn, ...params); // eslint-disable-line
+    const result = ((...params: any[]) => withState(boundCurrentStateContext, fn, ...params)) as BoundFn<T, R>; // eslint-disable-line
     result.bound = true;
+    result.dynamic = false;
     return result;
+}
+
+export type BoundFn<T, R> = ((...params: T[]) => R) & {
+    bound: true;
+    dynamic: boolean;
 }

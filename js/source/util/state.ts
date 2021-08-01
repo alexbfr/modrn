@@ -42,6 +42,13 @@ function clone<T>(initial: T): T {
     return initial;
 }
 
+export function getOrCreateAttachedState<T>(prefix: string, element: Element): StateToken<T> {
+    if (!element.id) {
+        element.id = nextId();
+    }
+    return {id: `${prefix || ""}#${element.id}`, dummy: null as unknown as T};
+}
+
 export function useStateInternal<T, K extends StateToken<T>>(token: K, context: Stateful, initial: T | (() => T)): State<T> {
 
     const currentState = context.state[token.id] as T;

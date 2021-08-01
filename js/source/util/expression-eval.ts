@@ -1,6 +1,9 @@
 // @ts-no-check
 /* eslint-disable */
-import jsep, {Compound} from "jsep";
+
+import jsep, {Jsep} from "../jsep/jsep";
+import Compound = jsep.Compound;
+import Expression = jsep.Expression;
 
 /**
  * Evaluation code from JSEP project, under MIT License.
@@ -32,7 +35,7 @@ const DEFAULT_PRECEDENCE: Record<string, number> = {
     "%": 10
 };
 
-const binops: Record<string, ((a: any, b: any) => any)> = {
+const binops: Record<string, ((a: any, b: any, nodeLeft: jsep.Expression, nodeRight: jsep.Expression, ctx: any) => any)> = {
     "||": function (a: any, b: any) { return a || b; },
     "&&": function (a: any, b: any) { return a && b; },
     "|": function (a: any, b: any) { return a | b; },
@@ -65,7 +68,10 @@ const unops: Record<string, ((a: any) => any)> = {
 
 declare type operand = number | string;
 declare type unaryCallback = (a: operand) => operand;
-declare type binaryCallback = (a: operand, b: operand) => operand;
+declare type binaryCallback = (a: operand, b: operand, nodeA: jsep.Expression, nodeB: jsep.Expression, context: any) => operand;
+export declare type lazy = {
+    lazy?: true;
+}
 
 type AnyExpression = jsep.ArrayExpression
     | jsep.BinaryExpression
@@ -124,9 +130,13 @@ function evaluate(_node: jsep.Expression, context: object): any {
     case "ArrayExpression":
         return evaluateArray(node.elements, context);
 
-    case "BinaryExpression":
-        return binops[node.operator as keyof typeof binops](evaluate(node.left, context), evaluate(node.right, context));
-
+    case "BinaryExpression": {
+        const binop = binops[node.operator as keyof typeof binops];
+        if ((binop as lazy).lazy) {
+            return binop(null, null, node.left, node.right, context);
+        }
+        return binop(evaluate(node.left, context), evaluate(node.right, context), node.left, node.right, context);
+    }
     case "CallExpression":
         let caller, fn, assign;
         if (node.callee.type === "MemberExpression") {
@@ -156,7 +166,7 @@ function evaluate(_node: jsep.Expression, context: object): any {
         } else if (node.operator === "&&") {
             return evaluate(node.left, context) && evaluate(node.right, context);
         }
-        return binops[node.operator as keyof typeof binops](evaluate(node.left, context), evaluate(node.right, context));
+        return binops[node.operator as keyof typeof binops](evaluate(node.left, context), evaluate(node.right, context), node.left, node.right, context);
 
     case "MemberExpression":
         return evaluateMember(node, context)[1];
@@ -194,7 +204,7 @@ async function evalAsync(_node: jsep.Expression, context: object): Promise<any> 
             evalAsync(node.left, context),
             evalAsync(node.right, context)
         ]);
-        return binops[node.operator as keyof typeof binops](left, right);
+        return binops[node.operator as keyof typeof binops](left, right, node.left, node.right, context);
     }
 
     case "CallExpression": {
@@ -244,7 +254,7 @@ async function evalAsync(_node: jsep.Expression, context: object): Promise<any> 
             evalAsync(node.right, context)
         ]);
 
-        return binops[node.operator as keyof typeof binops](left, right);
+        return binops[node.operator as keyof typeof binops](left, right, node.left, node.right, context);
     }
 
     case "MemberExpression":
@@ -266,22 +276,22 @@ function compile(expression: jsep.Expression): (context: object) => any {
 }
 
 function compileAsync(expression: string | jsep.Expression): (context: object) => Promise<any> {
-    return evalAsync.bind(null, jsep(expression));
+    return evalAsync.bind(null, (expression as Expression)?.type ? expression : Jsep.parse(expression as string));
 }
 
 // Added functions to inject Custom Unary Operators (and override existing ones)
 function addUnaryOp(operator: string, _function: unaryCallback): void {
-    jsep.addUnaryOp(operator);
+    Jsep.addUnaryOp(operator);
     unops[operator] = _function;
 }
 
 // Added functions to inject Custom Binary Operators (and override existing ones)
 function addBinaryOp(operator: string, precedence_or_fn: number | binaryCallback, _function: binaryCallback): void {
     if (_function) {
-        jsep.addBinaryOp(operator, precedence_or_fn as number);
+        Jsep.addBinaryOp(operator, precedence_or_fn as number);
         binops[operator as keyof typeof binops] = _function;
     } else {
-        jsep.addBinaryOp(operator, DEFAULT_PRECEDENCE[operator] || 1);
+        Jsep.addBinaryOp(operator, DEFAULT_PRECEDENCE[operator] || 1);
         binops[operator as keyof typeof binops] = precedence_or_fn as ((a: any, b: any) => any);
     }
 }
@@ -295,3 +305,4 @@ export {
     addUnaryOp,
     addBinaryOp
 };
+

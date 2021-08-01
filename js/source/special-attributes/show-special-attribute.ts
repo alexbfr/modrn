@@ -1,12 +1,12 @@
-import {registerSpecialAttribute} from "../variable-analysis/register-special-attribute";
-import {SpecialAttributeHandlerFnResult} from "../component-registry";
+import {registerSpecialAttribute} from "../core/variable-analysis/register-special-attribute";
+import {SpecialAttributeHandlerFnResult} from "../core/component-registry";
 
 export const showSpecialAttributeRegistration = registerSpecialAttribute("m-show", showSpecialAttributeHandler).hidden = true;
 
 function showSpecialAttributeHandler(): SpecialAttributeHandlerFnResult {
 
-    function valueTransformer(elem: HTMLElement, value: unknown): unknown {
-        if (value === "false" || !value) {
+    function valueTransformer(elem: HTMLElement, value: Record<string, unknown>): unknown {
+        if (value["m-show"] === "false" || !value["m-show"]) {
             elem.style.display = "none";
         } else {
             elem.style.display = "";

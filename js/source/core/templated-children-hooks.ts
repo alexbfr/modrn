@@ -150,6 +150,20 @@ export function useModrnChild<T, R>(childStateToken: ChildrenStateToken, compone
     });
 }
 
+export function useModrnChildren<T, R>(childStateToken: ChildrenStateToken, component: RegisteredComponent<T, R>, props: (T & Record<string, unknown>)[]): ChildCollection {
+    const fragment = getComponentInfoOf(component)?.content;
+    if (!props || !fragment) {
+        return useTemplatedChildren(childStateToken, [], () => ({key: "__1", props: {}}));
+    }
+    return useTemplatedChildren(childStateToken, props, (data: Record<string, unknown>, index: number) => {
+        return {
+            key: "" + index,
+            props: data,
+            template: fragment
+        };
+    });
+}
+
 const useChildrenState = createChildrenState();
 
 export function useChildren<T>(iterateOver: T[], basicChildProps: Record<string, unknown>, itemAs = "item", indexAs="index", childStateToken = useChildrenState): ChildCollection {

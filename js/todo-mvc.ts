@@ -40,7 +40,7 @@ const headerComponent = makeComponent(headerComponentProps, ({addTodo}) => {
           m-autofocus="true"
           autocomplete="off"
           placeholder="What needs to be done?"
-          value="{{newTodo}}"
+          value="{{newTodo}}" m-onkeyup:enter=""
           onchange="{{setText}}"
           onkeyup="{{onKey}}"
         />

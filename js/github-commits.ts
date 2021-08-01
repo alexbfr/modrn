@@ -1,6 +1,8 @@
 import {declare, makeComponent, NoProps} from "./source/core/component-declaration";
 import {createState} from "./source/util/state";
 import {purify, useState} from "./source/core/state-hooks";
+import {yearMonthDay} from "./source/filters/date-time-filter";
+import {jsonFetch} from "./source/util/fetch";
 
 const apiURL = "https://api.github.com/repos/vuejs/vue/commits?per_page=5&sha=";
 
@@ -37,8 +39,7 @@ const githubCommits = makeComponent(NoProps, () => {
     const setCommits = purify(githubState, (state, commits: Commit[]) => ({commits}));
 
     async function fetchData(branch: string) {
-        await fetch(`${apiURL}${branch}`)
-            .then(result => result.json())
+        await jsonFetch(`${apiURL}${branch}`)
             .then(data => {
                 setCommits(data as Commit[]);
             });
@@ -68,10 +69,11 @@ const githubCommits = makeComponent(NoProps, () => {
             <a href="{{record.html_url}}" target="_blank" class="commit">{{ record.sha.slice(0, 7) }}</a>
             - <span class="message">{{ record.commit.message }}</span><br/>
             by <span class="author"><a href="{{record.author.html_url}}" target="_blank">{{ record.commit.author.name }}</a></span> 
-            at <span class="date">{{ record.commit.author.date | formatDate }}</span>
+            at <span class="date">{{ yearMonthDay(record.commit.author.date) }}</span>
         </li>
     </ul>
 `)
+    .withFilters({yearMonthDay})
     .register();
 
 export const githubCommitsModule = declare({githubCommits});

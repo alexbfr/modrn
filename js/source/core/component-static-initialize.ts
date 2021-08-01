@@ -16,10 +16,13 @@ export function componentStaticInitialize(componentName: string, component: Regi
 
     logDiagnostic(`Statically initializing ${componentName}`);
     const tagName = tagify(componentName);
+    if (component.svgTemplate) {
+        debugger;
+    }
     const rootElement = document.createElement("div", {is: tagName});
 
     rootElement.style.display = "contents";
-    rootElement.innerHTML = component.htmlTemplate;
+    rootElement.innerHTML = component.htmlTemplate || component.svgTemplate || "";
 
     const fragment = analyzeToFragment(rootElement);
     logDiagnostic(`Element ${componentName} analyzed to`, fragment.variableDefinitions);

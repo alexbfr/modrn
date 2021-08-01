@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import {registerModule} from "./component-registry";
 import {ChildCollection} from "./templated-children-hooks";
 
@@ -11,7 +10,7 @@ export type ElementRefs = {
     refs: HTMLElement[];
 }
 
-export type Container = { "__typed": true };
+export type Container = { "__typed"?: true };
 
 export function mBool(): boolean {
     return false as boolean;
@@ -60,7 +59,11 @@ export function m<T>(v: T): T & Container {
 export type UnregisteredComponentBase = {register: () => void};
 
 export type UnregisteredComponentHtml = {
-    html: <T extends UnregisteredComponentHtml & UnregisteredComponentBase>(this: T, html: string) => Omit<T, "html">
+    html: <T extends UnregisteredComponentHtml & UnregisteredComponentBase>(this: T, html: string) => Omit<Omit<T, "svg">, "html">
+}
+
+export type UnregisteredComponentSvg = {
+    svg: <T extends UnregisteredComponentHtml & UnregisteredComponentBase>(this: T, html: string) => Omit<Omit<T, "html">, "svg">
 }
 
 export type UnregisteredComponentTransparent = {
@@ -71,11 +74,19 @@ export type UnregisteredComponentDynamicChildren = {
     dynamicChildren: <T extends UnregisteredComponentDynamicChildren & UnregisteredComponentBase>(this: T) => Omit<T, "dynamicChildren">
 }
 
+export type UnregisteredComponentFilters = {
+    withFilters: <T extends UnregisteredComponentFilters & UnregisteredComponentBase>(this: T, filters: Filters) => Omit<T, "withFilters">
+}
+
 export type UnregisteredComponent<T, R> = {
     register: () => RegisteredComponent<T, R>;
-} & UnregisteredComponentHtml & UnregisteredComponentTransparent & UnregisteredComponentDynamicChildren;
+} & UnregisteredComponentHtml & UnregisteredComponentSvg & UnregisteredComponentTransparent & UnregisteredComponentDynamicChildren & UnregisteredComponentFilters;
 
 export type AllProps = {allProps: () => Record<string, unknown>};
+
+export type Filters = {
+    [filterName: string]: (val: unknown) => unknown;
+}
 
 export type RegisteredComponent<T, R> = {
     transparent: boolean;
@@ -83,7 +94,9 @@ export type RegisteredComponent<T, R> = {
     customElementConstructor?: CustomElementConstructor;
     propTemplate: T;
     renderFunction: (props: T & AllProps) => R | null;
-    htmlTemplate: string;
+    filters: Filters;
+    htmlTemplate: string | null;
+    svgTemplate: string | null;
 }
 
 export type Module<M, K extends keyof M> = {
@@ -113,14 +126,21 @@ export const NoProps = m({});
 
 export function makeComponent<T, R>(propsType?: Container & T, renderFn?: (props: T & AllProps) => R | null): UnregisteredComponent<T, R> {
 
-    const result: UnregisteredComponent<T, R> = {html, register, transparent, dynamicChildren};
-    let htmlTemplate: string;
+    const result: UnregisteredComponent<T, R> = {html, svg, register, transparent, dynamicChildren, withFilters};
+    let htmlTemplate: string | null;
+    let svgTemplate: string | null;
     let isTransparent = false;
     let hasDynamicChildren = false;
+    let filters: Filters = {};
 
-    function html<T extends UnregisteredComponentHtml & UnregisteredComponentBase>(this: T, htmlText: string): Omit<T, "html"> {
+    function html<T extends UnregisteredComponentHtml & UnregisteredComponentBase>(this: T, htmlText: string): Omit<Omit<T, "svg">, "html"> {
         htmlTemplate = htmlText;
         return result as UnregisteredComponentBase as Omit<T, "html">;
+    }
+
+    function svg<T extends UnregisteredComponentHtml & UnregisteredComponentBase>(this: T, svgText: string): Omit<Omit<T, "html">, "svg"> {
+        svgTemplate = svgText;
+        return result as UnregisteredComponentBase as Omit<T, "svg">;
     }
 
     function transparent<T extends UnregisteredComponentTransparent & UnregisteredComponentBase>(this: T): Omit<T, "transparent"> {
@@ -133,13 +153,20 @@ export function makeComponent<T, R>(propsType?: Container & T, renderFn?: (props
         return result as UnregisteredComponentBase as Omit<T, "dynamicChildren">;
     }
 
+    function withFilters<T extends UnregisteredComponentFilters & UnregisteredComponentBase>(this: T, filtersProvided: Filters): Omit<T, "withFilters"> {
+        filters = {...filters, ...filtersProvided};
+        return result as UnregisteredComponentBase as Omit<T, "withFilters">;
+    }
+
     function register(): RegisteredComponent<T, R> {
         return {
             transparent: isTransparent,
             dynamicChildren: hasDynamicChildren,
             propTemplate: (propsType || m({})) as never,
             renderFunction: renderFn || (() => null),
-            htmlTemplate
+            filters,
+            htmlTemplate,
+            svgTemplate
         } as RegisteredComponent<T, R>;
     }
 
