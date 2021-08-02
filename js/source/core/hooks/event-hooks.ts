@@ -1,6 +1,12 @@
-import {createState, StateToken} from "../util/state";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {createState, StateToken} from "../../util/state";
 import {useState} from "./state-hooks";
-import {bindToStateContext, getCurrentStateContext} from "./component-registry";
+import {bindToStateContext} from "../component-state";
+import {useDisconnect} from "./disconnect-hook";
 
 type EventListener<T, W> = {
     addEventListener(type: T, listener: (this: W, ev: never) => any, options?: boolean | AddEventListenerOptions): void // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -31,8 +37,3 @@ export function useEventListener<T, W>(token: EventListenerStateToken, on: Event
         on.removeEventListener(type, state.listener);
     });
 }
-
-export function useDisconnect(fn: () => void): void {
-    getCurrentStateContext().disconnected.push(bindToStateContext(fn));
-}
-

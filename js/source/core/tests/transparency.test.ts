@@ -1,6 +1,12 @@
-import {makeComponent, NoProps} from "../component-declaration";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {makeComponent} from "../component-declaration";
 import {registerAnonymous} from "./anon";
 import {TestUtils} from "../../test-utils/test-utils";
+import {NoProps} from "../types/registered-component";
 
 it("Propagates props transparently in simple case", async () => {
 

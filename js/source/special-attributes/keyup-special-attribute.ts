@@ -1,10 +1,15 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {registerSpecialAttribute} from "../core/variable-analysis/register-special-attribute";
-import {bindToStateContext, SpecialAttributeHandlerFnResult} from "../core/component-registry";
 import {createState} from "../util/state";
-import {useState} from "../core/state-hooks";
-import {useDisconnect} from "../core/event-hooks";
-import {createChangeHook, useChange} from "../core/change-hooks";
+import {useState} from "../core/hooks/state-hooks";
+import {createChangeHook, useChange} from "../core/hooks/change-hooks";
 import {logWarn} from "../util/logging";
+import {SpecialAttributeHandlerFnResult} from "../core/types/variables";
+import {useDisconnect} from "../core/hooks/disconnect-hook";
 
 export const keyupSpecialAttributeRegistration = registerSpecialAttribute("m-keyup", keyupSpecialAttributeHandler, 1000000).hidden = true;
 

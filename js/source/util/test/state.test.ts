@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 // import {createState, PureStateFunction, purifyInternal, State, Stateful, StateToken, useStateInternal, WrappedFunction} from "../state";
 //
 // interface StatefulX extends Stateful {

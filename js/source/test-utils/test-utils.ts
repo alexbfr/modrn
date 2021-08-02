@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 /* eslint-disable */
 
 import {__testing__setDomContentLoaded} from "../util/wait-until-dom-content-loaded";

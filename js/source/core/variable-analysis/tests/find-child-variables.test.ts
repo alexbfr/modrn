@@ -1,5 +1,11 @@
-import {ExpressionType, MappingType, VariableUsageExpression} from "../../component-registry";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {findChildVariables} from "../find-child-variables";
+import {MappingType} from "../../types/variables";
+import {ExpressionType, VariableUsageExpression} from "../../types/expression-types";
 
 it("Returns empty list when no variables are used", () => {
 

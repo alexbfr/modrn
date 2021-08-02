@@ -1,4 +1,9 @@
-import {hasObjectChanged} from "../change-hooks";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {hasObjectChanged} from "../has-object-changed";
 
 it("Treats two empty objects as equal", () => {
     const actual = hasObjectChanged({}, {}, 0);

@@ -1,159 +1,31 @@
-import {Module, RegisteredComponent} from "./component-declaration";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {tagify} from "../util/tagify";
 import {logDiagnostic} from "../util/logging";
-import {Stateful,} from "../util/state";
 import {requestRender} from "./render-queue";
-import jsep from "../jsep/jsep";
-import Expression = jsep.Expression;
-
-export interface ComponentState extends Stateful {
-    addedChildElements: WeakSet<ChildNode>;
-    previousChild: Fragment | null;
-    customProps: Record<string, unknown>;
-    getOwner: () => ModrnHTMLElement;
-}
-
-export abstract class ModrnHTMLElement extends HTMLElement {
-    svgRoot?: SVGElement;
-    componentInfo?: ComponentInfo;
-    state?: ComponentState;
-    initialPreviousChild?: Fragment;
-    initialCustomProps?: Record<string, unknown>;
-    abstract update(): void;
-    abstract notifyChildrenChanged(childFragment: Fragment): void;
-    abstract copyTo(other: ModrnHTMLElement): void;
-}
-
-export enum MappingType {
-    childVariable,
-    attribute,
-    attributeRef,
-    specialAttribute
-}
-
-export enum ExpressionType {
-    VariableUsage,
-    ComplexExpression,
-    ConstantExpression,
-    FunctionReferenceExpression
-}
-
-export type BaseExpression = {
-    expressionType: ExpressionType;
-};
-
-export type VariableUsageExpression = {
-    expressionType: ExpressionType.VariableUsage;
-    variableName: string;
-} & BaseExpression;
-
-export type ComplexExpression = {
-    expressionType: ExpressionType.ComplexExpression;
-    usedVariableNames: string[];
-    expression: Expression;
-    originalExpression: string;
-    compiledExpression: (what: unknown) => unknown;
-} & BaseExpression;
-
-export type FunctionReferenceExpression = {
-    expressionType: ExpressionType.FunctionReferenceExpression;
-    usedVariableNames: string[];
-    expression: Expression;
-    originalExpression: string;
-    compiledExpression: (what: unknown) => unknown;
-} & BaseExpression;
-
-export type ConstantExpression = {
-    expressionType: ExpressionType.ConstantExpression;
-    value: unknown;
-} & BaseExpression;
-
-export type ValueTransformerFn = <T>(node: Node, value: T) => T;
-
-export type VariableMappingBase<T extends MappingType> = {
-    indexes: number[];
-    type: T;
-    expression: BaseExpression;
-    valueTransformer?: ValueTransformerFn | SpecialAttributeValueTransformerFn;
-}
-
-export type VariableMapping = VariableMappingBase<MappingType>;
-
-export type ChildVariable = VariableMappingBase<MappingType.childVariable>;
-
-export type AttributeVariable = {
-    attributeName: string;
-    hidden?: boolean;
-} & VariableMappingBase<MappingType.attribute>;
-
-export type AttributeRefVariable = VariableMappingBase<MappingType.attributeRef>;
-
-export type SpecialAttributeVariable = {
-    specialAttributeRegistration: SpecialAttributeRegistration;
-    attributeName: string;
-    hidden?: boolean;
-} & VariableMappingBase<MappingType.specialAttribute>;
-
-export type VariablesByNodeIndex = {
-    indexes: number[],
-    mappings: {
-        [variableName: string]: VariableMapping[],
-        __constants: VariableMapping[]
-    }
-};
-
-export type VariableMappings = {
-    all: {
-            [variableName: string]: VariableMapping[],
-            __constants: VariableMapping[]
-        },
-    sorted: VariablesByNodeIndex[];
-};
-
-export type FoundVariables = {
-    variables: VariableMappings;
-    newRootElement: HTMLElement;
-};
-
-export type Fragment = {
-    childElement: HTMLElement | null;
-    variableDefinitions: VariableMappings | null;
-}
-
-export type SpecialAttributeValueTransformerFn = (element: HTMLElement, valuesBySlot: Record<string, unknown>) => unknown;
-
-export type SpecialAttributeHandlerFnResult = {
-    transformedElement?: HTMLElement;
-    valueTransformer?: SpecialAttributeValueTransformerFn;
-    remapAttributeName?: (attributeNameProvided: string) => string;
-}
-
-export type SpecialAttributeHandlerFn = (elem: HTMLElement) => SpecialAttributeHandlerFnResult;
-
-export type SpecialAttributeRegistration = {
-    id: string;
-    precedence: number;
-    attributeName: string;
-    handler: SpecialAttributeHandlerFn;
-    hidden?: boolean;
-}
-
-export type ComponentInfo = {
-    isSpecialAttribute: boolean;
-    tagName: string;
-    componentName: string;
-    registeredComponent: RegisteredComponent<unknown, unknown>;
-    content: Fragment | null;
-};
-
-export type ComponentRegistry = {
-    [componentName: string]: ComponentInfo;
-}
+import {Module, RegisteredComponent} from "./types/registered-component";
+import {
+    ComponentInfo,
+    ComponentRegistry,
+    DisconnectedFunction,
+    Fragment,
+    HasConnectedFunction,
+    ModrnHTMLElement,
+    NotifyChildrenChangedFunction
+} from "./types/component-registry";
 
 const componentByRegisteredComponent = new WeakMap<RegisteredComponent<unknown, unknown>, ComponentInfo>();
 const componentRegistry: ComponentRegistry = {};
 const componentsToRegister: ComponentInfo[] = [];
 
+/**
+ * Adds a component to the global registry without directly registering it as custom element.
+ * @param componentName the js-name of the new component (i.e. without dashes)
+ * @param component the component to register
+ */
 export function addToComponentRegistry(componentName: string, component: RegisteredComponent<unknown, unknown>): ComponentInfo {
     const tagName = tagify(componentName).toLowerCase();
     const componentInfo: ComponentInfo = {
@@ -169,33 +41,58 @@ export function addToComponentRegistry(componentName: string, component: Registe
     return componentInfo;
 }
 
+/**
+ * Adds a module to the global registry by adding each individual registered component.
+ *
+ * @param module
+ */
 export function registerModule<M, K extends keyof M>(module: Module<M, K>): void {
     Object.entries(module).forEach(([componentName, component]) => {
         addToComponentRegistry(componentName, component as RegisteredComponent<unknown, unknown>);
     });
 }
 
+/**
+ * Updates the component registry with the static initialization result of the component (js-named, i.e.
+ * without dashes)
+ * @param componentName
+ * @param content
+ */
 export function setStaticInitializationResultForComponent(componentName: string, content: Fragment): void {
     componentRegistry[tagify(componentName).toLowerCase()].content = content;
 }
 
+/**
+ * Checks if the provided tagName (html-named) is already registered
+ * @param tagName
+ */
 export function isRegisteredTagName(tagName: string): boolean {
     const componentName = tagName.toLowerCase();
     return componentName in componentRegistry;
 }
 
+/**
+ * Returns a copy of the component registry
+ */
 export function getComponentRegistry(): ComponentRegistry {
     return {...componentRegistry};
 }
 
+/**
+ * Returns the component info for a certain registered component
+ * @param registeredComponent
+ */
 export function getComponentInfoOf(registeredComponent: RegisteredComponent<unknown, unknown>): ComponentInfo | undefined {
     return componentByRegisteredComponent.get(registeredComponent);
 }
 
-export type HasConnectedFunction = (self: ModrnHTMLElement, componentInfo: ComponentInfo) => void;
-export type NotifyChildrenChangedFunction = (self: ModrnHTMLElement, componentInfo: ComponentInfo, childFragment: Fragment) => void;
-export type DisconnectedFunction = (self: ModrnHTMLElement, componentInfo: ComponentInfo) => void;
-
+/**
+ * Registers the component and creates a custom element for it.
+ * @param componentInfo - the component
+ * @param hasConnectedFn - the connected callback function (called when mounted)
+ * @param notifyChildrenChangedFn - the (custom) callback function when dynamic children change
+ * @param disconnectedFn - the disconnected callback function (called when unmounted)
+ */
 export function register(componentInfo: ComponentInfo,
     hasConnectedFn: HasConnectedFunction,
     notifyChildrenChangedFn: NotifyChildrenChangedFunction,
@@ -236,12 +133,24 @@ export function register(componentInfo: ComponentInfo,
             other.state = this.state ? {...this.state} : undefined;
         }
 
+        static get observedAttributes() {
+            return Object.keys((componentInfo.registeredComponent.propTemplate as Record<string, unknown>) || {});
+        }
+
     };
     customElements.define(tagName, customElementConstructor);
     componentInfo.registeredComponent.customElementConstructor = customElementConstructor;
     return customElementConstructor;
 }
 
+/**
+ * Register all components in the component registry at once.
+ * @see register
+ *
+ * @param hasConnectedFn
+ * @param notifyChildrenChangedFn
+ * @param disconnectedFn
+ */
 export function registerAll(hasConnectedFn: HasConnectedFunction, notifyChildrenChangedFn: NotifyChildrenChangedFunction, disconnectedFn: DisconnectedFunction): void {
     const componentsToRegisterCopy = [...componentsToRegister];
     componentsToRegister.splice(0, componentsToRegister.length);
@@ -250,68 +159,3 @@ export function registerAll(hasConnectedFn: HasConnectedFunction, notifyChildren
     });
 }
 
-function createEmptyState(self: ModrnHTMLElement): ComponentState {
-
-    try {
-        return {
-            addedChildElements: new WeakSet<ChildNode>(),
-            previousChild: null,
-            customProps: self.initialCustomProps || {},
-            state: {},
-            disconnected: [],
-            update: self.update.bind(self),
-            getOwner: () => self
-        };
-    } finally {
-        delete self.initialCustomProps;
-    }
-}
-
-export function getStateOf(self: ModrnHTMLElement): ComponentState {
-    return self.state || (self.state = createEmptyState(self));
-}
-
-let currentStateContext: Stateful | undefined = undefined;
-
-export function getCurrentStateContext(): Stateful {
-    const state = currentStateContext;
-    if (!state) {
-        throw new Error("Not initialized - forgotten to use bindToStateContext?");
-    }
-    return state;
-}
-
-export function withState<T, R>(state: Stateful, fn: (...params: T[]) => R, ...params: T[]): R { // eslint-disable-line
-    const oldStateContext = currentStateContext;
-    try {
-        currentStateContext = state;
-        return fn(...params);
-    } finally {
-        currentStateContext = oldStateContext;
-    }
-}
-
-export function dynamic<T, R>(fn: (...params: T[]) => R, ...params: T[]): (...params: T[]) => R { // eslint-disable-line
-    const result = bindToStateContext(fn) as BoundFn<T, R>;
-    result.dynamic = true;
-    return result;
-}
-
-export function bindToStateContext<T, R>(fn: (...params: T[]) => R, ...params: T[]): (...params: T[]) => R { // eslint-disable-line
-    if ("bound" in fn) {
-        return fn;
-    }
-    if (!currentStateContext) {
-        throw new Error("Cannot bind to current state context since none exists");
-    }
-    const boundCurrentStateContext = currentStateContext;
-    const result = ((...params: any[]) => withState(boundCurrentStateContext, fn, ...params)) as BoundFn<T, R>; // eslint-disable-line
-    result.bound = true;
-    result.dynamic = false;
-    return result;
-}
-
-export type BoundFn<T, R> = ((...params: T[]) => R) & {
-    bound: true;
-    dynamic: boolean;
-}

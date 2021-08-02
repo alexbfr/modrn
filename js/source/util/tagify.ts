@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 function isUpper(c: string) {
     return c >= "A" && c <= "Z";
 }

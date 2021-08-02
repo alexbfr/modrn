@@ -1,5 +1,10 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {registerSpecialAttribute} from "../core/variable-analysis/register-special-attribute";
-import {SpecialAttributeHandlerFnResult} from "../core/component-registry";
+import {SpecialAttributeHandlerFnResult} from "../core/types/variables";
 
 export const showSpecialAttributeRegistration = registerSpecialAttribute("m-show", showSpecialAttributeHandler).hidden = true;
 

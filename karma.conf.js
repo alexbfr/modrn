@@ -1,3 +1,8 @@
+/*
+ * // SPDX-License-Identifier: MIT
+ * // Copyright © 2021 Alexander Berthold
+ */
+
 // karma.conf.js
 module.exports = function(config) {
     config.set({

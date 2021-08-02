@@ -1,13 +1,9 @@
-import {RegisteredComponent} from "./component-declaration";
-import {
-    addToComponentRegistry,
-    ComponentInfo,
-    ComponentRegistry,
-    Fragment,
-    getStateOf,
-    ModrnHTMLElement,
-    register
-} from "./component-registry";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {addToComponentRegistry, register} from "./component-registry";
 import {analyzeToFragment, componentStaticInitialize} from "./component-static-initialize";
 import {childNodesToArray} from "../util/childnodes-to-array";
 import {ELEMENT_NODE} from "./variable-analysis/variable-types";
@@ -16,13 +12,17 @@ import {isDomContentLoaded, waitUntilDomContentLoaded} from "../util/wait-until-
 import {requestRender} from "./render-queue";
 import {cloneDeep} from "../util/cloneDeep";
 import {renderComponent} from "./render-component";
+import {ComponentInfo, Fragment, ModrnHTMLElement} from "./types/component-registry";
+import {getStateOf} from "./component-state";
+import {RegisteredComponent} from "./types/registered-component";
 
-export function initializeAll(componentRegistry: ComponentRegistry): void {
-    Object.entries(componentRegistry).forEach(([, componentInfo]) => {
-        componentStaticInitialize(componentInfo.componentName, componentInfo.registeredComponent);
-    });
-}
-
+/**
+ * Extracts dynamic child content (commonly named "slot"). Since the component may have been upgraded,
+ * children which belong to the component itself are being excluded, the rest is detached from the component
+ * and stored in state.previousChild.
+ *
+ * @param self
+ */
 function extractDynamicChildContent(self: ModrnHTMLElement) {
     const state = getStateOf(self);
     const childNodes = childNodesToArray(self).filter(cn => !state.addedChildElements.has(cn));
@@ -43,6 +43,13 @@ function extractDynamicChildContent(self: ModrnHTMLElement) {
     }
 }
 
+/**
+ * During initial rendering the dynamic children are not yet available.
+ * IMPORTANT: This occurs only if the component is marked as dynamic {@see ComponentBuilderDynamicChildren} to avoid
+ * the overhead of re-checking for all components not expecting dynamic children.
+ *
+ * @param weakSelf
+ */
 function waitForDynamicChildContentInitialization(weakSelf: WeakRef<ModrnHTMLElement>) {
     waitUntilDomContentLoaded().then(() => {
         const self = weakSelf.deref();
@@ -53,6 +60,13 @@ function waitForDynamicChildContentInitialization(weakSelf: WeakRef<ModrnHTMLEle
     });
 }
 
+/**
+ * Tries to extract the dynamic children if required and possible, and returns true otherwise if we have to wait
+ * for a re-render.
+ * @see waitForDynamicChildContentInitialization
+ *
+ * @param self
+ */
 function extractDynamicChildContentIfPossible(self: ModrnHTMLElement) {
     if (!self.componentInfo?.registeredComponent.dynamicChildren) {
         logDiagnostic(`Not parsing dynamic children for ${self.nodeName}, since dynamicChildren attribute is not set`);
@@ -64,6 +78,12 @@ function extractDynamicChildContentIfPossible(self: ModrnHTMLElement) {
     return !isDomContentLoaded();
 }
 
+/**
+ * Appends the static child content of the element (i.e. the template used during registration)
+ *
+ * @param componentInfo
+ * @param self
+ */
 function appendStaticChildContent(componentInfo: ComponentInfo, self: ModrnHTMLElement) {
     if (componentInfo.content?.childElement) {
         const state = getStateOf(self);
@@ -77,6 +97,11 @@ function appendStaticChildContent(componentInfo: ComponentInfo, self: ModrnHTMLE
     }
 }
 
+/**
+ * Component has connected callback function. This function may be called multiple times and guards itself against that.
+ * @param self
+ * @param componentInfo
+ */
 export function componentHasConnected(self: ModrnHTMLElement, componentInfo: ComponentInfo): void {
     const what = self.nodeName + "#" + self.id;
     logDiagnostic("Connecting: ", what);
@@ -98,10 +123,25 @@ export function componentHasConnected(self: ModrnHTMLElement, componentInfo: Com
     }
 }
 
+/**
+ * Called when the component unmounts. Calls disconnect functions
+ * @param self
+ */
 export function componentHasDisconnected(self: ModrnHTMLElement): void {
-    (self.state?.disconnected || []).forEach(fn => fn());
+    if (self.state?.disconnected) {
+        (self.state.disconnected || []).forEach(fn => fn());
+        self.state.disconnected = [];
+    }
 }
 
+/**
+ * Called when the dynamic children change. Does not implicitly re-render, since this is usually happening
+ * inside a render cycle.
+ *
+ * @param self
+ * @param componentInfo
+ * @param childFragment
+ */
 export function childrenChanged(self: ModrnHTMLElement, componentInfo: ComponentInfo, childFragment: Fragment): void {
     if (!self.state) {
         self.initialPreviousChild = childFragment;
@@ -110,6 +150,11 @@ export function childrenChanged(self: ModrnHTMLElement, componentInfo: Component
     }
 }
 
+/**
+ * Mostly to help tests: this method registers *and* initializes the provided component in one go.
+ * @param componentName
+ * @param component
+ */
 export function only(componentName: string, component: RegisteredComponent<unknown, unknown>): ComponentInfo {
 
     const componentInfo = addToComponentRegistry(componentName, component);

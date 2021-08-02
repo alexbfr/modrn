@@ -1,12 +1,23 @@
-import {ComponentInfo, ModrnHTMLElement, ValueTransformerFn, VariableMapping} from "../component-registry";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {analyzeToFragment} from "../component-static-initialize";
 import {requestRender} from "../render-queue";
 import {ELEMENT_NODE, TEXT_NODE} from "../variable-analysis/variable-types";
-import {ChildCollection} from "../templated-children-hooks";
 import {UnsafeHtml} from "./unsafe-html";
 import {cloneDeep} from "../../util/cloneDeep";
+import {ChildCollection} from "../types/prop-types";
+import {ModrnHTMLElement} from "../types/component-registry";
+import {ValueTransformerFn, VariableMapping} from "../types/variables";
 
-export function getChildValue(self: ModrnHTMLElement, componentInfo: ComponentInfo, node: Node): unknown {
+/**
+ * Gets the child value of the node
+ * @param self
+ * @param node
+ */
+export function getChildValue(self: ModrnHTMLElement, node: Node): unknown {
     if (node instanceof HTMLElement || node instanceof SVGElement) {
         return node;
     }
@@ -16,115 +27,163 @@ export function getChildValue(self: ModrnHTMLElement, componentInfo: ComponentIn
     throw new Error(`Cannot get child content of ${nodeInfo(node)} of ${nodeInfo(self)}: cannot map type`);
 }
 
-export function setChildValue(self: ModrnHTMLElement, componentInfo: ComponentInfo, node: Node, match: VariableMapping, valueProvided: unknown): unknown {
+/**
+ * Sets the child value of the provided node. This is a bit lengthy (see the individual functions below),
+ * since several cases have to be taken care of. There will be bugs here waiting to be fixed.
+ *
+ * @param self
+ * @param node
+ * @param match
+ * @param valueProvided
+ */
+export function setChildValue(self: ModrnHTMLElement, node: Node, match: VariableMapping, valueProvided: unknown): unknown {
 
     let value: unknown;
     const valueTransformer = match.valueTransformer as ValueTransformerFn | undefined;
-    if (node instanceof SVGElement) {
-        debugger;
-    }
     if (node instanceof ModrnHTMLElement) {
-        const state = node?.state;
-        if (!state) {
-            throw new Error(`Node is missing state: ${nodeInfo(node)} of ${nodeInfo(self)}`);
-        }
-        if (typeof valueProvided === "undefined" || valueProvided === null) {
-            state.previousChild = null;
-        } else if (typeof valueProvided === "object" && valueProvided instanceof HTMLElement) {
-            value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
-            state.previousChild = analyzeToFragment(value as HTMLElement);
-        } else if (typeof valueProvided === "string" || typeof valueProvided === "number" || typeof valueProvided === "boolean") {
-            const valueNode = document.createElement("span");
-            value = valueTransformer ? valueTransformer(valueNode, valueProvided) : valueProvided;
-            valueNode.textContent = "" + value;
-            state.previousChild = {childElement: valueNode, variableDefinitions: null};
-            return value;
-        } else if (typeof valueProvided === "object" && (valueProvided as UnsafeHtml).unsafeHtml) {
-            const valueNode = document.createElement("span");
-            value = valueTransformer ? valueTransformer(valueNode, valueProvided) : valueProvided;
-            valueNode.innerHTML = "" + (value as UnsafeHtml).unsafeHtml;
-            state.previousChild = {childElement: valueNode, variableDefinitions: null};
-        } else {
-            throw new Error(`Cannot set child content on ${nodeInfo(node)} of ${nodeInfo(self)} to ${valueProvided}: cannot map type`);
-        }
+        value = setModrnElementChildContent(self, node, valueProvided, valueTransformer);
     } else if (node instanceof HTMLElement || node instanceof SVGElement) {
-        if (typeof valueProvided === "undefined" || valueProvided === null) {
-            value = valueTransformer ? valueTransformer(node, valueProvided) : "";
-            node.innerHTML = value as string;
-        } else if (typeof valueProvided === "object" && valueProvided instanceof HTMLElement) {
-            value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
-            node.innerHTML = "";
-            node.appendChild(cloneDeep(value as HTMLElement));
-        } else if (typeof valueProvided === "object" && (valueProvided as ChildCollection)?.__childCollection) {
-            value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
-            const children = (value as ChildCollection).elements;
-            let currentElement: Element | null = node.firstElementChild;
-            for (const child of children) {
-                const replace = child !== currentElement;
-                const before = currentElement;
-                currentElement = currentElement?.nextElementSibling || null;
-                if (replace) {
-                    node.insertBefore(child, currentElement);
-                    if (before) {
-                        node.removeChild(before);
-                    }
-                }
-            }
-            while(currentElement != null) {
-                const before = currentElement;
-                currentElement = currentElement.nextElementSibling;
-                node.removeChild(before);
-            }
-        } else if (typeof valueProvided === "object" && (valueProvided as UnsafeHtml).unsafeHtml) {
-            value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
-            node.innerHTML = "" + (value as UnsafeHtml).unsafeHtml;
-        } else if (typeof valueProvided === "string" || typeof valueProvided === "number" || typeof valueProvided === "boolean") {
-            value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
-            node.innerHTML = "";
-            node.textContent = "" + value;
-        } else {
-            if (node.nodeName === "PRE") {
-                (node as Element).innerHTML = "";
-                value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
-                node.textContent = JSON.stringify(valueProvided, null, 2);
-            } else {
-                throw new Error(`Cannot set child content on ${nodeInfo(node)} of ${nodeInfo(self)} to ${valueProvided}: cannot map type`);
-            }
-        }
+        value = setChildContentToElementChild(self, node, valueProvided, valueTransformer);
     } else if (node.nodeType === TEXT_NODE) {
-        if ((valueProvided as ChildCollection)?.__childCollection) {
-            const parent = node.parentElement;
-            if (!parent) {
-                throw new Error(`Parent element missing on ${nodeInfo(node)} of ${nodeInfo(self)}`);
-            }
-            const newNode = document.createElement("div") as HTMLElement;
-            newNode.style.display = "contents";
-            value = valueTransformer ? valueTransformer(newNode, valueProvided) : valueProvided;
-            const children = (value as ChildCollection).elements;
-            children.forEach(newNode.appendChild.bind(newNode));
-            parent.insertBefore(newNode, node);
-            parent.removeChild(node);
-        } else if (typeof valueProvided === "undefined" || valueProvided === null) {
-            value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
-            node.textContent = "";
-        } else if (typeof valueProvided === "object" && valueProvided instanceof HTMLElement) {
-            const parent = node.parentElement;
-            if (!parent) {
-                throw new Error(`Parent element missing on ${nodeInfo(node)} of ${nodeInfo(self)}`);
-            }
-            value = valueTransformer ? valueTransformer(parent, cloneDeep(valueProvided as HTMLElement)) : cloneDeep(valueProvided as HTMLElement);
-            parent.insertBefore(value as HTMLElement, node);
-            parent.removeChild(node);
-        } else if (typeof valueProvided === "string" || typeof valueProvided === "number" || typeof valueProvided === "boolean") {
-            value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
-            node.textContent = "" + value;
-        } else {
-            value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
-            node.textContent = JSON.stringify(valueProvided, null, 2);
-        }
+        value = setChildContentToTextNode(self, node, valueProvided, valueTransformer);
     }
     if (value instanceof ModrnHTMLElement) {
         requestRender(value);
+    }
+    return value;
+}
+
+function setModrnElementChildContent(self: ModrnHTMLElement, node: ModrnHTMLElement, valueProvided: unknown, valueTransformer: (<T>(node: Node, value: T) => T) | undefined) {
+    let value: unknown;
+    const state = node?.state;
+
+    if (!state) {
+        throw new Error(`Node is missing state: ${nodeInfo(node)} of ${nodeInfo(self)}`);
+    }
+    if (typeof valueProvided === "undefined" || valueProvided === null || valueProvided === false) {
+        // Clear if falsy and not a number or string
+        state.previousChild = null;
+    } else if (typeof valueProvided === "object" && valueProvided instanceof HTMLElement) {
+        value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
+        if (state.previousChild?.childElement !== value) {
+            // Setting a HTMLELement child requires to first analyze the provided fragment
+            state.previousChild = analyzeToFragment(value as HTMLElement);
+        }
+    } else if (typeof valueProvided === "string" || typeof valueProvided === "number" || typeof valueProvided === "boolean") {
+        // TODO: could be optimized to check if there's already just one span, then it'd be enough to just replace the text content
+        const valueNode = document.createElement("span");
+        value = valueTransformer ? valueTransformer(valueNode, valueProvided) : valueProvided;
+        valueNode.textContent = "" + value;
+        state.previousChild = {childElement: valueNode, variableDefinitions: null};
+    } else if (typeof valueProvided === "object" && (valueProvided as UnsafeHtml).unsafeHtml) {
+        // same as above
+        const valueNode = document.createElement("span");
+        value = valueTransformer ? valueTransformer(valueNode, valueProvided) : valueProvided;
+        valueNode.innerHTML = "" + (value as UnsafeHtml).unsafeHtml;
+        state.previousChild = {childElement: valueNode, variableDefinitions: null};
+    } else {
+        throw new Error(`Cannot set child content on ${nodeInfo(node)} of ${nodeInfo(self)} to ${valueProvided}: cannot map type`);
+    }
+    return value;
+}
+
+function setChildContentToElementChild(self: ModrnHTMLElement, node: HTMLElement | SVGElement, valueProvided: unknown, valueTransformer: (<T>(node: Node, value: T) => T) | undefined) {
+    let value: unknown;
+    if (typeof valueProvided === "undefined" || valueProvided === null) {
+        value = valueTransformer ? valueTransformer(node, valueProvided) : "";
+        node.innerHTML = value as string;
+    } else if (typeof valueProvided === "object" && valueProvided instanceof HTMLElement) {
+        // Set a html element child directly. We're not cloning here, since clones can easily provided in an efficient
+        // manner using useTemplateChildren()
+        value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
+        if (node.childNodes.length !== 1 || node.firstElementChild !== value) {
+            node.innerHTML = "";
+            node.appendChild(value as HTMLElement);
+        }
+    } else if (typeof valueProvided === "object" && (valueProvided as ChildCollection)?.__childCollection) {
+        // Here we're setting a useTemplateChildren() result as the body of another html element
+        value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
+        const children = (value as ChildCollection).elements;
+        let currentElement: Element | null = node.firstElementChild;
+        for (const child of children) { // iterate all desired children
+            const replace = child !== currentElement; // compare current desired child with actual child
+            const before = currentElement;
+            currentElement = currentElement?.nextElementSibling || null;
+            if (replace) { // if replacing is required, do that
+                node.insertBefore(child, currentElement);
+                if (before) {
+                    node.removeChild(before);
+                }
+            } // otherwise we can skip this element
+        }
+        // all remaining actual children are superfluous and must be removed
+        while (currentElement != null) {
+            const before = currentElement;
+            currentElement = currentElement.nextElementSibling;
+            node.removeChild(before);
+        }
+    } else if (typeof valueProvided === "object" && (valueProvided as UnsafeHtml).unsafeHtml) {
+        value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
+        node.innerHTML = "" + (value as UnsafeHtml).unsafeHtml;
+    } else if (typeof valueProvided === "string" || typeof valueProvided === "number" || typeof valueProvided === "boolean") {
+        value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
+        node.innerHTML = "";
+        node.textContent = "" + value;
+    } else {
+        if (node.nodeName === "PRE") {
+            (node as Element).innerHTML = "";
+            value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
+            node.textContent = JSON.stringify(valueProvided, null, 2);
+        } else {
+            throw new Error(`Cannot set child content on ${nodeInfo(node)} of ${nodeInfo(self)} to ${valueProvided}: cannot map type`);
+        }
+    }
+    return value;
+}
+
+/**
+ * Text nodes need a little special treatment, since depending on the value they need to be upgraded to elements
+ * @param self
+ * @param node
+ * @param valueProvided
+ * @param valueTransformer
+ */
+function setChildContentToTextNode(self: ModrnHTMLElement, node: Node, valueProvided: unknown, valueTransformer: (<T>(node: Node, value: T) => T) | undefined) {
+    let value: unknown;
+
+    if ((valueProvided as ChildCollection)?.__childCollection) {
+        // We're providing a child collection, upgrade the text node to an element
+        const parent = node.parentElement;
+        if (!parent) {
+            throw new Error(`Parent element missing on ${nodeInfo(node)} of ${nodeInfo(self)}`);
+        }
+        // Create a div style=contents container
+        const newNode = document.createElement("div") as HTMLElement;
+        newNode.style.display = "contents";
+        value = valueTransformer ? valueTransformer(newNode, valueProvided) : valueProvided;
+
+        // Append the children
+        const children = (value as ChildCollection).elements;
+        children.forEach(newNode.appendChild.bind(newNode));
+        parent.insertBefore(newNode, node);
+        parent.removeChild(node);
+    } else if (typeof valueProvided === "undefined" || valueProvided === null) {
+        value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
+        node.textContent = "";
+    } else if (typeof valueProvided === "object" && valueProvided instanceof HTMLElement) {
+        const parent = node.parentElement;
+        if (!parent) {
+            throw new Error(`Parent element missing on ${nodeInfo(node)} of ${nodeInfo(self)}`);
+        }
+        value = valueTransformer ? valueTransformer(parent, valueProvided as HTMLElement) : valueProvided as HTMLElement;
+        parent.insertBefore(value as HTMLElement, node);
+        parent.removeChild(node);
+    } else if (typeof valueProvided === "string" || typeof valueProvided === "number" || typeof valueProvided === "boolean") {
+        value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
+        node.textContent = "" + value;
+    } else {
+        value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
+        node.textContent = JSON.stringify(valueProvided, null, 2);
     }
     return value;
 }

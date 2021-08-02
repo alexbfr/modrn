@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import isDate from "date-fns/isDate";
 import format from "date-fns/format";
 

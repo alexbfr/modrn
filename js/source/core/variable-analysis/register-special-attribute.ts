@@ -1,5 +1,10 @@
-import {SpecialAttributeHandlerFn, SpecialAttributeRegistration} from "../component-registry";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {nextId} from "../../util/next-id";
+import {SpecialAttributeHandlerFn, SpecialAttributeRegistration} from "../types/variables";
 
 export type SpecialAttributeRegistry = {
     [attributeName: string]: SpecialAttributeRegistration

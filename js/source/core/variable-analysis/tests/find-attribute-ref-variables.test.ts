@@ -1,6 +1,11 @@
-import {MappingType} from "../../component-registry";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {findAttributeRefVariables} from "../find-attribute-ref-variables";
 import {varUsageExpression} from "./find-child-variables.test";
+import {MappingType} from "../../types/variables";
 
 it("Returns empty list when no refs exist", () => {
 

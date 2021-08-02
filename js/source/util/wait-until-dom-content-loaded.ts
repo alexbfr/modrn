@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 let domContentIsLoaded = document.readyState === "complete";
 let domContentLoadedPromise: Promise<void> | undefined;
 let domContentLoadedResolver: () => void = () => void 0;

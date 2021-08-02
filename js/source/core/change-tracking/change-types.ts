@@ -1,4 +1,9 @@
-import {ModrnHTMLElement} from "../component-registry";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {ModrnHTMLElement} from "../types/component-registry";
 
 export type Consumers = {
     consumers: WeakRef<ModrnHTMLElement>[];
@@ -11,10 +16,6 @@ export type Changes = {
 export let changes: Changes = {
     list: new WeakMap<object, Consumers>() // eslint-disable-line
 };
-
-export type ReRender = {
-    [uniqueId: string]: () => void;
-}
 
 export interface ApplyResult {
     madeChanges: boolean;

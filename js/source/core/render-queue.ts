@@ -1,8 +1,13 @@
-import {ModrnHTMLElement} from "./component-registry";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {logDiagnostic, logWarn} from "../util/logging";
 import {renderComponent} from "./render-component";
 import {isTestingModeActive} from "../util/wait-until-dom-content-loaded";
 import {clearTainted} from "./change-tracking/mark-changed";
+import {ModrnHTMLElement} from "./types/component-registry";
 
 type RenderQueueElement = {
     element: WeakRef<ModrnHTMLElement>;
@@ -33,27 +38,6 @@ export function requestFrameUpdate(callback: () => void): void {
     requestUpdate();
 }
 
-export function requestReRenderDeep(self: HTMLElement): void {
-    if (self instanceof ModrnHTMLElement) {
-        requestRender(self);
-    }
-    return;
-    // if (self instanceof ModrnHTMLElement && (self as ModrnHTMLElement).componentInfo?.registeredComponent.transparent) {
-    //     console.info("DEEP: ", self);
-    //     renderQueue.push({element: new WeakRef(self)});
-    // } else {
-    //     return;
-    // }
-    // let pivot = self.firstElementChild;
-    // while (pivot) {
-    //     const current = pivot;
-    //     pivot = pivot.nextElementSibling;
-    //     if (current.nodeType === 3) {
-    //         requestReRenderDeep(current as HTMLElement);
-    //     }
-    // }
-}
-
 export function requestRender(selfProvided: ModrnHTMLElement | string): void {
     const self = (typeof selfProvided === "string") ? document.getElementById(selfProvided) as ModrnHTMLElement : selfProvided;
     if (!self.componentInfo) {
@@ -64,9 +48,6 @@ export function requestRender(selfProvided: ModrnHTMLElement | string): void {
     }
     alreadyRequested.add(self);
     renderQueue.push({element: new WeakRef(self)});
-    if (self.componentInfo.registeredComponent.transparent) {
-        requestReRenderDeep(self);
-    }
     requestUpdate();
 }
 

@@ -1,12 +1,16 @@
-import {start} from "./source/core/modrn";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {modrn} from "./source/core/modrn";
 import {markdownModule} from "./markdown";
 import {treeViewModule} from "./treeview";
 import {elasticHeaderModule} from "./elastic-header";
 import {githubCommitsModule} from "./github-commits";
 import {todoMvcModule} from "./todo-mvc";
-import {polygraphModule} from "./polygraph";
 
-start(markdownModule, treeViewModule, elasticHeaderModule, githubCommitsModule, todoMvcModule, polygraphModule);
+modrn(markdownModule, treeViewModule, elasticHeaderModule, githubCommitsModule, todoMvcModule);
 
 
 // window.setInterval(() => {

@@ -1,7 +1,21 @@
-import {AttributeRefVariable, ExpressionType, MappingType, VariableUsageExpression} from "../component-registry";
-import {extractExpression, isRefAttributeName} from "./helpers";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
 
-export function findAttributeRefVariables(rootElement: HTMLElement, indexes: number[]): AttributeRefVariable[] {
+import {extractExpression, isRefAttributeName} from "./extract-expression";
+import {ExpressionType, VariableUsageExpression} from "../types/expression-types";
+import {AttributeRefVariable, MappingType} from "../types/variables";
+
+/**
+ * Searches for ref attributes
+ * @example
+ * <span ref="{{myRef}}">...</span>
+ *
+ * @param rootElement
+ * @param indexes
+ */
+export function findAttributeRefVariables(rootElement: Element, indexes: number[]): AttributeRefVariable[] {
     const result: AttributeRefVariable[] = [];
     const attributes = (rootElement as HTMLElement)?.attributes;
     const attributesLength = attributes?.length || 0;

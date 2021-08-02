@@ -1,9 +1,15 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 // @ts-no-check
 /* eslint-disable */
 
 import jsep, {Jsep} from "../jsep/jsep";
 import Compound = jsep.Compound;
 import Expression = jsep.Expression;
+import Identifier = jsep.Identifier;
 
 /**
  * Evaluation code from JSEP project, under MIT License.
@@ -134,6 +140,10 @@ function evaluate(_node: jsep.Expression, context: object): any {
         const binop = binops[node.operator as keyof typeof binops];
         if ((binop as lazy).lazy) {
             return binop(null, null, node.left, node.right, context);
+        }
+        const left = evaluate(node.left, context);
+        if (node.operator === "&&" && !left) {
+            return false;
         }
         return binop(evaluate(node.left, context), evaluate(node.right, context), node.left, node.right, context);
     }
@@ -305,4 +315,29 @@ export {
     addUnaryOp,
     addBinaryOp
 };
+
+function evalLambda(a: any, b: any, nodeA: Expression, nodeB: Expression, ctx: any): any {
+    if (nodeA.type !== "Identifier" && nodeA.type !== "Compound") {
+        throw new Error("Left-hand side must be an identifier or argument list");
+    }
+
+    const names = nodeA.type === "Identifier" ? [(nodeA as Identifier).name] : ((nodeA as Compound).body.map(node => {
+        if (node.type !== "Identifier") {
+            throw new Error("Argument list must only consist of identifiers");
+        }
+        return (node as Identifier).name;
+    }));
+
+    const compiled = compile(nodeB);
+    return (...params: any[]) => {
+        const subContext = {...ctx};
+        for (let idx = 0; idx < names.length; ++idx) {
+            subContext[names[idx]] = (idx < params.length) ? params[idx] : undefined;
+        }
+        return compiled(subContext);
+    };
+}
+(evalLambda as lazy).lazy = true;
+
+addBinaryOp("=>", 20, evalLambda);
 

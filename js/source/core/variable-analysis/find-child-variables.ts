@@ -1,9 +1,23 @@
-import {ChildVariable, ConstantExpression, ExpressionType, MappingType} from "../component-registry";
-import {ELEMENT_NODE} from "./variable-types";
-import {extractExpression} from "./helpers";
-import {hasSpecialAttributes} from "./find-special-attributes";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
 
-export function findChildVariables(rootElement: HTMLElement, indexes: number[]): ChildVariable[] {
+import {ELEMENT_NODE} from "./variable-types";
+import {extractExpression} from "./extract-expression";
+import {hasSpecialAttributes} from "./find-special-attributes";
+import {ChildVariable, MappingType} from "../types/variables";
+import {ConstantExpression, ExpressionType} from "../types/expression-types";
+
+/**
+ * Searches for child variables
+ * @example
+ * <span>{{aChild}}</span>
+ *
+ * @param rootElement
+ * @param indexes
+ */
+export function findChildVariables(rootElement: Element, indexes: number[]): ChildVariable[] {
     const result: ChildVariable[] = [];
     const length = rootElement.childNodes.length;
     for (let idx = 0; idx < length; ++idx) {
@@ -13,9 +27,6 @@ export function findChildVariables(rootElement: HTMLElement, indexes: number[]):
         }
         const textContent = childNode.textContent;
         if (textContent && textContent.startsWith("{{") && textContent.endsWith("}}")) {
-            if (rootElement instanceof SVGElement && (rootElement.textContent?.indexOf("axisLabels") || -1) >= 0) {
-                debugger;
-            }
             childNode.textContent = "";
             const newIndexes = [...indexes, idx];
             const expression = extractExpression(textContent);

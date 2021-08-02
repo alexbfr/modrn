@@ -1,4 +1,11 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {variableNamePattern} from "./variable-types";
+import {compile} from "../../util/expression-eval";
+import jsep, {Jsep} from "../../jsep/jsep";
 import {
     BaseExpression,
     ComplexExpression,
@@ -6,9 +13,7 @@ import {
     ExpressionType,
     FunctionReferenceExpression,
     VariableUsageExpression
-} from "../component-registry";
-import {compile} from "../../util/expression-eval";
-import jsep, {Jsep} from "../../jsep/jsep";
+} from "../types/expression-types";
 import ArrayExpression = jsep.ArrayExpression;
 import BinaryExpression = jsep.BinaryExpression;
 import CallExpression = jsep.CallExpression;
@@ -19,7 +24,12 @@ import UnaryExpression = jsep.UnaryExpression;
 import LogicalExpression = jsep.LogicalExpression;
 import ConditionalExpression = jsep.ConditionalExpression;
 
+/**
+ * Extract an expression from the provided text content
+ * @param textContent
+ */
 export function extractExpression(textContent: string): BaseExpression {
+    // Is it an expression after all?
     if (!textContent.startsWith("{{")) {
         return {
             expressionType: ExpressionType.ConstantExpression,
@@ -27,43 +37,58 @@ export function extractExpression(textContent: string): BaseExpression {
         } as ConstantExpression;
     }
     const text = textContent.substring(2, textContent.length - 2).trim();
+
+    // Function references start with & (abbreviation for () => ...)
     if (text.startsWith("&")) {
-        const expression = Jsep.parse(text.substring(1));
-        if (expression.type !== "CallExpression") {
-            throw new Error(`Cannot parse ${text} as a function reference`);
-        }
-        const variableNames: string[] = [];
-        collectVariableNames(expression, variableNames);
-        const compiled = compile(expression);
-        return {
-            expressionType: ExpressionType.FunctionReferenceExpression,
-            usedVariableNames: variableNames,
-            expression,
-            compiledExpression: compiled,
-            originalExpression: "&" + text
-        } as FunctionReferenceExpression;
-    }
-    if (variableNamePattern.test(textContent)) {
-        return {expressionType: ExpressionType.VariableUsage, variableName: text} as VariableUsageExpression;
+        return extractFunctionReferenceExpression(text);
+    } else if (variableNamePattern.test(textContent)) {
+        return extractVariableReferenceExpression(text);
     } else {
-        const variableNames: string[] = [];
-        const expression = Jsep.parse(text);
-        collectVariableNames(expression, variableNames);
-        const compiled = compile(expression);
-        if (variableNames.length === 0) {
-            return {
-                expressionType: ExpressionType.ConstantExpression,
-                value: compiled({})
-            } as ConstantExpression;
-        }
-        return {
-            expressionType: ExpressionType.ComplexExpression,
-            usedVariableNames: variableNames,
-            expression,
-            compiledExpression: compiled,
-            originalExpression: text
-        } as ComplexExpression;
+        return extractComplexExpression(text);
     }
+}
+
+function extractVariableReferenceExpression(text: string) {
+    return {expressionType: ExpressionType.VariableUsage, variableName: text} as VariableUsageExpression;
+}
+
+function extractComplexExpression(text: string) {
+    const variableNames: string[] = [];
+    const expression = Jsep.parse(text);
+    collectVariableNames(expression, variableNames);
+    const compiled = compile(expression);
+    if (variableNames.length === 0) {
+        return {
+            expressionType: ExpressionType.ConstantExpression,
+            value: compiled({})
+        } as ConstantExpression;
+    }
+    return {
+        expressionType: ExpressionType.ComplexExpression,
+        usedVariableNames: variableNames,
+        expression,
+        compiledExpression: compiled,
+        originalExpression: text
+    } as ComplexExpression;
+}
+
+function extractFunctionReferenceExpression(text: string) {
+    const expression = Jsep.parse(text.substring(1));
+    if (expression.type !== "CallExpression") {
+        throw new Error(`Cannot parse ${text} as a function reference`);
+    }
+    const variableNames: string[] = [];
+
+    collectVariableNames(expression, variableNames);
+
+    const compiled = compile(expression);
+    return {
+        expressionType: ExpressionType.FunctionReferenceExpression,
+        usedVariableNames: variableNames,
+        expression,
+        compiledExpression: compiled,
+        originalExpression: "&" + text
+    } as FunctionReferenceExpression;
 }
 
 export function extractVariableName(textContent: string): string {

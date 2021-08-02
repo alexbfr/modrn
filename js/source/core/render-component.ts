@@ -1,8 +1,20 @@
-import {ComponentInfo, ModrnHTMLElement, withState} from "./component-registry";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {tagify} from "../util/tagify";
 import {substituteVariables} from "./variable-substition/substitute-variables";
-import {AllProps} from "./component-declaration";
+import {ComponentInfo, ModrnHTMLElement} from "./types/component-registry";
+import {AllProps} from "./types/registered-component";
+import {withState} from "./component-state";
 
+/**
+ * Builds the props for the element by merging attributes and custom props.
+ *
+ * @param self
+ * @param componentInfo
+ */
 function buildProps(self: ModrnHTMLElement, componentInfo: ComponentInfo): Record<string, unknown> & AllProps {
 
     const props: Record<string, unknown> & AllProps = {allProps};
@@ -23,19 +35,15 @@ function buildProps(self: ModrnHTMLElement, componentInfo: ComponentInfo): Recor
     return props;
 }
 
-function attributesOf(self: HTMLElement): Record<string, string> {
-    const result: Record<string, string> = {};
-    const length = self.attributes.length;
-    for (let index = 0; index < length; ++index) {
-        const {name, value} = self.attributes.item(index) || {};
-        if (name && value) {
-            result[name] = value;
-        }
-    }
-    return result;
-}
-
-export function renderComponent(self: ModrnHTMLElement, nodeToRender?: HTMLElement, suppressForDirectChildren = false): void {
+/**
+ * Renders the component. The root node to render may be specified explicitly during the initial rendering (the fully rendered
+ * content is then appended at once).
+ *
+ * @param self
+ * @param nodeToRender
+ * @param suppressForDirectChildren
+ */
+export function renderComponent(self: ModrnHTMLElement, nodeToRender?: Element, suppressForDirectChildren = false): void {
 
     const componentInfo = self.componentInfo;
     const state = self.state;
@@ -45,7 +53,7 @@ export function renderComponent(self: ModrnHTMLElement, nodeToRender?: HTMLEleme
     if (!componentInfo) {
         throw new Error(`Cannot render ${self}: componentInfo missing`);
     }
-    const root = (nodeToRender || self) as HTMLElement;
+    const root = (nodeToRender || self) as Element;
     if (!root) {
         return;
     }
@@ -58,3 +66,20 @@ export function renderComponent(self: ModrnHTMLElement, nodeToRender?: HTMLEleme
         substituteVariables(self, root, variables as Record<string, unknown>, undefined, suppressForDirectChildren);
     });
 }
+
+/**
+ * Extract attributes to a more convenient record.
+ * @param self
+ */
+function attributesOf(self: HTMLElement): Record<string, string> {
+    const result: Record<string, string> = {};
+    const length = self.attributes.length;
+    for (let index = 0; index < length; ++index) {
+        const {name, value} = self.attributes.item(index) || {};
+        if (name && value) {
+            result[name] = value;
+        }
+    }
+    return result;
+}
+

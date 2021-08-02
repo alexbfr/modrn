@@ -1,21 +1,25 @@
-import {AttributeVariable, ConstantExpression, ExpressionType, MappingType} from "../component-registry";
-import {extractExpression, isRefAttributeName, isWildcardAttributeName} from "./helpers";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {extractExpression, isRefAttributeName, isWildcardAttributeName} from "./extract-expression";
 import {logDiagnostic} from "../../util/logging";
 import {expressionPattern} from "./variable-types";
+import {AttributeVariable, MappingType} from "../types/variables";
+import {ConstantExpression, ExpressionType} from "../types/expression-types";
 
-function extractNameAndValue(element: HTMLElement | SVGElement, attributes: NamedNodeMap, attIdx: number) {
-    const {name, value} =  attributes.item(attIdx) || {name: null, value: null};
-    if (name?.startsWith(":")) {
-        element.removeAttribute(name);
-        const newName = name.substring(1);
-        return {name: newName, value};
-    }
-    return {name, value};
-}
-
-export function findAttributeVariables(rootElement: HTMLElement | SVGElement, indexes: number[]): AttributeVariable[] {
+/**
+ * Searches for attribute variables
+ * @example
+ * <span title="{{dynamicTitle}}">...</span>
+ *
+ * @param rootElement
+ * @param indexes
+ */
+export function findAttributeVariables(rootElement: Element, indexes: number[]): AttributeVariable[] {
     const result: AttributeVariable[] = [];
-    const attributes = (rootElement as HTMLElement)?.attributes;
+    const attributes = (rootElement as Element)?.attributes;
     const attributesLength = attributes?.length || 0;
     if (attributes && attributes?.length > 0) {
         for (let attIdx = 0; attIdx < attributesLength; ++attIdx) {
@@ -39,5 +43,15 @@ export function findAttributeVariables(rootElement: HTMLElement | SVGElement, in
         }
     }
     return result;
+}
+
+function extractNameAndValue(element: Element, attributes: NamedNodeMap, attIdx: number) {
+    const {name, value} =  attributes.item(attIdx) || {name: null, value: null};
+    if (name?.startsWith(":")) {
+        element.removeAttribute(name);
+        const newName = name.substring(1);
+        return {name: newName, value};
+    }
+    return {name, value};
 }
 

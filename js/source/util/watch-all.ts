@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 export function watchAll(node: HTMLElement, handler: (root: HTMLElement, node: HTMLElement, mutations: MutationRecord[]) => void): MutationObserver[] {
 
     const observers: MutationObserver[] = [];

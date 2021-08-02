@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import isDate from "date-fns/isDate";
 import parseISO from "date-fns/parseISO";
 import formatISO from "date-fns/formatISO";

@@ -1,8 +1,14 @@
-import {declare, m, makeComponent, mFunction, mObj, mString, NoProps} from "./source/core/component-declaration";
-import {getState, purify, useState} from "./source/core/state-hooks";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {declare, makeComponent} from "./source/core/component-declaration";
+import {getState, purify, useState} from "./source/core/hooks/state-hooks";
 import {createState} from "./source/util/state";
-import {ChangeEvent} from "react";
-import {createEventListener, useEventListener} from "./source/core/event-hooks";
+import {createEventListener, useEventListener} from "./source/core/hooks/event-hooks";
+import {m, mFunction, mObj, mString} from "./source/core/types/prop-types";
+import {NoProps} from "./source/core/types/registered-component";
 
 type Todo = {
     id: number;
@@ -24,7 +30,7 @@ type HeaderComponentState = {
 const headerComponentState = createState<HeaderComponentState>();
 const headerComponent = makeComponent(headerComponentProps, ({addTodo}) => {
     const [{newTodo}] = useState(headerComponentState, {newTodo: ""});
-    const setText = purify(headerComponentState, (state, evt: ChangeEvent) => ({newTodo: (evt?.target as HTMLInputElement)?.value}));
+    const setText = purify(headerComponentState, (state, evt: Event) => ({newTodo: (evt?.target as HTMLInputElement)?.value}));
     const onKey = purify(headerComponentState, (state, evt: KeyboardEvent) => {
         if (evt.key === "Enter") {
             addTodo(state.newTodo);
@@ -80,6 +86,7 @@ const todoListComponent = makeComponent(todoListProps, ({visibility, todos, upda
     const [editTodo, setEditTodo] = useState(editTodoState, {});
     const filteredTodos = filters[visibility](todos);
     const allDone = todos.filter(todo => todo.completed).length === todos.length;
+
     function toggleAllDone() {
         todos.forEach(todo => updateTodo({...todo, completed: !allDone}));
     }
@@ -137,14 +144,12 @@ const todoListComponent = makeComponent(todoListProps, ({visibility, todos, upda
               <label ondblclick="{{&onEdit(todo)}}">{{ todo.title }}</label>
               <button class="destroy" onclick="{{&removeTodo(todo)}}"></button>
             </div>
-            <div style="display: contents" m-if="isEditing(todo)">
-                <input
-                  class="edit" tabindex="1"
-                  type="text" value="{{editTodo && editTodo.title}}"
-                  onblur="{{onBlur}}" m-autofocus="{{isEditing(todo)}}"
-                  onkeyup="{{onKeyup}}"
-                />
-            </div>
+            <input
+              class="edit" tabindex="1"
+              type="text" value="{{editTodo && editTodo.title}}"
+              onblur="{{onBlur}}" m-autofocus="{{isEditing(todo)}}"
+              onkeyup="{{onKeyup}}"
+            />
           </li>
         </ul>
       </section>

@@ -1,7 +1,14 @@
-import {declare, m, makeComponent, mChild, NoProps} from "./source/core/component-declaration";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {declare, makeComponent} from "./source/core/component-declaration";
 import {createState} from "./source/util/state";
-import {getState, mutableState, useState} from "./source/core/state-hooks";
-import {createChildrenState, useTemplate} from "./source/core/templated-children-hooks";
+import {getState, mutableState, useState} from "./source/core/hooks/state-hooks";
+import {createChildrenState, useTemplate} from "./source/core/hooks/templated-children-hooks";
+import {m, mChild} from "./source/core/types/prop-types";
+import {NoProps} from "./source/core/types/registered-component";
 
 const draggableHeaderInitialState = {
     dragging: false,

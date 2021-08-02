@@ -1,8 +1,15 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {clearRenderQueue, renderElements, requestRender} from "../render-queue";
-import {m, makeComponent, mNumber, NoProps} from "../component-declaration";
+import {makeComponent} from "../component-declaration";
 import {registerAnonymous} from "./anon";
 import {TestUtils} from "../../test-utils/test-utils";
-import {ModrnHTMLElement} from "../component-registry";
+import {m, mNumber} from "../types/prop-types";
+import {NoProps} from "../types/registered-component";
+import {ModrnHTMLElement} from "../types/component-registry";
 
 beforeEach(() => clearRenderQueue());
 

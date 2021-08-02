@@ -1,6 +1,11 @@
-import {MappingType} from "../../component-registry";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {findAttributeVariables} from "../find-attribute-variables";
 import {varUsageExpression} from "./find-child-variables.test";
+import {MappingType} from "../../types/variables";
 
 it("Returns empty list when no attributes exist", () => {
 

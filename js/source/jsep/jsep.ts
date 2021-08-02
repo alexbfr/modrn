@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 //     JavaScript Expression Parser (JSEP) <%= version %>
 //     JSEP may be freely distributed under the MIT License
 //     https://ericsmekens.github.io/jsep/
@@ -94,9 +99,6 @@ namespace jsep {
         | "ConditionalExpression"
         | "ArrayExpression";
 
-    type HookType = "gobble-expression" | "after-expression" | "gobble-token" | "after-token" | "gobble-spaces";
-    type HookCallback = (env: { node?: Expression }) => void;
-
 }
 
 
@@ -108,7 +110,7 @@ export class Jsep {
     /**
      * @returns {string}
      */
-    static get version() {
+    static get version(): string {
         // To be filled in by the template
         return "<%= version %>";
     }
@@ -116,7 +118,7 @@ export class Jsep {
     /**
      * @returns {string}
      */
-    static toString() {
+    static toString(): string {
         return "JavaScript Expression Parser (JSEP) v" + Jsep.version;
     }
 
@@ -126,7 +128,7 @@ export class Jsep {
      * @param {string} op_name The name of the unary op to add
      * @returns {Jsep}
      */
-    static addUnaryOp(op_name: string) {
+    static addUnaryOp(op_name: string): typeof Jsep {
         Jsep.max_unop_len = Math.max(op_name.length, Jsep.max_unop_len);
         Jsep.unary_ops[op_name] = 1;
         return Jsep;
@@ -138,7 +140,7 @@ export class Jsep {
      * @param {number} precedence The precedence of the binary op (can be a float)
      * @returns {Jsep}
      */
-    static addBinaryOp(op_name: string, precedence: number) {
+    static addBinaryOp(op_name: string, precedence: number): typeof Jsep {
         Jsep.max_binop_len = Math.max(op_name.length, Jsep.max_binop_len);
         Jsep.binary_ops[op_name] = precedence;
         return Jsep;
@@ -149,7 +151,7 @@ export class Jsep {
      * @param {string} char The additional character to treat as a valid part of an identifier
      * @returns {Jsep}
      */
-    static addIdentifierChar(char: string) {
+    static addIdentifierChar(char: string): typeof Jsep {
         Jsep.additional_identifier_chars.add(char);
         return Jsep;
     }
@@ -160,7 +162,7 @@ export class Jsep {
      * @param {*} literal_value The value of the literal
      * @returns {Jsep}
      */
-    static addLiteral(literal_name: string, literal_value: any): typeof Jsep {
+    static addLiteral(literal_name: string, literal_value: any): typeof Jsep { // eslint-disable-line
         Jsep.literals[literal_name] = literal_value;
         return Jsep;
     }
@@ -700,7 +702,7 @@ export class Jsep {
      * e.g. `"hello world"`, `'this is\nJSEP'`
      * @returns {jsep.Literal}
      */
-    gobbleStringLiteral() {
+    gobbleStringLiteral(): Literal {
         let str = "";
         const quote = this.expr.charAt(this.index++);
         let closed = false;
@@ -750,7 +752,7 @@ export class Jsep {
             type: Jsep.LITERAL,
             value: str,
             raw: quote + str + quote
-        };
+        } as Literal;
     }
 
     /**
@@ -760,7 +762,7 @@ export class Jsep {
      * (e.g. `true`, `false`, `null`) or `this`
      * @returns {jsep.Expression}
      */
-    gobbleIdentifier() {
+    gobbleIdentifier(): Expression {
         let ch = this.code;
         const start = this.index;
 
@@ -786,14 +788,14 @@ export class Jsep {
                 type: Jsep.LITERAL,
                 value: Jsep.literals[identifier],
                 raw: identifier
-            };
+            } as Expression;
         } else if (identifier === Jsep.this_str) {
-            return {type: Jsep.THIS_EXP};
+            return {type: Jsep.THIS_EXP} as Expression;
         } else {
             return {
                 type: Jsep.IDENTIFIER,
                 name: identifier
-            };
+            } as Expression;
         }
     }
 
@@ -806,7 +808,7 @@ export class Jsep {
      * @param {string} termination
      * @returns {jsep.Expression[]}
      */
-    gobbleArguments(termination: any): (Expression | null)[] {
+    gobbleArguments(termination: any): (Expression | null)[] { // eslint-disable-line
         const args = [];
         let closed = false;
         let separator_count = 0;
@@ -957,7 +959,7 @@ export class Jsep {
     // Literals
     // ----------
     // Store the values to return for the various literals we may encounter
-    static literals: Record<string, any> = {
+    static literals: Record<string, boolean | null> = {
         "true": true,
         "false": false,
         "null": null

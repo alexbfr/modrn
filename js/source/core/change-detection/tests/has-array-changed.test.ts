@@ -1,4 +1,9 @@
-import {hasArrayChanged} from "../change-hooks";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {hasArrayChanged} from "../has-array-changed";
 
 it("Treats two empty arrays as equal", () => {
     const actual = hasArrayChanged([], [], 0);

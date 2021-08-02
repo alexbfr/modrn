@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {tagify} from "../tagify";
 
 describe("Create valid html tag names from strings", function () {

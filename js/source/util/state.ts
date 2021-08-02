@@ -1,7 +1,12 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {DeepPartialOrFull, immodify} from "./immodify";
 import {markChanged} from "../core/change-tracking/mark-changed";
 import {nextId} from "./next-id";
-import {ModrnHTMLElement} from "../core/component-registry";
+import {ModrnHTMLElement} from "../core/types/component-registry";
 
 export type ParamType<K1 = never, K2 = never, K3 = never, K4 = never> =
     [K1] extends [never] ? [] :

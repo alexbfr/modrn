@@ -1,9 +1,15 @@
-import { TestUtils } from "../../test-utils/test-utils";
-import {makeComponent, NoProps} from "../component-declaration";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {TestUtils} from "../../test-utils/test-utils";
+import {makeComponent} from "../component-declaration";
 import {registerAnonymous} from "./anon";
-import {useChild, useChildren, useTemplate} from "../templated-children-hooks";
+import {useChild, useChildren, useTemplate} from "../hooks/templated-children-hooks";
 import {clearRenderQueue, getRenderQueueLength, renderElements, requestRender} from "../render-queue";
-import {ModrnHTMLElement} from "../component-registry";
+import {NoProps} from "../types/registered-component";
+import {ModrnHTMLElement} from "../types/component-registry";
 
 beforeEach(() => clearRenderQueue());
 

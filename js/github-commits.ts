@@ -1,8 +1,14 @@
-import {declare, makeComponent, NoProps} from "./source/core/component-declaration";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {declare, makeComponent} from "./source/core/component-declaration";
 import {createState} from "./source/util/state";
-import {purify, useState} from "./source/core/state-hooks";
+import {purify, useState} from "./source/core/hooks/state-hooks";
 import {yearMonthDay} from "./source/filters/date-time-filter";
 import {jsonFetch} from "./source/util/fetch";
+import {NoProps} from "./source/core/types/registered-component";
 
 const apiURL = "https://api.github.com/repos/vuejs/vue/commits?per_page=5&sha=";
 

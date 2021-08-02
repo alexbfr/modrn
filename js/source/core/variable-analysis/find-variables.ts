@@ -1,127 +1,110 @@
-import {
-    AttributeVariable,
-    ComplexExpression,
-    ExpressionType,
-    FoundVariables,
-    Fragment,
-    FunctionReferenceExpression,
-    isRegisteredTagName,
-    MappingType,
-    ModrnHTMLElement,
-    SpecialAttributeVariable,
-    VariableMapping,
-    VariableMappings, VariablesByNodeIndex,
-    VariableUsageExpression
-} from "../component-registry";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {splitTextContentAtVariables} from "./split-text-content-at-variables";
 import {findChildVariables} from "./find-child-variables";
 import {findAttributeVariables} from "./find-attribute-variables";
 import {findAttributeRefVariables} from "./find-attribute-ref-variables";
 import {findSpecialAttributes} from "./find-special-attributes";
 import {tagify} from "../../util/tagify";
-import {addBinaryOp, compile, lazy} from "../../util/expression-eval";
-import jsep from "../../jsep/jsep";
-import Expression = jsep.Expression;
-import Identifier = jsep.Identifier;
-import Compound = jsep.Compound;
+import {
+    AttributeVariable,
+    FoundVariables,
+    MappingType,
+    SpecialAttributeVariable,
+    VariableMapping,
+    VariablesByNodeIndex
+} from "../types/variables";
+import {Fragment, ModrnHTMLElement} from "../types/component-registry";
+import {
+    ComplexExpression,
+    ExpressionType,
+    FunctionReferenceExpression,
+    VariableUsageExpression
+} from "../types/expression-types";
+import {isRegisteredTagName} from "../component-registry";
 
-function evalLambda(a: any, b: any, nodeA: Expression, nodeB: Expression, ctx: any): any {
-    if (nodeA.type !== "Identifier" && nodeA.type !== "Compound") {
-        throw new Error("Left-hand side must be an identifier or argument list");
+/**
+ * Finds variable references in the provided element.
+ * This function inspects all children recursively. If a ModrnHTMLElement is encountered,
+ * recursion stops there (a ModrnHTMLElement will have done the same process for its own content already).
+ *
+ * Also, there is specific handling for special attributes which wrap their element (like m-if or m-for).
+ *
+ * @param rootElement
+ */
+export function findVariables(rootElement: Element): FoundVariables {
+    const allMappings: {
+        [variableName: string]: VariableMapping[],
+        __constants: VariableMapping[]
+    } = {
+        __constants: []
+    };
+    const result: {
+        [indexString: string]: VariablesByNodeIndex
+    } = {};
+
+    // Ensure variables occurring in textContent are in their own respective nodes
+    splitTextContentAtVariables(rootElement);
+
+    // Look for special attributes
+    const specialAttributes = findSpecialAttributes(rootElement, []);
+
+    let vars: VariableMapping[] = [];
+    let newRootElement = rootElement;
+
+    // If we do have special attributes, the root element may have been changed if the attribute is of the wrapping kind
+    if (specialAttributes.length) {
+        const analyzed = analyzeWrappedFragment(rootElement, [], specialAttributes, vars);
+        newRootElement = analyzed.rootElement;
     }
 
-    const names = nodeA.type === "Identifier" ? [(nodeA as Identifier).name] : ((nodeA as Compound).body.map(node => {
-        if (node.type !== "Identifier") {
-            throw new Error("Argument list must only consist of identifiers");
-        }
-        return (node as Identifier).name;
-    }));
+    /** If the root element was changed, we don't need to delve into children since this will already have been done {@see analyzeWrappedFragment} */
+    if (newRootElement === rootElement) {
+        vars = [...vars, ...analyze(rootElement, []), ...iterateChildren(rootElement, [])];
+    }
 
-    const compiled = compile(nodeB);
-    return (...params: any[]) => {
-        const subContext = {...ctx};
-        for (let idx = 0; idx < names.length; ++idx) {
-            subContext[names[idx]] = (idx < params.length) ? params[idx] : undefined;
+    // Normalize the list of variable mappings by putting them in a map first in order to group by child node indexes
+    vars.forEach(varMapping => {
+        const indexesString = varMapping.indexes.join(",");
+        const where = result[indexesString] || (result[indexesString] = {
+            indexes: varMapping.indexes,
+            mappings: {__constants: []}
+        });
+        if (varMapping.expression.expressionType === ExpressionType.ConstantExpression) {
+            where.mappings.__constants.push(varMapping);
+            allMappings.__constants.push(varMapping);
         }
-        return compiled(subContext);
+        allVariableReferencesOf(varMapping).forEach(variableName => {
+            const list = where.mappings[variableName] || (where.mappings[variableName] = []);
+            list.push(varMapping);
+            const allList = allMappings[variableName] || (allMappings[variableName] = []);
+            allList.push(varMapping);
+        });
+    });
+
+    // Finally, return the result my taking the grouped result object's entries and sort by the indexes (ensuring the
+    // element will be updated from top of hierarchy to bottom of hierarchy)
+    return {
+        variables: {
+            sorted: Object.entries(result)
+                .sort(([, value1], [, value2]) => indexArrayComparer(value1.indexes, value2.indexes))
+                .map(([, vars]) => vars),
+            all: allMappings
+        },
+        newRootElement: newRootElement
     };
 }
-(evalLambda as lazy).lazy = true;
 
-addBinaryOp("=>", 20, evalLambda);
-
-function precedenceComparer(s1: SpecialAttributeVariable, s2: SpecialAttributeVariable): number {
-    return s1.specialAttributeRegistration.precedence - s2.specialAttributeRegistration.precedence;
-}
-
-type WrappedFragmentResult = {
-    rootElement: HTMLElement;
-}
-
-function analyzeWrappedFragment(
-    rootElementProvided: HTMLElement, indexes: number[], specialAttributes: SpecialAttributeVariable[], result: VariableMapping[]): WrappedFragmentResult {
-
-    let rootElement = rootElementProvided;
-
-    if (specialAttributes.length === 0) {
-        return {
-            rootElement
-        };
-    }
-
-    const specialAttribute = specialAttributes[0];
-    rootElement.removeAttribute(specialAttribute.specialAttributeRegistration.attributeName);
-    const specialAttributeHandlerResult = specialAttribute.specialAttributeRegistration?.handler(rootElement);
-
-    if (specialAttributeHandlerResult.transformedElement && specialAttributeHandlerResult.transformedElement !== rootElement) {
-        rootElement = specialAttributeHandlerResult.transformedElement;
-        const variableResult = findVariables(rootElementProvided);
-        const newRootElement = variableResult.newRootElement;
-
-        const subFragment: Fragment = {
-            childElement: newRootElement,
-            variableDefinitions: variableResult.variables
-        };
-        if (subFragment.variableDefinitions) {
-            const subVariables = Object.keys(subFragment.variableDefinitions.all)
-                .map(variableName => ({
-                    indexes,
-                    attributeName: tagify(variableName),
-                    type: MappingType.attribute,
-                    hidden: true,
-                    expression: {expressionType: ExpressionType.VariableUsage, variableName} as VariableUsageExpression
-                } as AttributeVariable));
-            result.push(...subVariables);
-        }
-
-        const parentElement = newRootElement.parentElement;
-        if (!parentElement) {
-            throw new Error(`Parent element was assumed to exist, but didn't at ${newRootElement}`);
-        }
-
-        parentElement.insertBefore(rootElement, newRootElement);
-        parentElement.removeChild(newRootElement);
-        (rootElement as ModrnHTMLElement).notifyChildrenChanged(subFragment);
-
-        result.push(specialAttribute);
-        return {
-            rootElement
-        };
-    }
-    specialAttributes.splice(0, 1);
-    result.push({
-        type: MappingType.specialAttribute,
-        hidden: false,
-        indexes,
-        attributeName: specialAttributeHandlerResult.remapAttributeName ? specialAttributeHandlerResult.remapAttributeName(specialAttribute.attributeName) : specialAttribute.attributeName,
-        expression: specialAttribute.expression,
-        specialAttributeRegistration: specialAttribute.specialAttributeRegistration,
-        valueTransformer: specialAttributeHandlerResult.valueTransformer
-    } as SpecialAttributeVariable);
-    return analyzeWrappedFragment(rootElementProvided, indexes, specialAttributes, result);
-}
-
-function analyze(rootElement: HTMLElement, indexes: number[]): VariableMapping[] {
+/**
+ * Analyzes the provided element for variable references.
+ *
+ * @param rootElement
+ * @param indexes
+ */
+function analyze(rootElement: Element, indexes: number[]): VariableMapping[] {
     const specialAttributes = findSpecialAttributes(rootElement, indexes).sort(precedenceComparer);
 
     const result: VariableMapping[] = [];
@@ -141,7 +124,12 @@ function analyze(rootElement: HTMLElement, indexes: number[]): VariableMapping[]
     return result;
 }
 
-function iterateChildren(rootElement: HTMLElement, indexes: number[]): VariableMapping[] {
+/**
+ * Inspect children
+ * @param rootElement
+ * @param indexes
+ */
+function iterateChildren(rootElement: Element, indexes: number[]): VariableMapping[] {
     const result: VariableMapping[] = [];
     splitTextContentAtVariables(rootElement);
     if (!rootElement.firstElementChild) {
@@ -158,6 +146,10 @@ function iterateChildren(rootElement: HTMLElement, indexes: number[]): VariableM
     return result;
 }
 
+/**
+ * Extract all variable references in a mapping
+ * @param varMapping
+ */
 function allVariableReferencesOf(varMapping: VariableMapping): string[] {
     switch (varMapping.expression.expressionType) {
     case ExpressionType.VariableUsage:
@@ -173,57 +165,116 @@ function allVariableReferencesOf(varMapping: VariableMapping): string[] {
     }
 }
 
-export function findVariables(rootElement: HTMLElement): FoundVariables {
-    const allMappings: {
-        [variableName: string]: VariableMapping[],
-        __constants: VariableMapping[]
-    } = {
-        __constants: []
-    };
-    const result: {
-        [indexString: string]: VariablesByNodeIndex
-    } = {};
+type WrappedFragmentResult = {
+    rootElement: Element;
+}
 
-    splitTextContentAtVariables(rootElement);
-    const specialAttributes = findSpecialAttributes(rootElement, []);
+/**
+ * Analyze the first special attribute, recurse over the rest (since we have to take precedence into account and some
+ * special attributes may be of the wrapping kind, like m-for)
+ *
+ * This is not optimal but unlikely to be a measurable bottleneck.
+ *
+ * @param rootElementProvided
+ * @param indexes
+ * @param specialAttributes
+ * @param result
+ */
+function analyzeWrappedFragment(
+    rootElementProvided: Element, indexes: number[], specialAttributes: SpecialAttributeVariable[], result: VariableMapping[]): WrappedFragmentResult {
 
-    let vars: VariableMapping[] = [];
-    let newRootElement = rootElement;
+    let rootElement = rootElementProvided;
 
-    if (specialAttributes.length) {
-        const analyzed = analyzeWrappedFragment(rootElement, [], specialAttributes, vars);
-        newRootElement = analyzed.rootElement;
+    if (specialAttributes.length === 0) {
+        return {
+            rootElement
+        };
     }
 
-    if (newRootElement === rootElement) {
-        vars = [...vars, ...analyze(rootElement, []), ...iterateChildren(rootElement, [])];
-    }
+    const specialAttribute = specialAttributes[0];
+    rootElement.removeAttribute(specialAttribute.specialAttributeRegistration.attributeName);
 
-    vars.forEach(varMapping => {
-        const indexesString = varMapping.indexes.join(",");
-        const where = result[indexesString] || (result[indexesString] = {
-            indexes: varMapping.indexes,
-            mappings: {__constants: []}
-        });
-        if (varMapping.expression.expressionType === ExpressionType.ConstantExpression) {
-            where.mappings.__constants.push(varMapping);
-            allMappings.__constants.push(varMapping);
+    // Invoke the handler function
+    const specialAttributeHandlerResult = specialAttribute.specialAttributeRegistration?.handler(rootElement);
+
+    // Check if there is a new element returned, if so, recurse directly into it
+    if (specialAttributeHandlerResult.transformedElement && specialAttributeHandlerResult.transformedElement !== rootElement) {
+        rootElement = specialAttributeHandlerResult.transformedElement;
+
+        // Recursively analyze variables in the original (unwrapped) item
+        const variableResult = findVariables(rootElementProvided);
+        const newRootElement = variableResult.newRootElement;
+
+        // Build a fragment of the result (will be assigned as dynamic child later on)
+        const subFragment: Fragment = {
+            childElement: newRootElement,
+            variableDefinitions: variableResult.variables
+        };
+
+        // Re-map found variable definitions; all variable definitions now are attributes (i.e. custom props) to the
+        // wrapping container
+        if (subFragment.variableDefinitions) {
+            const subVariables = Object.keys(subFragment.variableDefinitions.all)
+                .map(variableName => ({
+                    indexes,
+                    attributeName: tagify(variableName),
+                    type: MappingType.attribute,
+                    hidden: true,
+                    expression: {expressionType: ExpressionType.VariableUsage, variableName} as VariableUsageExpression
+                } as AttributeVariable));
+            result.push(...subVariables);
         }
-        allVariableReferencesOf(varMapping).forEach(variableName => {
-            const list = where.mappings[variableName] || (where.mappings[variableName] = []);
-            list.push(varMapping);
-            const allList = allMappings[variableName] || (allMappings[variableName] = []);
-            allList.push(varMapping);
-        });
-    });
 
-    return {
-        variables: {
-            sorted: Object.entries(result)
-                .sort(([name1], [name2]) => name1.localeCompare(name2))
-                .map(([name, vars]) => vars),
-            all: allMappings
-        },
-        newRootElement: newRootElement
-    };
+        const parentElement = newRootElement.parentElement;
+        if (!parentElement) {
+            throw new Error(`Parent element was assumed to exist, but didn't at ${newRootElement}`);
+        }
+
+        // Inform the wrapping element of its dynamic children
+        (rootElement as ModrnHTMLElement).notifyChildrenChanged(subFragment);
+
+        // And add to parent, removing the wrapped children
+        parentElement.insertBefore(rootElement, newRootElement);
+        parentElement.removeChild(newRootElement);
+
+        result.push(specialAttribute);
+        return {
+            rootElement
+        };
+    }
+    specialAttributes.splice(0, 1);
+    result.push({
+        type: MappingType.specialAttribute,
+        hidden: false,
+        indexes,
+        attributeName: specialAttributeHandlerResult.remapAttributeName ? specialAttributeHandlerResult.remapAttributeName(specialAttribute.attributeName) : specialAttribute.attributeName,
+        expression: specialAttribute.expression,
+        specialAttributeRegistration: specialAttribute.specialAttributeRegistration,
+        valueTransformer: specialAttributeHandlerResult.valueTransformer
+    } as SpecialAttributeVariable);
+    return analyzeWrappedFragment(rootElementProvided, indexes, specialAttributes, result);
+}
+
+function precedenceComparer(s1: SpecialAttributeVariable, s2: SpecialAttributeVariable): number {
+    return s1.specialAttributeRegistration.precedence - s2.specialAttributeRegistration.precedence;
+}
+
+function indexArrayComparer(indexes1: number[], indexes2: number[]): number {
+    const l1 = indexes1.length;
+    const l2 = indexes2.length;
+    if (l1 < l2) {
+        return -1;
+    } else if (l1 > l2) {
+        return 1;
+    }
+    for (let idx = 0; idx < l1; idx++) {
+        const v1 = indexes1[idx];
+        const v2 = indexes2[idx];
+        if (v1 < v2) {
+            return -1;
+        } else if (v1 > v2) {
+            return 1;
+        }
+    }
+    return 0;
 }

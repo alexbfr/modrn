@@ -1,4 +1,9 @@
-import {replaceWith, immodify} from "../immodify";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {immodify, replaceWith} from "../immodify";
 
 it("Works for one string property", () => {
     const previous = {someData: "someValue"};

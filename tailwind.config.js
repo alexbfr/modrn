@@ -1,3 +1,8 @@
+/*
+ * // SPDX-License-Identifier: MIT
+ * // Copyright © 2021 Alexander Berthold
+ */
+
 const colors = require('tailwindcss/colors');
 
 module.exports = {

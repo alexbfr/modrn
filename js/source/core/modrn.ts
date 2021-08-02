@@ -1,6 +1,10 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {getComponentRegistry, registerAll} from "./component-registry";
-import {ModuleResult} from "./component-declaration";
-import {childrenChanged, componentHasConnected, componentHasDisconnected, initializeAll} from "./modrn-base";
+import {childrenChanged, componentHasConnected, componentHasDisconnected} from "./modrn-base";
 import {ifSpecialAttributeRegistration} from "../special-attributes/if-special-attribute";
 import {forSpecialAttributeRegistration} from "../special-attributes/for-special-attribute";
 import {classSpecialAttributeRegistration} from "../special-attributes/class-special-attribute";
@@ -11,8 +15,16 @@ import {
     changeSpecialAttributeRegistration,
     inputSpecialAttributeRegistration
 } from "../special-attributes/change-special-attribute";
+import {ModuleResult} from "./types/registered-component";
+import {initializeAll} from "./component-static-initialize";
 
-export function start(...modules: ModuleResult<never, never>[]): void { // eslint-disable-line
+/**
+ * Perform the global initialization of all components contained in the provided module list.
+ * This creates a custom element (aka web component) for each of them.
+ *
+ * @param modules
+ */
+export function modrn(...modules: ModuleResult<never, never>[]): void { // eslint-disable-line
     registerAll(componentHasConnected, childrenChanged, componentHasDisconnected);
     initializeAll(getComponentRegistry());
 }

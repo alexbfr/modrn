@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {splitTextContentAtVariables} from "../split-text-content-at-variables";
 
 it("leaves a plain replacement as-is", () => {

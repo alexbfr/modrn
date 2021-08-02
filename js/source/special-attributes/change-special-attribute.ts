@@ -1,10 +1,15 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {registerSpecialAttribute} from "../core/variable-analysis/register-special-attribute";
-import {SpecialAttributeHandlerFnResult, SpecialAttributeRegistration} from "../core/component-registry";
-import {createState, getOrCreateAttachedState} from "../util/state";
-import {useState} from "../core/state-hooks";
-import {useDisconnect} from "../core/event-hooks";
-import {createChangeHook, getOrCreateAttachedChangeHook, useChange} from "../core/change-hooks";
+import {getOrCreateAttachedState} from "../util/state";
+import {useState} from "../core/hooks/state-hooks";
+import {getOrCreateAttachedChangeHook, useChange} from "../core/hooks/change-hooks";
 import {logWarn} from "../util/logging";
+import {SpecialAttributeHandlerFnResult, SpecialAttributeRegistration} from "../core/types/variables";
+import {useDisconnect} from "../core/hooks/disconnect-hook";
 
 export const changeSpecialAttributeRegistration = makeChangeHandler("m-change", "change");
 export const inputSpecialAttributeRegistration = makeChangeHandler("m-input", "input");

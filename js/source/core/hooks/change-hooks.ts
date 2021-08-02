@@ -1,6 +1,12 @@
-import {createState, getOrCreateAttachedState, StateToken} from "../util/state";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {createState, getOrCreateAttachedState, StateToken} from "../../util/state";
 import {useState} from "./state-hooks";
-import {hasFunctionChanged} from "./change-tracking/change-from-to";
+import {hasObjectChanged} from "../change-detection/has-object-changed";
+import {hasArrayChanged} from "../change-detection/has-array-changed";
 
 export type ChangeHookState = {
     previous: unknown;
@@ -11,18 +17,40 @@ export type ChangeHookStateToken = StateToken<ChangeHookState> & {deepness: numb
 
 export type ChangeHandlerFn<T> = (previous: T, now: T) => void;
 
+/**
+ * Creates a change hook. deepness specifies the maximum recursion depth to compare the two objects
+ * @param deepness - maximum recursion depth
+ */
 export function createChangeHook(deepness = 0): ChangeHookStateToken {
     return {...createState<ChangeHookState>(), deepness};
 }
 
+/**
+ * Gets or creates an element-attached change hook-
+ * @param prefix - the prefix to disambiguate multiple attached states on the same element
+ * @param element - the element to attach the state to
+ * @param deepness - maximum recusrion depth
+ */
 export function getOrCreateAttachedChangeHook(prefix: string, element: Element, deepness = 0): ChangeHookStateToken {
     return {...getOrCreateAttachedState<ChangeHookState>(prefix, element), deepness};
 }
 
+/**
+ * Tracks changes to the provided value, which must be not null. Change is detected recursively up to the depth when
+ * creating the state token.
+ * @see createChangeHook
+ * @see getOrCreateAttachedChangeHook
+ *
+ * @param stateToken
+ * @param value
+ * @param changeHandlerFn
+ */
 export function useChange<T>(stateToken: ChangeHookStateToken, value: NonNullable<T>, changeHandlerFn?: ChangeHandlerFn<T>): boolean {
     const [state, setState] = useState(stateToken, {previous: value, initial: true});
     const previous = state.previous;
     let changed = false;
+
+    // Do not trigger change on initialization
     if (state.initial) {
         setState({...state, initial: false});
     } else {
@@ -66,66 +94,4 @@ export function useChange<T>(stateToken: ChangeHookStateToken, value: NonNullabl
     return changed;
 }
 
-export function hasObjectChanged(previous: Record<string, unknown>, value: Record<string, unknown>, deepness: number): boolean {
-    const previousEntries = Object.entries(previous);
-    const nowEntries = Object.keys(value);
-    if (previousEntries.length !== nowEntries.length) {
-        return true;
-    } else {
-        const now = value as unknown as Record<string, unknown>;
-        for (const [name, val] of previousEntries) {
-            if (!(name in now)) {
-                return true;
-            }
-            if (now[name] !== val) {
-                if (deepness > 0) {
-                    if (hasChanged(val, now[name], deepness - 1)) {
-                        return true;
-                    }
-                } else {
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
-}
 
-export function hasArrayChanged(previousArr: unknown[], nowArr: unknown[], deepness: number): boolean {
-    if (previousArr.length !== nowArr.length) {
-        return true;
-    } else {
-        for (let idx = 0; idx < nowArr.length; idx++) {
-            const now = nowArr[idx];
-            const previous = previousArr[idx];
-            if (now !== previous) {
-                if (deepness > 0) {
-                    if (hasChanged(previous, now, deepness - 1)) {
-                        return true;
-                    }
-                } else {
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
-}
-
-function hasChanged(previous: unknown, now: unknown, deepness: number) {
-    if (!now || !previous) {
-        return true;
-    }
-    if (Array.isArray(now) && Array.isArray(previous)) {
-        if (hasArrayChanged(previous as unknown[], now as unknown[], deepness - 1)) {
-            return true;
-        }
-    } else if (typeof now === "object" && typeof previous === "object") {
-        if (hasObjectChanged(previous as Record<string, unknown>, now as Record<string, unknown>, deepness - 1)) {
-            return true;
-        }
-    } else if (typeof now === "function" && typeof previous === "function") {
-        return hasFunctionChanged(previous, now);
-    }
-    return false;
-}

@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 type Full<T> = { full: true } & { val: T};
 
 export type DeepPartialOrFull<T> = {

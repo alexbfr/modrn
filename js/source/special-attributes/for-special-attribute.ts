@@ -1,8 +1,15 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {registerSpecialAttribute} from "../core/variable-analysis/register-special-attribute";
-import {ModrnHTMLElement, SpecialAttributeHandlerFnResult} from "../core/component-registry";
-import {m, makeComponent, mArray, mObj, mString} from "../core/component-declaration";
-import {useChildren} from "../core/templated-children-hooks";
+import {makeComponent} from "../core/component-declaration";
+import {useChildren} from "../core/hooks/templated-children-hooks";
 import {only} from "../core/modrn-base";
+import {m, mArray, mObj} from "../core/types/prop-types";
+import {SpecialAttributeHandlerFnResult} from "../core/types/variables";
+import {ModrnHTMLElement} from "../core/types/component-registry";
 
 const FOR_PRECEDENCE = -1;
 const AS_PRECEDENCE = -100;

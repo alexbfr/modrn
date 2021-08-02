@@ -1,8 +1,14 @@
-import {makeComponent, NoProps} from "../../core/component-declaration";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {makeComponent} from "../../core/component-declaration";
 import {registerAnonymous} from "../../core/tests/anon";
 import {TestUtils} from "../../test-utils/test-utils";
 import {getRenderQueueLength, renderElements, requestRender} from "../../core/render-queue";
-import {ModrnHTMLElement} from "../../core/component-registry";
+import {NoProps} from "../../core/types/registered-component";
+import {ModrnHTMLElement} from "../../core/types/component-registry";
 
 it("Renders a simple for loop with true if condition", async () => {
 

@@ -1,7 +1,13 @@
-import { TestUtils } from "../../test-utils/test-utils";
-import {makeComponent, NoProps} from "../component-declaration";
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+import {TestUtils} from "../../test-utils/test-utils";
+import {makeComponent} from "../component-declaration";
 import {registerAnonymous} from "./anon";
 import {clearRenderQueue} from "../render-queue";
+import {NoProps} from "../types/registered-component";
 
 beforeEach(clearRenderQueue);
 

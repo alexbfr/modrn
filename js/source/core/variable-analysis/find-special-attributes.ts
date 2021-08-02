@@ -1,28 +1,24 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {getSpecialAttributeRegistry} from "./register-special-attribute";
-import {MappingType, SpecialAttributeVariable} from "../component-registry";
-import {extractExpression} from "./helpers";
+import {extractExpression} from "./extract-expression";
+import {MappingType, SpecialAttributeVariable} from "../types/variables";
 
-export function hasSpecialAttributes(rootElement: HTMLElement): boolean {
-    const specialAttributeRegistry = getSpecialAttributeRegistry();
-
-    const attributes = (rootElement as HTMLElement)?.attributes;
-    const attributesLength = attributes?.length || 0;
-    if (attributes && attributes?.length > 0) {
-        for (let attIdx = 0; attIdx < attributesLength; ++attIdx) {
-            const {name, value} = attributes.item(attIdx) || {name: null, value: null};
-            if (name && value && specialAttributeRegistry[name]) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-export function findSpecialAttributes(rootElement: HTMLElement, indexes: number[]): SpecialAttributeVariable[] {
+/**
+ * Looks for special attributes, that is, attributes which have been registered as such
+ * @see registerSpecialAttribute
+ *
+ * @param rootElement
+ * @param indexes
+ */
+export function findSpecialAttributes(rootElement: Element, indexes: number[]): SpecialAttributeVariable[] {
     const specialAttributeRegistry = getSpecialAttributeRegistry();
     const result: SpecialAttributeVariable[] = [];
 
-    const attributes = (rootElement as HTMLElement)?.attributes;
+    const attributes = (rootElement as Element)?.attributes;
     const attributesLength = attributes?.length || 0;
     if (attributes && attributes?.length > 0) {
         for (let attIdx = 0; attIdx < attributesLength; ++attIdx) {
@@ -45,3 +41,21 @@ export function findSpecialAttributes(rootElement: HTMLElement, indexes: number[
 
     return result;
 }
+
+export function hasSpecialAttributes(rootElement: HTMLElement): boolean {
+    const specialAttributeRegistry = getSpecialAttributeRegistry();
+
+    const attributes = (rootElement as HTMLElement)?.attributes;
+    const attributesLength = attributes?.length || 0;
+    if (attributes && attributes?.length > 0) {
+        for (let attIdx = 0; attIdx < attributesLength; ++attIdx) {
+            const {name, value} = attributes.item(attIdx) || {name: null, value: null};
+            // TODO: this will also skip decorating special attributes, which is unintended
+            if (name && value && specialAttributeRegistry[name]) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+

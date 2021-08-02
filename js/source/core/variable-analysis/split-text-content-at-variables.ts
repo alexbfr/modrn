@@ -1,7 +1,21 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {expressionPattern, TEXT_NODE} from "./variable-types";
 import {logDiagnostic} from "../../util/logging";
 
-export function splitTextContentAtVariables(rootElement: HTMLElement): void {
+/**
+ * Splits the text content of the provided element around variable references like {{x}}
+ * It does this by cutting off text before and/or after a variable reference and puts the variable reference
+ * in its own text node.
+ *
+ * The text node is later upgraded to a element, if required {@see substituteVariables}
+ *
+ * @param rootElement
+ */
+export function splitTextContentAtVariables(rootElement: Element): void {
     let childCount = rootElement.childNodes.length;
     let previousWasSplit = false;
     for (let idx = 0; idx < childCount; ++idx) {

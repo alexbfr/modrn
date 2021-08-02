@@ -1,6 +1,11 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {findVariables} from "../find-variables";
-import {AttributeVariable, MappingType, VariableMappings} from "../../component-registry";
 import {varUsageExpression} from "./find-child-variables.test";
+import {AttributeVariable, MappingType, VariableMappings} from "../../types/variables";
 
 it("Finds single child variable", () => {
     const elem = document.createElement("div");

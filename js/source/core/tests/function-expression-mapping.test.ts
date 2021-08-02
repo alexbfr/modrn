@@ -1,7 +1,14 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {clearRenderQueue} from "../render-queue";
-import {makeComponent, NoProps} from "../component-declaration";
+import {makeComponent} from "../component-declaration";
 import {registerAnonymous} from "./anon";
 import {TestUtils} from "../../test-utils/test-utils";
+import {NoProps} from "../types/registered-component";
 
 beforeEach(() => clearRenderQueue());
 

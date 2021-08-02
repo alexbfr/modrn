@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 export function checkIsShown(
     firstElementChild: Element | null): boolean {
 

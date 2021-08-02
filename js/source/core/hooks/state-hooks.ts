@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 import {
     getStateInternal,
     MutableState,
@@ -8,8 +13,8 @@ import {
     StateToken,
     useStateInternal,
     WrappedFunction
-} from "../util/state";
-import {getCurrentStateContext} from "./component-registry";
+} from "../../util/state";
+import {getCurrentStateContext} from "../component-state";
 
 export function useState<T, K extends StateToken<T>>(token: K, initial: K["dummy"] | (() => K["dummy"])): State<K["dummy"]> {
     const state = getCurrentStateContext();

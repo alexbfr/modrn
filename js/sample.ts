@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+
 // import {declare, m, makeComponent, mBool, mString} from "./source/core/component-declaration";
 // import {createState} from "./source/util/state";
 // import {useState} from "./source/core/state-hooks";
