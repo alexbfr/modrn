@@ -1391,12 +1391,6 @@ function extractFunctionReferenceExpression(text) {
         originalExpression: "&" + text
     };
 }
-function isRefAttributeName(name) {
-    return name === "ref";
-}
-function isWildcardAttributeName(name) {
-    return variableNamePattern.test(name);
-}
 function collectVariableNames(parsed, variableNameList) {
     switch (parsed.type) {
         case "ArrayExpression":
@@ -1547,6 +1541,42 @@ exports.MappingType = void 0;
  * SPDX-License-Identifier: MIT
  * Copyright © 2021 Alexander Berthold
  */
+function classifyAttribute(attributeName) {
+    if (!attributeName) {
+        return undefined;
+    }
+    if (attributeName === "ref") {
+        return { type: "ref" };
+    }
+    if (variableNamePattern.test(attributeName)) {
+        return { type: "wildcard", variableName: attributeName };
+    }
+    else {
+        const specialAttributeRegistry = getSpecialAttributeRegistry();
+        const indexOfColon = (attributeName || "").indexOf(":");
+        const name = (indexOfColon >= 0) ? attributeName === null || attributeName === void 0 ? void 0 : attributeName.substring(0, indexOfColon) : attributeName;
+        const registration = specialAttributeRegistry[name];
+        if (registration) {
+            return {
+                type: "special",
+                name: name,
+                fullName: attributeName,
+                registration
+            };
+        }
+        else {
+            return {
+                type: "standard",
+                name
+            };
+        }
+    }
+}
+
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
 /**
  * Looks for special attributes, that is, attributes which have been registered as such
  * @see registerSpecialAttribute
@@ -1556,24 +1586,22 @@ exports.MappingType = void 0;
  */
 function findSpecialAttributes(rootElement, indexes) {
     var _a;
-    const specialAttributeRegistry = getSpecialAttributeRegistry();
     const result = [];
     const attributes = (_a = rootElement) === null || _a === void 0 ? void 0 : _a.attributes;
     const attributesLength = (attributes === null || attributes === void 0 ? void 0 : attributes.length) || 0;
     if (attributes && (attributes === null || attributes === void 0 ? void 0 : attributes.length) > 0) {
         for (let attIdx = 0; attIdx < attributesLength; ++attIdx) {
             const { name: fullName, value } = attributes.item(attIdx) || { name: null, value: null };
-            const indexOfColon = (fullName || "").indexOf(":");
-            const name = (indexOfColon >= 0) ? fullName === null || fullName === void 0 ? void 0 : fullName.substring(0, indexOfColon) : fullName;
-            if (name && fullName && value && specialAttributeRegistry[name]) {
+            const classification = classifyAttribute(fullName);
+            if (fullName && value && (classification === null || classification === void 0 ? void 0 : classification.type) === "special") {
                 const expression = extractExpression(value);
                 result.push({
                     type: exports.MappingType.specialAttribute,
                     indexes,
-                    specialAttributeRegistration: specialAttributeRegistry[name],
+                    specialAttributeRegistration: classification.registration,
                     expression,
                     attributeName: fullName,
-                    hidden: specialAttributeRegistry[name].hidden
+                    hidden: classification.registration.hidden
                 });
             }
         }
@@ -1656,7 +1684,8 @@ function findAttributeVariables(rootElement, indexes) {
     if (attributes && (attributes === null || attributes === void 0 ? void 0 : attributes.length) > 0) {
         for (let attIdx = 0; attIdx < attributesLength; ++attIdx) {
             const { name, value } = extractNameAndValue(rootElement, attributes, attIdx);
-            if (name && !isRefAttributeName(name) && !isWildcardAttributeName(name) && value && expressionPattern.test(value)) {
+            const classification = classifyAttribute(name);
+            if (name && value && (classification === null || classification === void 0 ? void 0 : classification.type) === "standard" && expressionPattern.test(value)) {
                 rootElement.setAttribute(name, "");
                 const expression = extractExpression(value);
                 if (expression.expressionType === exports.ExpressionType.ConstantExpression) {
@@ -1705,7 +1734,8 @@ function findAttributeRefVariables(rootElement, indexes) {
     if (attributes && (attributes === null || attributes === void 0 ? void 0 : attributes.length) > 0) {
         for (let attIdx = 0; attIdx < attributesLength; ++attIdx) {
             const { name, value } = attributes.item(attIdx) || { name: null, value: null };
-            if (name && value && isRefAttributeName(name)) {
+            const classification = classifyAttribute(name);
+            if (name && value && classification.type === "ref") {
                 rootElement.removeAttribute(name);
                 const expression = extractExpression(value);
                 if (expression.expressionType !== exports.ExpressionType.VariableUsage) {
@@ -2144,6 +2174,11 @@ function setModrnElementChildContent(self, node, valueProvided, valueTransformer
     }
     return value;
 }
+function clearChildren(node) {
+    let child;
+    while ((child = node.lastChild))
+        node.removeChild(child);
+}
 function setChildContentToElementChild(self, node, valueProvided, valueTransformer) {
     var _a;
     let value;
@@ -2156,7 +2191,7 @@ function setChildContentToElementChild(self, node, valueProvided, valueTransform
         // manner using useTemplateChildren()
         value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
         if (node.childNodes.length !== 1 || node.firstElementChild !== value) {
-            node.innerHTML = "";
+            clearChildren(node);
             node.appendChild(value);
         }
     }
@@ -2189,7 +2224,6 @@ function setChildContentToElementChild(self, node, valueProvided, valueTransform
     }
     else if (typeof valueProvided === "string" || typeof valueProvided === "number" || typeof valueProvided === "boolean") {
         value = valueTransformer ? valueTransformer(node, valueProvided) : valueProvided;
-        node.innerHTML = "";
         node.textContent = "" + value;
     }
     else {
@@ -2473,19 +2507,19 @@ function hasFunctionChanged(previous, valueToSet) {
  * Checks if an object has changed up to a maximum recursion depth
  * @param previous
  * @param now
- * @param deepness
+ * @param depth
  */
-function hasChanged(previous, now, deepness) {
+function hasChanged(previous, now, depth) {
     if (!now || !previous) {
         return true;
     }
     if (Array.isArray(now) && Array.isArray(previous)) {
-        if (hasArrayChanged(previous, now, deepness - 1)) {
+        if (hasArrayChanged(previous, now, depth - 1)) {
             return true;
         }
     }
     else if (typeof now === "object" && typeof previous === "object") {
-        if (hasObjectChanged(previous, now, deepness - 1)) {
+        if (hasObjectChanged(previous, now, depth - 1)) {
             return true;
         }
     }
@@ -2498,9 +2532,9 @@ function hasChanged(previous, now, deepness) {
  * Checks if an array has changed up to a maximum recursion depth
  * @param previousArr
  * @param nowArr
- * @param deepness
+ * @param depth
  */
-function hasArrayChanged(previousArr, nowArr, deepness) {
+function hasArrayChanged(previousArr, nowArr, depth) {
     if (previousArr.length !== nowArr.length) {
         return true;
     }
@@ -2509,8 +2543,8 @@ function hasArrayChanged(previousArr, nowArr, deepness) {
             const now = nowArr[idx];
             const previous = previousArr[idx];
             if (now !== previous) {
-                if (deepness > 0) {
-                    if (hasChanged(previous, now, deepness - 1)) {
+                if (depth !== 0) {
+                    if (hasChanged(previous, now, depth - 1)) {
                         return true;
                     }
                 }
@@ -2526,9 +2560,9 @@ function hasArrayChanged(previousArr, nowArr, deepness) {
  * Checks if an object has changed up to a maximum recursion depth
  * @param previous
  * @param value
- * @param deepness
+ * @param depth
  */
-function hasObjectChanged(previous, value, deepness) {
+function hasObjectChanged(previous, value, depth) {
     const previousEntries = Object.entries(previous);
     const nowEntries = Object.keys(value);
     if (previousEntries.length !== nowEntries.length) {
@@ -2541,8 +2575,8 @@ function hasObjectChanged(previous, value, deepness) {
                 return true;
             }
             if (now[name] !== val) {
-                if (deepness > 0) {
-                    if (hasChanged(val, now[name], deepness - 1)) {
+                if (depth !== 0) {
+                    if (hasChanged(val, now[name], depth - 1)) {
                         return true;
                     }
                 }
@@ -2569,14 +2603,7 @@ function hasObjectChanged(previous, value, deepness) {
  * @param forConsumer
  * @param node
  */
-function changeFromTo(previous, now, forConsumer, node) {
-    const result = changeFromToRaw(previous, now, forConsumer);
-    if (result.madeChanges && node instanceof ModrnHTMLElement) {
-        requestRender(node);
-    }
-    return result;
-}
-function changeFromToRaw(previous, now, forConsumer) {
+function changeFromTo(previous, now, forConsumer) {
     var _a, _b;
     if (!previous && !now) {
         return { madeChanges: false };
@@ -2869,6 +2896,10 @@ function substituteVariables(self, root, varsProvided, variableDefinitionsProvid
         if (specialAttributeProcessFns === null || specialAttributeProcessFns === void 0 ? void 0 : specialAttributeProcessFns.map(fn => fn()).filter(res => res).length) {
             applyResult.madeChanges = true;
         }
+        const modrnNode = node();
+        if (applyResult.madeChanges && modrnNode.state) {
+            renderComponent(node());
+        }
     });
     function setValue(node, match, valueProvided, slotsBySpecialAttribute, specialAttributeProcessFns) {
         var _a, _b;
@@ -2935,12 +2966,12 @@ function substituteVariables(self, root, varsProvided, variableDefinitionsProvid
     function setAsAttribute(node, attributeName, value) {
         const original = getAttributeValue(self, node, attributeName);
         setAttributeValue(self, node, attributeName, value, true);
-        return changeFromTo(original, value, self, !suppressReRender && node);
+        return changeFromTo(original, value, self);
     }
     function setAsChildValue(node, match, valueProvided) {
         const original = getChildValue(self, node);
         const value = setChildValue(self, node, match, valueProvided);
-        return changeFromTo(original, value, self, !suppressReRender && node);
+        return changeFromTo(original, value, self);
     }
 }
 function varsWithOptions(vars, options) {
@@ -3327,11 +3358,23 @@ function clone(initial) {
     }
     return initial;
 }
-function getOrCreateAttachedState(prefix, element) {
+function getOrCreateElementAttachedState(prefix, element) {
     if (!element.id) {
         element.id = nextId();
     }
     return { id: `${prefix || ""}#${element.id}`, dummy: null };
+}
+function getOrCreateTokenAttachedState(prefix, otherTokenProvided) {
+    const otherToken = otherTokenProvided;
+    const attachments = otherToken.__attachments || (otherToken.__attachments = {});
+    if (prefix in attachments) {
+        return attachments[prefix];
+    }
+    else {
+        const result = { id: `${prefix || ""}${nextId()}-${otherToken.id}`, dummy: null };
+        attachments[prefix] = result;
+        return result;
+    }
 }
 function useStateInternal(token, context, initial) {
     const currentState = context.state[token.id];
@@ -3652,7 +3695,7 @@ const ifComponent = makeComponent(m({ "mIf": mBool() }), props => {
     return { child };
 }).html(`{{child}}`).transparent().register();
 only("modrn-if", ifComponent).isSpecialAttribute = true;
-const ifSpecialAttributeRegistration = registerSpecialAttribute("m-if", ifSpecialAttributeHandler, IF_PRECEDENCE);
+registerSpecialAttribute("m-if", ifSpecialAttributeHandler, IF_PRECEDENCE);
 function ifSpecialAttributeHandler() {
     if (!ifComponent.customElementConstructor) {
         throw new Error("Constructor missing for if component");
@@ -3678,9 +3721,9 @@ const forComponent = makeComponent(m({ mFor: mArray(), mAs: mObj(), mIndexAs: mO
     return { children };
 }).html(`{{children}}`).transparent().register();
 only("modrn-for", forComponent).isSpecialAttribute = true;
-const forSpecialAttributeRegistration = registerSpecialAttribute("m-for", forSpecialAttributeHandler, FOR_PRECEDENCE);
-const asSpecialAttributeRegistration = registerSpecialAttribute("m-as", asSpecialAttributeHandler, AS_PRECEDENCE);
-const indexAsSpecialAttributeRegistration = registerSpecialAttribute("m-index-as", asSpecialAttributeHandler, AS_PRECEDENCE);
+registerSpecialAttribute("m-for", forSpecialAttributeHandler, FOR_PRECEDENCE);
+registerSpecialAttribute("m-as", asSpecialAttributeHandler, AS_PRECEDENCE);
+registerSpecialAttribute("m-index-as", asSpecialAttributeHandler, AS_PRECEDENCE);
 function forSpecialAttributeHandler() {
     if (!forComponent.customElementConstructor) {
         throw new Error("Constructor missing for 'for' component");
@@ -3699,7 +3742,7 @@ function asSpecialAttributeHandler() {
  * SPDX-License-Identifier: MIT
  * Copyright © 2021 Alexander Berthold
  */
-const classSpecialAttributeRegistration = registerSpecialAttribute("m-class", classSpecialAttributeHandler).hidden = true;
+registerSpecialAttribute("m-class", classSpecialAttributeHandler).hidden = true;
 function classSpecialAttributeHandler() {
     function valueTransformer(elem, valueMap) {
         const value = valueMap["m-class"];
@@ -3726,7 +3769,7 @@ function classSpecialAttributeHandler() {
  * SPDX-License-Identifier: MIT
  * Copyright © 2021 Alexander Berthold
  */
-const showSpecialAttributeRegistration = registerSpecialAttribute("m-show", showSpecialAttributeHandler).hidden = true;
+registerSpecialAttribute("m-show", showSpecialAttributeHandler).hidden = true;
 function showSpecialAttributeHandler() {
     function valueTransformer(elem, value) {
         if (value["m-show"] === "false" || !value["m-show"]) {
@@ -3759,8 +3802,7 @@ function useDisconnect(fn) {
  * SPDX-License-Identifier: MIT
  * Copyright © 2021 Alexander Berthold
  */
-const autofocusSpecialAttributeRegistration = registerSpecialAttribute("m-autofocus", autofocusSpecialAttributeHandler, 1000000).hidden = true;
-const focusState = createState();
+registerSpecialAttribute("m-autofocus", autofocusSpecialAttributeHandler, 1000000).hidden = true;
 function autofocusSpecialAttributeHandler() {
     function setFocus(weakRef) {
         const elem = weakRef.deref();
@@ -3774,6 +3816,7 @@ function autofocusSpecialAttributeHandler() {
         }
     }
     function valueTransformer(elem, value) {
+        const focusState = getOrCreateElementAttachedState("autofocus-special-attribute", elem);
         const [state, setState] = useState(focusState, { hasGrabbed: false });
         useDisconnect(() => setState({ hasGrabbed: false }));
         const focusRequested = value["m-autofocus"];
@@ -3803,26 +3846,35 @@ function autofocusSpecialAttributeHandler() {
  * Copyright © 2021 Alexander Berthold
  */
 /**
- * Creates a change hook. deepness specifies the maximum recursion depth to compare the two objects
- * @param deepness - maximum recursion depth
+ * Creates a change hook. depth specifies the maximum recursion depth to compare the two objects
+ * @param depth - maximum recursion depth
  */
-function createChangeHook(deepness = 0) {
-    return Object.assign(Object.assign({}, createState()), { deepness });
+function createChangeHook(depth = 0) {
+    return Object.assign(Object.assign({}, createState()), { depth });
 }
 /**
  * Gets or creates an element-attached change hook-
  * @param prefix - the prefix to disambiguate multiple attached states on the same element
  * @param element - the element to attach the state to
- * @param deepness - maximum recusrion depth
+ * @param depth - maximum recusrion depth
  */
-function getOrCreateAttachedChangeHook(prefix, element, deepness = 0) {
-    return Object.assign(Object.assign({}, getOrCreateAttachedState(prefix, element)), { deepness });
+function getOrCreateElementAttachedChangeHook(prefix, element, depth = 0) {
+    return Object.assign(Object.assign({}, getOrCreateElementAttachedState(prefix, element)), { depth });
+}
+/**
+ * Gets or creates a change hook attached on another state
+ * @param prefix - the prefix to disambiguate multiple attached states on the same element
+ * @param otherToken - the other state to attach this change hook to
+ * @param depth - maximum recusrion depth
+ */
+function getOrCreateTokenAttachedChangeHook(prefix, otherToken, depth = 0) {
+    return Object.assign(Object.assign({}, getOrCreateTokenAttachedState(prefix, otherToken)), { depth });
 }
 /**
  * Tracks changes to the provided value, which must be not null. Change is detected recursively up to the depth when
  * creating the state token.
  * @see createChangeHook
- * @see getOrCreateAttachedChangeHook
+ * @see getOrCreateElementAttachedChangeHook
  *
  * @param stateToken
  * @param value
@@ -3834,7 +3886,7 @@ function useChange(stateToken, value, changeHandlerFn) {
     let changed = false;
     // Do not trigger change on initialization
     if (state.initial) {
-        setState(Object.assign(Object.assign({}, state), { initial: false }));
+        setState(Object.assign(Object.assign({}, state), { initial: false }), true);
     }
     else {
         if (Array.isArray(value)) {
@@ -3843,7 +3895,7 @@ function useChange(stateToken, value, changeHandlerFn) {
             }
             const previousArr = previous;
             const nowArr = value;
-            changed = hasArrayChanged(previousArr, nowArr, stateToken.deepness);
+            changed = hasArrayChanged(previousArr, nowArr, stateToken.depth);
             if (changed) {
                 setState({ previous: [...nowArr], initial: false }, true);
             }
@@ -3861,7 +3913,7 @@ function useChange(stateToken, value, changeHandlerFn) {
             if (typeof previous !== "object") {
                 throw new Error("Value must not change from primitive to object");
             }
-            changed = hasObjectChanged(previous, value, stateToken.deepness);
+            changed = hasObjectChanged(previous, value, stateToken.depth);
             if (changed) {
                 setState({ previous: Object.assign({}, value), initial: false }, true);
             }
@@ -3873,7 +3925,7 @@ function useChange(stateToken, value, changeHandlerFn) {
         }
     }
     if (changed && changeHandlerFn) {
-        changeHandlerFn(previous, value);
+        changeHandlerFn(value, previous);
     }
     return changed;
 }
@@ -3882,16 +3934,17 @@ function useChange(stateToken, value, changeHandlerFn) {
  * SPDX-License-Identifier: MIT
  * Copyright © 2021 Alexander Berthold
  */
-const keyupSpecialAttributeRegistration = registerSpecialAttribute("m-keyup", keyupSpecialAttributeHandler, 1000000).hidden = true;
-const attachState = createState();
-const changeState = createChangeHook(1);
+registerSpecialAttribute("m-keyup", keyupSpecialAttributeHandler, 1000000).hidden = true;
 function keyupSpecialAttributeHandler() {
     function valueTransformer(elem, value) {
+        const attachState = getOrCreateElementAttachedState("keyup-special-handler-as", elem);
+        const changeState = getOrCreateElementAttachedChangeHook("keyup-special-handler-cs", elem, 1);
         const [state, setState] = useState(attachState, { hasAttached: false });
         function eventListener(evt) {
             const action = value[evt.code] || value[evt.key] || value[""];
             if (typeof action === "function") {
-                action(evt);
+                const theEvt = Object.assign({}, evt);
+                setTimeout(() => action(theEvt));
             }
             else if (action) {
                 logWarn(`Not a function: ${action} for key/code ${evt.key}/${evt.code}`);
@@ -4110,19 +4163,20 @@ const keys = {
  * SPDX-License-Identifier: MIT
  * Copyright © 2021 Alexander Berthold
  */
-const changeSpecialAttributeRegistration = makeChangeHandler("m-change", "change");
-const inputSpecialAttributeRegistration = makeChangeHandler("m-input", "input");
+makeChangeHandler("m-change", "change");
+makeChangeHandler("m-input", "input");
+makeChangeHandler("m-blur", "blur");
 function makeChangeHandler(attributeName, eventName) {
     function changeSpecialAttributeHandler() {
         function valueTransformer(elem, value) {
-            const attachState = getOrCreateAttachedState(attributeName + "-attach", elem);
-            const changeState = getOrCreateAttachedChangeHook(attributeName + "-state", elem, 1);
+            const attachState = getOrCreateElementAttachedState(attributeName + "-attach", elem);
+            const changeState = getOrCreateElementAttachedChangeHook(attributeName + "-state", elem, 1);
             const [state, setState] = useState(attachState, { hasAttached: false });
             function eventListener(evt) {
                 var _a;
                 const action = value[""];
                 if (typeof action === "function") {
-                    action((_a = evt === null || evt === void 0 ? void 0 : evt.target) === null || _a === void 0 ? void 0 : _a.value);
+                    action((_a = evt === null || evt === void 0 ? void 0 : evt.target) === null || _a === void 0 ? void 0 : _a.value, evt);
                 }
                 else if (action) {
                     logWarn(`Not a function: ${action}`);
@@ -4324,20 +4378,64 @@ function useRef(stateToken) {
  * SPDX-License-Identifier: MIT
  * Copyright © 2021 Alexander Berthold
  */
+function useStateChange(stateToken, changeHandler, depth = 0) {
+    const stateChangeToken = getOrCreateTokenAttachedChangeHook("stateChange", stateToken, depth);
+    const [currentState] = getState(stateToken);
+    useChange(stateChangeToken, currentState, changeHandler);
+}
+
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
+function useLocalStorageState(token, initial, localStorageKey, depth = -1) {
+    function readFromLocalStorage() {
+        try {
+            const item = localStorage.getItem(localStorageKey);
+            return item ? JSON.parse(item) : null;
+        }
+        catch (e) {
+            logWarn(`Read from local storage for key ${localStorageKey} failed`, e);
+            return null;
+        }
+    }
+    function saveToLocalStorage(item) {
+        try {
+            localStorage.setItem(localStorageKey, JSON.stringify(item));
+        }
+        catch (e) {
+            logWarn(`Write to local storage for key ${localStorageKey} failed`, e, item);
+        }
+    }
+    const result = useState(token, () => {
+        const result = readFromLocalStorage();
+        if (result) {
+            return result;
+        }
+        if (typeof initial === "function") {
+            return initial();
+        }
+        else {
+            return initial;
+        }
+    });
+    useStateChange(token, saveToLocalStorage, depth);
+    return result;
+}
+
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright © 2021 Alexander Berthold
+ */
 const NoProps = m({});
 
-exports.Jsep = Jsep;
 exports.ModrnHTMLElement = ModrnHTMLElement;
 exports.NoProps = NoProps;
 exports.addToComponentRegistry = addToComponentRegistry;
 exports.analyzeToFragment = analyzeToFragment;
-exports.asSpecialAttributeRegistration = asSpecialAttributeRegistration;
-exports.autofocusSpecialAttributeRegistration = autofocusSpecialAttributeRegistration;
 exports.bindToStateContext = bindToStateContext;
 exports.cancelUpdate = cancelUpdate;
-exports.changeSpecialAttributeRegistration = changeSpecialAttributeRegistration;
 exports.childrenChanged = childrenChanged;
-exports.classSpecialAttributeRegistration = classSpecialAttributeRegistration;
 exports.clearTainted = clearTainted;
 exports.cloneDeep = cloneDeep;
 exports.componentHasConnected = componentHasConnected;
@@ -4351,14 +4449,15 @@ exports.createState = createState;
 exports.createTemplatedChildrenState = createTemplatedChildrenState;
 exports.declare = declare;
 exports.dynamic = dynamic;
-exports.forSpecialAttributeRegistration = forSpecialAttributeRegistration;
 exports.getAndResetComponentsToRegister = getAndResetComponentsToRegister;
 exports.getAndResetRenderQueue = getAndResetRenderQueue;
 exports.getComponentInfoOf = getComponentInfoOf;
 exports.getComponentRegistry = getComponentRegistry;
 exports.getCurrentStateContext = getCurrentStateContext;
-exports.getOrCreateAttachedChangeHook = getOrCreateAttachedChangeHook;
-exports.getOrCreateAttachedState = getOrCreateAttachedState;
+exports.getOrCreateElementAttachedChangeHook = getOrCreateElementAttachedChangeHook;
+exports.getOrCreateElementAttachedState = getOrCreateElementAttachedState;
+exports.getOrCreateTokenAttachedChangeHook = getOrCreateTokenAttachedChangeHook;
+exports.getOrCreateTokenAttachedState = getOrCreateTokenAttachedState;
 exports.getRenderQueueLength = getRenderQueueLength;
 exports.getState = getState;
 exports.getStateInternal = getStateInternal;
@@ -4366,15 +4465,11 @@ exports.getStateOf = getStateOf;
 exports.hasArrayChanged = hasArrayChanged;
 exports.hasChanged = hasChanged;
 exports.hasObjectChanged = hasObjectChanged;
-exports.ifSpecialAttributeRegistration = ifSpecialAttributeRegistration;
 exports.immodify = immodify;
-exports.indexAsSpecialAttributeRegistration = indexAsSpecialAttributeRegistration;
 exports.initializeAll = initializeAll;
-exports.inputSpecialAttributeRegistration = inputSpecialAttributeRegistration;
 exports.isRegisteredTagName = isRegisteredTagName;
 exports.isTainted = isTainted;
 exports.isTestingModeActive = isTestingModeActive;
-exports.keyupSpecialAttributeRegistration = keyupSpecialAttributeRegistration;
 exports.logDiagnostic = logDiagnostic;
 exports.logWarn = logWarn;
 exports.m = m;
@@ -4388,7 +4483,6 @@ exports.mNumber = mNumber;
 exports.mObj = mObj;
 exports.mRef = mRef;
 exports.mString = mString;
-exports.makeChangeHandler = makeChangeHandler;
 exports.makeComponent = makeComponent;
 exports.markChanged = markChanged;
 exports.modrn = modrn;
@@ -4406,7 +4500,6 @@ exports.requestUpdate = requestUpdate;
 exports.setFrameRequestCallback = setFrameRequestCallback;
 exports.setStaticInitializationResultForComponent = setStaticInitializationResultForComponent;
 exports.setTestingModeActive = setTestingModeActive;
-exports.showSpecialAttributeRegistration = showSpecialAttributeRegistration;
 exports.sigDate = sigDate;
 exports.sigElementRefs = sigElementRefs;
 exports.sigEventHandler = sigEventHandler;
@@ -4417,6 +4510,7 @@ exports.useChild = useChild;
 exports.useChildren = useChildren;
 exports.useDisconnect = useDisconnect;
 exports.useEventListener = useEventListener;
+exports.useLocalStorageState = useLocalStorageState;
 exports.useModrnChild = useModrnChild;
 exports.useModrnChildren = useModrnChildren;
 exports.useRef = useRef;
@@ -4434,117 +4528,42 @@ exports.withState = withState;
  * Copyright © 2021 Alexander Berthold
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.elasticHeaderModule = void 0;
+exports.performanceTestModule = void 0;
 const modrn_1 = require("modrn");
-const draggableHeaderInitialState = {
-    dragging: false,
-    c: {
-        x: 160,
-        y: 160
-    },
-    start: {
-        x: 0,
-        y: 0
-    }
-};
-const draggableHeaderState = modrn_1.createState();
-function pageFromTouchOrMouseEvent(evt) {
-    const { pageX, pageY } = evt.changedTouches ? evt.changedTouches[0] : evt;
-    return { pageX, pageY };
-}
-const draggableHeaderView = modrn_1.makeComponent(modrn_1.m({
-    header: modrn_1.mChild(),
-    content: modrn_1.mChild()
-}), ({ header, content }) => {
-    const [{ c }] = modrn_1.useState(draggableHeaderState, draggableHeaderInitialState);
-    const headerPath = `M0,0 L320,0 320,160Q${c.x},${c.y} 0,160`;
-    const dy = c.y - 160;
-    const dampen = dy > 0 ? 2 : 4;
-    const contentPosition = `transform: translate3d(0,${dy / dampen}px,0)`;
-    function startDrag(evt) {
-        const [state, setState] = modrn_1.getState(draggableHeaderState);
-        const { pageX, pageY } = pageFromTouchOrMouseEvent(evt);
-        state.dragging = true;
-        state.start = { x: pageX, y: pageY };
-        setState(state);
-    }
-    function onDrag(evt) {
-        const [state, setState] = modrn_1.getState(draggableHeaderState);
-        const { pageX, pageY } = pageFromTouchOrMouseEvent(evt);
-        if (state.dragging) {
-            // dampen vertical drag by a factor
-            const dy = pageY - state.start.y;
-            const dampen = dy > 0 ? 1.5 : 4;
-            state.c = { x: 160 + (pageX - state.start.x), y: 160 + dy / dampen };
-            setState(state);
+const performanceTestState = modrn_1.createState();
+const batchSize = 1000;
+const performanceTest = modrn_1.makeComponent(modrn_1.NoProps, () => {
+    const [state, setState] = modrn_1.useState(performanceTestState, { currentCounter: 0, items: [] });
+    const addAtEnd = modrn_1.purify(performanceTestState, state => {
+        const newItems = [...state.items];
+        let counter = state.currentCounter;
+        for (let idx = 0; idx < batchSize; idx++) {
+            newItems.push({ name: `Item ${counter}`, counter });
+            counter++;
         }
-    }
-    function stopDrag() {
-        const [state, update] = modrn_1.mutableState(draggableHeaderState);
-        if (state.dragging) {
-            const dynamics = window.dynamics; // eslint-disable-line @typescript-eslint/no-explicit-any
-            state.dragging = false;
-            update();
-            dynamics.animate(state.c, {
-                x: 160,
-                y: 160
-            }, {
-                type: dynamics.spring,
-                duration: 700,
-                friction: 280,
-                change: update
-            });
+        return { currentCounter: counter, items: newItems };
+    });
+    const addAtStart = modrn_1.purify(performanceTestState, state => {
+        const newItems = [];
+        let counter = state.currentCounter;
+        for (let idx = 0; idx < batchSize; idx++) {
+            newItems.push({ name: `Item ${counter}`, counter });
+            counter++;
         }
-    }
-    return { header, content, headerPath, contentPosition, startDrag, onDrag, stopDrag };
-}).html(`
-      <div class="draggable-header-view"
-        onmousedown="{{startDrag}}" ontouchstart="{{startDrag}}"
-        onmousemove="{{onDrag}}" ontouchmove="{{onDrag}}"
-        onmouseup="{{stopDrag}}" ontouchend="{{stopDrag}}"
-        onmouseleave="{{stopDrag}}">
-        <svg class="bg" width="320" height="560">
-          <path :d="{{headerPath}}" fill="#3F51B5"></path>
-        </svg>
-        <div class="header">
-          {{header}}
-        </div>
-        <div class="content" style="{{contentPosition}}">
-          {{content}}
-        </div>
-      </div>
+        return { currentCounter: counter, items: [...newItems, ...state.items] };
+    });
+    return { items: state.items, addAtEnd, addAtStart };
+})
+    .html(`
+    <button onclick="{{addAtEnd}}">Add items at the end</button>
+    <button onclick="{{addAtStart}}">Add items at the start</button>
+    <div m-for="{{items}}" m-as="item">
+        <span style="min-width: 20em; display: inline-block">{{item.name}}</span>
+        <span>#{{item.counter}}</span>
+    </div>
 `)
     .register();
-const headerChild = modrn_1.createChildrenState();
-const contentChild = modrn_1.createChildrenState();
-const elasticHeader = modrn_1.makeComponent(modrn_1.NoProps, () => {
-    const header = modrn_1.useTemplate("#header", {}, headerChild);
-    const content = modrn_1.useTemplate("#content", {}, contentChild);
-    return { header, content };
-}).html(`
-    <draggable-header-view header="{{header}}" content="{{content}}"></draggable-header-view>
-    <template id="header">
-        <h1>Elastic Draggable SVG Header</h1>
-        <p>
-            with <a href="http://modrnts.org">Modrn.ts</a> +
-            <a href="http://dynamicsjs.com">dynamics.js</a>
-        </p>
-    </template>
-    <template id="content">
-        <p>
-            Note this is just an effect demo - there are of course many
-            additional details if you want to use this in production, e.g.
-            handling responsive sizes, reload threshold and content scrolling.
-            Those are out of scope for this quick little hack. However, the idea
-            is that you can hide them as internal details of a Vue.js component
-            and expose a simple Web-Component-like interface.
-        </p>
-    </template>
-`).register();
-exports.elasticHeaderModule = modrn_1.declare({
-    draggableHeaderView,
-    elasticHeader
-});
-modrn_1.modrn(exports.elasticHeaderModule);
+exports.performanceTestModule = modrn_1.declare({ performanceTest });
+modrn_1.modrn(exports.performanceTestModule);
 
 },{"modrn":1}]},{},[2]);

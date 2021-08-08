@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "@vue/cli": "^4.5.13",
+    "create-react-app": "^4.0.3"
+  }
+}

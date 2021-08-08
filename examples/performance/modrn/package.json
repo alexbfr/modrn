@@ -1,5 +1,5 @@
 {
-  "name": "modrn-elastic-header",
+  "name": "modrn-performance-test",
   "version": "0.1.0",
   "license": "MIT",
   "author": "alexbfr@github",
@@ -12,27 +12,24 @@
     "concurrently": "^6.2.0",
     "cp-cli": "^2.0.0",
     "cross-env": "^7.0.3",
+    "date-fns": "^2.23.0",
     "eslint": "^7.30.0",
     "mkdirp": "^1.0.4",
-    "modrn": "file:../../modrn.ts/dist/modrn-0.1.0.tgz",
+    "modrn": "file:../../../modrn.ts/dist/modrn-0.1.0.tgz",
     "rimraf": "^3.0.2",
     "shx": "^0.3.3",
     "tinyify": "^3.0.0",
     "tsify": "^5.0.4",
     "typescript": "^4.3.5",
-    "vue": "^2.6.14",
     "watchify": "^4.0.0"
   },
   "scripts": {
     "clean": "rimraf output/* && mkdirp output",
     "copy-html": "shx cp ./src/*.html output/",
     "watch-html": "npx chokidar-cli ./src/*.html --initial --command \"npm run copy-html\"",
-    "watch-js": "node node_modules/watchify/bin/cmd.js src/elastic-header.ts -p [ tsify --noImplicitAny -v ] -o output/bundle.js -v",
+    "watch-js": "node node_modules/watchify/bin/cmd.js src/performance-test.ts -p [ tsify --noImplicitAny -v ] -o output/bundle.js -v",
     "watch": "npm run clean && concurrently --kill-others \"npm run watch-html\" \"npm run watch-js\"",
-    "build-js": "cross-env NODE_ENV=production browserify src/elastic-header.ts -p [ tsify --noImplicitAny ] -p [ tinyify ] -o output/bundle.js -v",
-    "build-js-nm": "browserify src/elastic-header.ts -p [ tsify --noImplicitAny ] -o output/bundle.js -v",
-    "build": "npm run clean && npm run copy-html && npm run build-js",
-    "build-nm": "npm run clean && npm run copy-html && npm run build-js-nm"
-  },
-  "_id": "Modrn@1.0.0"
+    "build-js": "cross-env NODE_ENV=production browserify src/performance-test.ts -p [ tsify --noImplicitAny ] -p [ tinyify ] -o output/bundle.js -v",
+    "build": "npm run clean && npm run copy-html && npm run build-js"
+  }
 }
