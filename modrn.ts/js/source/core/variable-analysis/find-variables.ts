@@ -85,7 +85,7 @@ export function findVariables(rootElement: Element): FoundVariables {
         });
     });
 
-    // Finally, return the result my taking the grouped result object's entries and sort by the indexes (ensuring the
+    // Finally, return the result by taking the grouped result object's entries and sort by the indexes (ensuring the
     // element will be updated from top of hierarchy to bottom of hierarchy)
     return {
         variables: {

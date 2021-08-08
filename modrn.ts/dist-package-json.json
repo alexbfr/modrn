@@ -1,11 +1,20 @@
 {
   "name": "modrn",
-  "version": "0.1.3",
+  "version": "0.1.6",
   "license": "MIT",
   "author": "alexbfr@github",
   "main": "modrn.js",
   "types": "index.d.ts",
+  "description": "Web framework based on web components without virtual DOM",
+  "keywords": [
+    "modrn",
+    "web component",
+    "web component framework",
+    "typescript",
+    "react",
+    "vue"
+  ],
   "devDependencies": {
   },
-  "_id": "Modrn@0.1.3"
+  "_id": "Modrn@0.1.6"
 }

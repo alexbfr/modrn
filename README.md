@@ -1,13 +1,12 @@
 # Introduction
 
-Modrn.ts is a pet project trying to resemble a Framework like vue.js or react.js 
-while only focusing on modern browsers and web technologies. So, ES6, web components 
-and the fetch api were a given - and since the browser landscape has shrunken 
-considerably, almost all browsers should be compatible (not sure about Safari, though).
+Modrn.ts (https://github.com/alexbfr/modrn) is a pet project trying to resemble a Framework like 
+vue.js or react.js while only focusing on modern browsers and web technologies. 
+Since the browser landscape has shrunk considerably, almost all browsers should be compatible as long
+as web components and ES6 are supported.
 
-Please keep in mind that this started as an experiment based on the question, 
-is it possible to create a reasonably fast, modern framework not using virtual DOM
-but resorting to web components instead, and this experiment hasn't concluded yet :)
+This started as an experiment to see if web components are able to replace the classical web framework
+approach of a virtual DOM, and also to further my knowledge of typescript and ES6/modern browser features.
 
 # Architecture
 
@@ -59,4 +58,3 @@ Interesting bits:
   
 * Dynamic child handling:
   https://github.com/alexbfr/modrn/blob/main/modrn.ts/js/source/core/hooks/templated-children-hooks.ts
-  

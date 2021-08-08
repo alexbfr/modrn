@@ -1,6 +1,6 @@
 {
   "name": "modrn",
-  "version": "0.1.3",
+  "version": "0.1.6",
   "license": "MIT",
   "author": "alexbfr@github",
   "main": "js/index.ts",
@@ -45,12 +45,13 @@
     "lint": "npx eslint js/**/*.ts",
     "create-dist-folder": "rimraf dist && mkdirp dist",
     "copy-to-dist-folder": "shx cp output/modrn.* dist/",
+    "copy-readme-to-dist-folder": "shx cp ../*.md dist/",
     "copy-package.json": "shx cp dist-package-json.json dist/package.json",
     "build-js": "cross-env NODE_ENV=production npx rollup -c ./rollup.config.js",
     "build-index-ts": "cross-env NODE_ENV=production npx rollup -c ./rollup-dts.config.js",
-    "build": "npm run lint && npm run clean && npm run build-js && npm run create-dist-folder && npm run copy-to-dist-folder && npm run build-index-ts && npm run copy-package.json && cd dist && npm pack"
+    "build": "npm run lint && npm run clean && npm run build-js && npm run create-dist-folder && npm run copy-to-dist-folder && npm run build-index-ts && npm run copy-package.json && npm run copy-readme-to-dist-folder && cd dist && npm pack"
   },
-  "_id": "Modrn@0.1.3",
+  "_id": "Modrn@0.1.6",
   "repository": {
     "type": "git",
     "url": "https://github.com/alexbfr/modrn.git"
