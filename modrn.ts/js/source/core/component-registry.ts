@@ -4,7 +4,7 @@
  */
 
 import {tagify} from "../util/tagify";
-import {logDiagnostic} from "../util/logging";
+import {logDiagnostic, logWarn} from "../util/logging";
 import {Module, RegisteredComponent} from "./types/registered-component";
 import {
     addToComponentRegistry,
@@ -90,7 +90,11 @@ export function register(componentInfo: ComponentInfo,
         }
 
     };
-    customElements.define(tagName, customElementConstructor);
+    try {
+        customElements.define(tagName, customElementConstructor);
+    } catch (e) {
+        logWarn(`Couldn't register ${tagName}`, e);
+    }
     componentInfo.registeredComponent.customElementConstructor = customElementConstructor;
     return customElementConstructor;
 }

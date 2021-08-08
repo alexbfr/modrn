@@ -1,12 +1,11 @@
 {
   "name": "modrn",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "license": "MIT",
   "author": "alexbfr@github",
   "main": "modrn.js",
   "types": "index.d.ts",
   "devDependencies": {
-    "date-fns": "^2.22.1"
   },
-  "_id": "Modrn@1.0.0"
+  "_id": "Modrn@0.1.1"
 }

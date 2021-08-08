@@ -1,6 +1,6 @@
 {
   "name": "modrn",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "license": "MIT",
   "author": "alexbfr@github",
   "main": "js/index.ts",
@@ -50,5 +50,5 @@
     "build-index-ts": "cross-env NODE_ENV=production npx rollup -c ./rollup-dts.config.js",
     "build": "npm run lint && npm run clean && npm run build-js && npm run create-dist-folder && npm run copy-to-dist-folder && npm run build-index-ts && npm run copy-package.json && cd dist && npm pack"
   },
-  "_id": "Modrn@1.0.0"
+  "_id": "Modrn@0.1.1"
 }

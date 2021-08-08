@@ -138,7 +138,7 @@ const todoListComponent = makeComponent(todoListProps, ({visibility, todos, upda
     }
 
     return {filteredTodos, todos, allDone, toggleAllDone, toggleCompleted, removeTodo,
-        editTodo: editTodo.todo, onEdit, onEscape, onFinish, isEditing, focus};
+        editTodo: editTodo.todo, onEdit, onEscape, onFinish, isEditing};
 }).html(`
      <section class="main" m-show="{{todos.length}}">
         <input

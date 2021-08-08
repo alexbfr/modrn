@@ -229,7 +229,12 @@ function register(componentInfo, hasConnectedFn, notifyChildrenChangedFn, discon
             return Object.keys(componentInfo.registeredComponent.propTemplate || {});
         }
     };
-    customElements.define(tagName, customElementConstructor);
+    try {
+        customElements.define(tagName, customElementConstructor);
+    }
+    catch (e) {
+        logWarn(`Couldn't register ${tagName}`, e);
+    }
     componentInfo.registeredComponent.customElementConstructor = customElementConstructor;
     return customElementConstructor;
 }
@@ -3070,6 +3075,7 @@ function attributesOf(self) {
  * SPDX-License-Identifier: MIT
  * Copyright © 2021 Alexander Berthold
  */
+/** [[include:./README.md]] */
 /**
  * Extracts dynamic child content (commonly named "slot"). Since the component may have been upgraded,
  * children which belong to the component itself are being excluded, the rest is detached from the component
@@ -3439,18 +3445,44 @@ function purifyInternal(context, token, fn) {
  * SPDX-License-Identifier: MIT
  * Copyright © 2021 Alexander Berthold
  */
+/**
+ * Returns the state associated with the provided stateToken {@see createState}. If the state wasn't initialized yet,
+ * it will be initialized first. The initial value may be either an object or a function returning an object of type T.
+ *
+ * @param token - the state token {@see createState}
+ * @param initial - the initial value
+ */
 function useState(token, initial) {
     const state = getCurrentStateContext();
     return useStateInternal(token, state, initial);
 }
+/**
+ * Similar to useState, but requires the state to be already initialized
+ * @param token - the state token {@see createState}
+ */
 function getState(token) {
     const state = getCurrentStateContext();
     return getStateInternal(token, state);
 }
+/**
+ * Returns a mutable view of the state of the provided token.
+ * @param token - the state token {@see createState}
+ */
 function mutableState(token) {
     const state = getCurrentStateContext();
     return mutableStateInternal(token, state);
 }
+/**
+ * Produces a state-bound function with up to 4 additional parameters aside from the 1st (which is always the current state).
+ *
+ * The method may return undefined if it doesn't alter the state, or it may return a Partial<T> of the state. Only keys being part of the
+ * partial result will be updated, the rest will stay in place.
+ *
+ * The return value of purify is the state-bound function.
+ *
+ * @param token - the state token {@see createState}
+ * @param fn - the function to bind the state to
+ */
 function purify(token, fn) {
     const state = getCurrentStateContext();
     return purifyInternal(state, token, fn);
@@ -4281,9 +4313,7 @@ function render(element) {
     logDiagnostic("Rendering: ", element.nodeName + "#" + element.id);
     renderComponent(element);
 }
-let frameCount = 0;
 function justRender() {
-    console.info("FRAME", frameCount++);
     alreadyRendered = new WeakSet();
     const toRender = getAndResetRenderQueue();
     const elementsToRender = toRender.map(item => item.element.deref()).filter(item => item !== undefined);

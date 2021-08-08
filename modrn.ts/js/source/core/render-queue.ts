@@ -39,7 +39,7 @@ export function clearRenderQueue(): void {
 
 let frameCount = 0;
 function justRender() {
-    console.info("FRAME", frameCount++);
+    logDiagnostic("FRAME", frameCount++);
     alreadyRendered = new WeakSet<ModrnHTMLElement>();
     const toRender = getAndResetRenderQueue();
     const elementsToRender = toRender.map(item => item.element.deref()).filter(item => item !== undefined);
