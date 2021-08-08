@@ -23,7 +23,7 @@
 
 #### Defined in
 
-js/source/core/render-queue.ts:35
+[js/source/core/render-queue.ts:35](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/render-queue.ts#L35)
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 #### Defined in
 
-js/source/core/render-queue.ts:67
+[js/source/core/render-queue.ts:67](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/render-queue.ts#L67)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-js/source/core/render-queue.ts:49
+[js/source/core/render-queue.ts:49](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/render-queue.ts#L49)
 
 ___
 
@@ -71,4 +71,4 @@ ___
 
 #### Defined in
 
-js/source/core/render-queue.ts:21
+[js/source/core/render-queue.ts:21](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/render-queue.ts#L21)

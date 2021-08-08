@@ -31,4 +31,4 @@ inequal only if the state has changed in between. @TODO this is probably not eve
 
 #### Defined in
 
-js/source/core/change-detection/has-function-changes.ts:24
+[js/source/core/change-detection/has-function-changes.ts:24](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/change-detection/has-function-changes.ts#L24)

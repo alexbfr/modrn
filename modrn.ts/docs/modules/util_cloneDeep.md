@@ -26,4 +26,4 @@
 
 #### Defined in
 
-js/source/util/cloneDeep.ts:25
+[js/source/util/cloneDeep.ts:25](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/util/cloneDeep.ts#L25)

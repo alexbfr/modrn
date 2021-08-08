@@ -26,4 +26,4 @@
 
 #### Defined in
 
-js/source/util/dump-structure.ts:6
+[js/source/util/dump-structure.ts:6](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/util/dump-structure.ts#L6)

@@ -31,7 +31,7 @@ Gets the child value of the node
 
 #### Defined in
 
-js/source/core/variable-substition/set-child-value.ts:18
+[js/source/core/variable-substition/set-child-value.ts:18](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-substition/set-child-value.ts#L18)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-js/source/core/variable-substition/set-child-value.ts:190
+[js/source/core/variable-substition/set-child-value.ts:190](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-substition/set-child-value.ts#L190)
 
 ___
 
@@ -77,4 +77,4 @@ since several cases have to be taken care of. There will be bugs here waiting to
 
 #### Defined in
 
-js/source/core/variable-substition/set-child-value.ts:37
+[js/source/core/variable-substition/set-child-value.ts:37](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-substition/set-child-value.ts#L37)

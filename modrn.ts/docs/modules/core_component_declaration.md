@@ -43,7 +43,7 @@ const myModule = declare({myComponent});
 
 #### Defined in
 
-js/source/core/component-declaration.ts:29
+[js/source/core/component-declaration.ts:29](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/component-declaration.ts#L29)
 
 ___
 
@@ -78,4 +78,4 @@ the component expects dynamic children (commonly named "slots").
 
 #### Defined in
 
-js/source/core/component-declaration.ts:55
+[js/source/core/component-declaration.ts:55](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/component-declaration.ts#L55)

@@ -27,7 +27,7 @@
 
 #### Defined in
 
-js/source/util/immodify.ts:8
+[js/source/util/immodify.ts:8](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/util/immodify.ts#L8)
 
 ## Functions
 
@@ -54,7 +54,7 @@ js/source/util/immodify.ts:8
 
 #### Defined in
 
-js/source/util/immodify.ts:20
+[js/source/util/immodify.ts:20](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/util/immodify.ts#L20)
 
 ___
 
@@ -80,4 +80,4 @@ ___
 
 #### Defined in
 
-js/source/util/immodify.ts:16
+[js/source/util/immodify.ts:16](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/util/immodify.ts#L16)

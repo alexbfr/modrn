@@ -20,4 +20,4 @@
 
 #### Defined in
 
-js/source/util/next-id.ts:6
+[js/source/util/next-id.ts:6](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/util/next-id.ts#L6)

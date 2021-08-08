@@ -30,4 +30,4 @@ Analyzes the provided root element to a fragment.
 
 #### Defined in
 
-js/source/core/variable-analysis/analyze-to-fragment.ts:16
+[js/source/core/variable-analysis/analyze-to-fragment.ts:16](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/analyze-to-fragment.ts#L16)

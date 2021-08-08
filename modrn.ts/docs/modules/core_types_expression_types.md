@@ -30,7 +30,7 @@
 
 #### Defined in
 
-js/source/core/types/expression-types.ts:15
+[js/source/core/types/expression-types.ts:15](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/expression-types.ts#L15)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/expression-types.ts:24
+[js/source/core/types/expression-types.ts:24](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/expression-types.ts#L24)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/expression-types.ts:40
+[js/source/core/types/expression-types.ts:40](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/expression-types.ts#L40)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/expression-types.ts:32
+[js/source/core/types/expression-types.ts:32](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/expression-types.ts#L32)
 
 ___
 
@@ -70,4 +70,4 @@ ___
 
 #### Defined in
 
-js/source/core/types/expression-types.ts:19
+[js/source/core/types/expression-types.ts:19](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/expression-types.ts#L19)

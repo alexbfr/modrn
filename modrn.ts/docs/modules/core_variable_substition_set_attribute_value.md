@@ -31,7 +31,7 @@ Gets the value of an attribute for a specific node (with the rendering context o
 
 #### Defined in
 
-js/source/core/variable-substition/set-attribute-value.ts:19
+[js/source/core/variable-substition/set-attribute-value.ts:19](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-substition/set-attribute-value.ts#L19)
 
 ___
 
@@ -57,4 +57,4 @@ Sets the value of an attribute/prop
 
 #### Defined in
 
-js/source/core/variable-substition/set-attribute-value.ts:56
+[js/source/core/variable-substition/set-attribute-value.ts:56](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-substition/set-attribute-value.ts#L56)

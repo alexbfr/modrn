@@ -31,4 +31,4 @@ content is then appended at once).
 
 #### Defined in
 
-js/source/core/render-component.ts:46
+[js/source/core/render-component.ts:46](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/render-component.ts#L46)

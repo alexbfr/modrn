@@ -30,7 +30,7 @@ Performs the static (one-time) initialization for the provided component.
 
 #### Defined in
 
-js/source/core/component-static-initialize.ts:29
+[js/source/core/component-static-initialize.ts:29](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/component-static-initialize.ts#L29)
 
 ___
 
@@ -52,4 +52,4 @@ Statically initialize all components currently registered
 
 #### Defined in
 
-js/source/core/component-static-initialize.ts:46
+[js/source/core/component-static-initialize.ts:46](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/component-static-initialize.ts#L46)

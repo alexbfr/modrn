@@ -33,7 +33,7 @@
 
 #### Defined in
 
-js/source/core/types/variables.ts:33
+[js/source/core/types/variables.ts:33](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/variables.ts#L33)
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/variables.ts:28
+[js/source/core/types/variables.ts:28](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/variables.ts#L28)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/variables.ts:26
+[js/source/core/types/variables.ts:26](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/variables.ts#L26)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/variables.ts:75
+[js/source/core/types/variables.ts:75](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/variables.ts#L75)
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/variables.ts:57
+[js/source/core/types/variables.ts:57](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/variables.ts#L57)
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/variables.ts:51
+[js/source/core/types/variables.ts:51](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/variables.ts#L51)
 
 ___
 
@@ -132,7 +132,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/variables.ts:59
+[js/source/core/types/variables.ts:59](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/variables.ts#L59)
 
 ___
 
@@ -157,7 +157,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/variables.ts:49
+[js/source/core/types/variables.ts:49](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/variables.ts#L49)
 
 ___
 
@@ -167,7 +167,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/variables.ts:35
+[js/source/core/types/variables.ts:35](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/variables.ts#L35)
 
 ___
 
@@ -198,7 +198,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/variables.ts:15
+[js/source/core/types/variables.ts:15](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/variables.ts#L15)
 
 ___
 
@@ -208,7 +208,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/variables.ts:24
+[js/source/core/types/variables.ts:24](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/variables.ts#L24)
 
 ___
 
@@ -233,7 +233,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/variables.ts:17
+[js/source/core/types/variables.ts:17](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/variables.ts#L17)
 
 ___
 
@@ -251,7 +251,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/variables.ts:67
+[js/source/core/types/variables.ts:67](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/variables.ts#L67)
 
 ___
 
@@ -269,4 +269,4 @@ ___
 
 #### Defined in
 
-js/source/core/types/variables.ts:41
+[js/source/core/types/variables.ts:41](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/variables.ts#L41)

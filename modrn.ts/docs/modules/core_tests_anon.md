@@ -32,4 +32,4 @@
 
 #### Defined in
 
-js/source/core/tests/anon.ts:10
+[js/source/core/tests/anon.ts:10](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/tests/anon.ts#L10)

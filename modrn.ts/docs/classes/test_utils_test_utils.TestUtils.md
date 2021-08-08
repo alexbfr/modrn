@@ -46,7 +46,7 @@ becomes `foo="bar" baz="foo"`
 
 #### Defined in
 
-js/source/test-utils/test-utils.ts:50
+[js/source/test-utils/test-utils.ts:50](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/test-utils/test-utils.ts#L50)
 
 ___
 
@@ -70,7 +70,7 @@ including given attributes.
 
 #### Defined in
 
-js/source/test-utils/test-utils.ts:36
+[js/source/test-utils/test-utils.ts:36](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/test-utils/test-utils.ts#L36)
 
 ___
 
@@ -93,7 +93,7 @@ requested element becomes available.
 
 #### Defined in
 
-js/source/test-utils/test-utils.ts:62
+[js/source/test-utils/test-utils.ts:62](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/test-utils/test-utils.ts#L62)
 
 ___
 
@@ -118,4 +118,4 @@ rendered element becomes available.
 
 #### Defined in
 
-js/source/test-utils/test-utils.ts:19
+[js/source/test-utils/test-utils.ts:19](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/test-utils/test-utils.ts#L19)

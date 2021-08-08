@@ -29,4 +29,4 @@ This creates a custom element (aka web component) for each of them.
 
 #### Defined in
 
-js/source/modrn.ts:29
+[js/source/modrn.ts:29](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/modrn.ts#L29)

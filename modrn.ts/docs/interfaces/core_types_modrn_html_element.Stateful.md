@@ -30,7 +30,7 @@
 
 #### Defined in
 
-js/source/core/types/modrn-html-element.ts:8
+[js/source/core/types/modrn-html-element.ts:8](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/modrn-html-element.ts#L8)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/modrn-html-element.ts:6
+[js/source/core/types/modrn-html-element.ts:6](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/modrn-html-element.ts#L6)
 
 ## Methods
 
@@ -58,7 +58,7 @@ js/source/core/types/modrn-html-element.ts:6
 
 #### Defined in
 
-js/source/core/types/modrn-html-element.ts:5
+[js/source/core/types/modrn-html-element.ts:5](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/modrn-html-element.ts#L5)
 
 ___
 
@@ -72,4 +72,4 @@ ___
 
 #### Defined in
 
-js/source/core/types/modrn-html-element.ts:7
+[js/source/core/types/modrn-html-element.ts:7](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/modrn-html-element.ts#L7)

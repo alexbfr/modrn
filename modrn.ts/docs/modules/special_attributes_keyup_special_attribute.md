@@ -16,4 +16,4 @@
 
 #### Defined in
 
-js/source/special-attributes/keyup-special-attribute.ts:14
+[js/source/special-attributes/keyup-special-attribute.ts:14](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/special-attributes/keyup-special-attribute.ts#L14)

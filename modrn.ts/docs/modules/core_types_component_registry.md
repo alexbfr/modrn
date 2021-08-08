@@ -31,7 +31,7 @@
 
 #### Defined in
 
-js/source/core/types/component-registry.ts:10
+[js/source/core/types/component-registry.ts:10](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/component-registry.ts#L10)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/component-registry.ts:16
+[js/source/core/types/component-registry.ts:16](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/component-registry.ts#L16)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/component-registry.ts:14
+[js/source/core/types/component-registry.ts:14](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/component-registry.ts#L14)
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/component-registry.ts:15
+[js/source/core/types/component-registry.ts:15](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/component-registry.ts#L15)
 
 ## Functions
 
@@ -130,7 +130,7 @@ Adds a component to the global registry without directly registering it as custo
 
 #### Defined in
 
-js/source/core/types/component-registry.ts:43
+[js/source/core/types/component-registry.ts:43](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/component-registry.ts#L43)
 
 ___
 
@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/component-registry.ts:58
+[js/source/core/types/component-registry.ts:58](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/component-registry.ts#L58)
 
 ___
 
@@ -166,7 +166,7 @@ Returns the component info for a certain registered component
 
 #### Defined in
 
-js/source/core/types/component-registry.ts:68
+[js/source/core/types/component-registry.ts:68](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/component-registry.ts#L68)
 
 ___
 
@@ -182,7 +182,7 @@ Returns a copy of the component registry
 
 #### Defined in
 
-js/source/core/types/component-registry.ts:30
+[js/source/core/types/component-registry.ts:30](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/component-registry.ts#L30)
 
 ___
 
@@ -204,4 +204,4 @@ Checks if the provided tagName (html-named) is already registered
 
 #### Defined in
 
-js/source/core/types/component-registry.ts:22
+[js/source/core/types/component-registry.ts:22](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/component-registry.ts#L22)

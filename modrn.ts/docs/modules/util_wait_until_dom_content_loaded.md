@@ -22,7 +22,7 @@
 
 #### Defined in
 
-js/source/util/wait-until-dom-content-loaded.ts:16
+[js/source/util/wait-until-dom-content-loaded.ts:16](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/util/wait-until-dom-content-loaded.ts#L16)
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 #### Defined in
 
-js/source/util/wait-until-dom-content-loaded.ts:12
+[js/source/util/wait-until-dom-content-loaded.ts:12](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/util/wait-until-dom-content-loaded.ts#L12)
 
 ___
 
@@ -50,4 +50,4 @@ ___
 
 #### Defined in
 
-js/source/util/wait-until-dom-content-loaded.ts:24
+[js/source/util/wait-until-dom-content-loaded.ts:24](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/util/wait-until-dom-content-loaded.ts#L24)

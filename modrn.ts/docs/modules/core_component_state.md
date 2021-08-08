@@ -31,7 +31,7 @@
 
 #### Defined in
 
-js/source/core/component-state.ts:10
+[js/source/core/component-state.ts:10](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/component-state.ts#L10)
 
 ## Functions
 
@@ -77,7 +77,7 @@ Binds the provided function to the current state context, if not already bound.
 
 #### Defined in
 
-js/source/core/component-state.ts:95
+[js/source/core/component-state.ts:95](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/component-state.ts#L95)
 
 ___
 
@@ -125,7 +125,7 @@ use state-bound functions instead (state is always up-to-date) and should be avo
 
 #### Defined in
 
-js/source/core/component-state.ts:82
+[js/source/core/component-state.ts:82](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/component-state.ts#L82)
 
 ___
 
@@ -141,7 +141,7 @@ Returns the current state context during rendering
 
 #### Defined in
 
-js/source/core/component-state.ts:50
+[js/source/core/component-state.ts:50](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/component-state.ts#L50)
 
 ___
 
@@ -163,7 +163,7 @@ Returns or creates the empty state for the element
 
 #### Defined in
 
-js/source/core/component-state.ts:43
+[js/source/core/component-state.ts:43](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/component-state.ts#L43)
 
 ___
 
@@ -194,4 +194,4 @@ Wraps the provided function with the state, preserving the state context stack
 
 #### Defined in
 
-js/source/core/component-state.ts:64
+[js/source/core/component-state.ts:64](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/component-state.ts#L64)

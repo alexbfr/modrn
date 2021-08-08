@@ -18,4 +18,4 @@
 
 #### Defined in
 
-js/source/core/change-tracking/change-types.ts:21
+[js/source/core/change-tracking/change-types.ts:21](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/change-tracking/change-types.ts#L21)

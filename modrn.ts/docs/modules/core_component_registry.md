@@ -34,7 +34,7 @@ Registers the component and creates a custom element for it.
 
 #### Defined in
 
-js/source/core/component-registry.ts:48
+[js/source/core/component-registry.ts:48](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/component-registry.ts#L48)
 
 ___
 
@@ -60,7 +60,7 @@ Register all components in the component registry at once.
 
 #### Defined in
 
-js/source/core/component-registry.ts:106
+[js/source/core/component-registry.ts:110](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/component-registry.ts#L110)
 
 ___
 
@@ -89,7 +89,7 @@ Adds a module to the global registry by adding each individual registered compon
 
 #### Defined in
 
-js/source/core/component-registry.ts:25
+[js/source/core/component-registry.ts:25](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/component-registry.ts#L25)
 
 ___
 
@@ -113,4 +113,4 @@ without dashes)
 
 #### Defined in
 
-js/source/core/component-registry.ts:37
+[js/source/core/component-registry.ts:37](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/component-registry.ts#L37)

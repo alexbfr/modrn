@@ -32,4 +32,4 @@ Also, there is specific handling for special attributes which wrap their element
 
 #### Defined in
 
-js/source/core/variable-analysis/find-variables.ts:38
+[js/source/core/variable-analysis/find-variables.ts:38](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/find-variables.ts#L38)

@@ -28,4 +28,4 @@
 
 #### Defined in
 
-js/source/jsep/jsep.ts:72
+[js/source/jsep/jsep.ts:72](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L72)

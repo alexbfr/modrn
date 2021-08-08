@@ -24,7 +24,7 @@
 
 #### Defined in
 
-js/source/core/hooks/ref-hooks.ts:37
+[js/source/core/hooks/ref-hooks.ts:37](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/ref-hooks.ts#L37)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-js/source/core/hooks/ref-hooks.ts:39
+[js/source/core/hooks/ref-hooks.ts:39](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/ref-hooks.ts#L39)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-js/source/core/hooks/ref-hooks.ts:13
+[js/source/core/hooks/ref-hooks.ts:13](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/ref-hooks.ts#L13)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-js/source/core/hooks/ref-hooks.ts:17
+[js/source/core/hooks/ref-hooks.ts:17](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/ref-hooks.ts#L17)
 
 ## Functions
 
@@ -78,7 +78,7 @@ js/source/core/hooks/ref-hooks.ts:17
 
 #### Defined in
 
-js/source/core/hooks/ref-hooks.ts:33
+[js/source/core/hooks/ref-hooks.ts:33](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/ref-hooks.ts#L33)
 
 ___
 
@@ -106,4 +106,4 @@ so if a ref is not in the dom anymore, the ref is automatically dropped.
 
 #### Defined in
 
-js/source/core/hooks/ref-hooks.ts:55
+[js/source/core/hooks/ref-hooks.ts:55](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/ref-hooks.ts#L55)

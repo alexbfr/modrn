@@ -16,4 +16,4 @@
 
 #### Defined in
 
-js/source/special-attributes/show-special-attribute.ts:9
+[js/source/special-attributes/show-special-attribute.ts:9](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/special-attributes/show-special-attribute.ts#L9)

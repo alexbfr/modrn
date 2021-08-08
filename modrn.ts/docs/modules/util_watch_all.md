@@ -27,4 +27,4 @@
 
 #### Defined in
 
-js/source/util/watch-all.ts:6
+[js/source/util/watch-all.ts:6](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/util/watch-all.ts#L6)

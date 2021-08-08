@@ -36,7 +36,7 @@
 
 #### Defined in
 
-js/source/core/types/modrn-html-element.ts:11
+[js/source/core/types/modrn-html-element.ts:11](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/modrn-html-element.ts#L11)
 
 ___
 
@@ -55,4 +55,4 @@ A fragment is the encapsulation of a html template analyzed for contained variab
 
 #### Defined in
 
-js/source/core/types/modrn-html-element.ts:39
+[js/source/core/types/modrn-html-element.ts:39](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/modrn-html-element.ts#L39)

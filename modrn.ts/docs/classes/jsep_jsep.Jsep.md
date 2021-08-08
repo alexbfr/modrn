@@ -103,7 +103,7 @@
 
 #### Defined in
 
-js/source/jsep/jsep.ts:265
+[js/source/jsep/jsep.ts:265](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L265)
 
 ## Properties
 
@@ -113,7 +113,7 @@ js/source/jsep/jsep.ts:265
 
 #### Defined in
 
-js/source/jsep/jsep.ts:100
+[js/source/jsep/jsep.ts:100](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L100)
 
 ___
 
@@ -123,7 +123,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:101
+[js/source/jsep/jsep.ts:101](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L101)
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:907
+[js/source/jsep/jsep.ts:907](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L907)
 
 ___
 
@@ -143,7 +143,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:905
+[js/source/jsep/jsep.ts:905](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L905)
 
 ___
 
@@ -153,7 +153,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:903
+[js/source/jsep/jsep.ts:903](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L903)
 
 ___
 
@@ -163,7 +163,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:920
+[js/source/jsep/jsep.ts:920](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L920)
 
 ___
 
@@ -173,7 +173,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:923
+[js/source/jsep/jsep.ts:923](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L923)
 
 ___
 
@@ -183,7 +183,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:914
+[js/source/jsep/jsep.ts:914](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L914)
 
 ___
 
@@ -193,7 +193,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:897
+[js/source/jsep/jsep.ts:897](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L897)
 
 ___
 
@@ -203,7 +203,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:906
+[js/source/jsep/jsep.ts:906](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L906)
 
 ___
 
@@ -213,7 +213,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:918
+[js/source/jsep/jsep.ts:918](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L918)
 
 ___
 
@@ -223,7 +223,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:911
+[js/source/jsep/jsep.ts:911](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L911)
 
 ___
 
@@ -233,7 +233,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:916
+[js/source/jsep/jsep.ts:916](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L916)
 
 ___
 
@@ -243,7 +243,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:899
+[js/source/jsep/jsep.ts:899](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L899)
 
 ___
 
@@ -253,7 +253,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:910
+[js/source/jsep/jsep.ts:910](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L910)
 
 ___
 
@@ -263,7 +263,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:901
+[js/source/jsep/jsep.ts:901](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L901)
 
 ___
 
@@ -273,7 +273,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:900
+[js/source/jsep/jsep.ts:900](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L900)
 
 ___
 
@@ -283,7 +283,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:919
+[js/source/jsep/jsep.ts:919](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L919)
 
 ___
 
@@ -293,7 +293,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:917
+[js/source/jsep/jsep.ts:917](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L917)
 
 ___
 
@@ -303,7 +303,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:913
+[js/source/jsep/jsep.ts:913](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L913)
 
 ___
 
@@ -313,7 +313,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:921
+[js/source/jsep/jsep.ts:921](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L921)
 
 ___
 
@@ -323,7 +323,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:922
+[js/source/jsep/jsep.ts:922](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L922)
 
 ___
 
@@ -333,7 +333,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:898
+[js/source/jsep/jsep.ts:898](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L898)
 
 ___
 
@@ -343,7 +343,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:912
+[js/source/jsep/jsep.ts:912](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L912)
 
 ___
 
@@ -353,7 +353,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:915
+[js/source/jsep/jsep.ts:915](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L915)
 
 ___
 
@@ -363,7 +363,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:909
+[js/source/jsep/jsep.ts:909](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L909)
 
 ___
 
@@ -373,7 +373,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:902
+[js/source/jsep/jsep.ts:902](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L902)
 
 ___
 
@@ -383,7 +383,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:904
+[js/source/jsep/jsep.ts:904](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L904)
 
 ___
 
@@ -393,7 +393,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:950
+[js/source/jsep/jsep.ts:950](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L950)
 
 ___
 
@@ -403,7 +403,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:940
+[js/source/jsep/jsep.ts:940](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L940)
 
 ___
 
@@ -413,7 +413,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:955
+[js/source/jsep/jsep.ts:955](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L955)
 
 ___
 
@@ -423,7 +423,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:965
+[js/source/jsep/jsep.ts:965](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L965)
 
 ___
 
@@ -433,7 +433,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:964
+[js/source/jsep/jsep.ts:964](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L964)
 
 ___
 
@@ -443,7 +443,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:962
+[js/source/jsep/jsep.ts:962](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L962)
 
 ___
 
@@ -453,7 +453,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:930
+[js/source/jsep/jsep.ts:930](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L930)
 
 ## Accessors
 
@@ -467,7 +467,7 @@ js/source/jsep/jsep.ts:930
 
 #### Defined in
 
-js/source/jsep/jsep.ts:249
+[js/source/jsep/jsep.ts:249](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L249)
 
 ___
 
@@ -481,7 +481,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:256
+[js/source/jsep/jsep.ts:256](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L256)
 
 ___
 
@@ -495,7 +495,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:106
+[js/source/jsep/jsep.ts:106](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L106)
 
 ## Methods
 
@@ -521,7 +521,7 @@ e.g. `foo(bar, baz)`, `my_func()`, or `[bar, baz]`
 
 #### Defined in
 
-js/source/jsep/jsep.ts:804
+[js/source/jsep/jsep.ts:804](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L804)
 
 ___
 
@@ -539,7 +539,7 @@ and then tries to gobble the expressions as arguments.
 
 #### Defined in
 
-js/source/jsep/jsep.ts:884
+[js/source/jsep/jsep.ts:884](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L884)
 
 ___
 
@@ -556,7 +556,7 @@ e.g. `1`, `1+2`, `a+(b*2)-Math.sqrt(2)`
 
 #### Defined in
 
-js/source/jsep/jsep.ts:453
+[js/source/jsep/jsep.ts:453](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L453)
 
 ___
 
@@ -575,7 +575,7 @@ then, return that binary operation
 
 #### Defined in
 
-js/source/jsep/jsep.ts:427
+[js/source/jsep/jsep.ts:427](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L427)
 
 ___
 
@@ -591,7 +591,7 @@ The main parsing function.
 
 #### Defined in
 
-js/source/jsep/jsep.ts:411
+[js/source/jsep/jsep.ts:411](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L411)
 
 ___
 
@@ -613,7 +613,7 @@ top-level parser (but can be reused within as well)
 
 #### Defined in
 
-js/source/jsep/jsep.ts:376
+[js/source/jsep/jsep.ts:376](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L376)
 
 ___
 
@@ -634,7 +634,7 @@ then the expression probably doesn't have a `)`
 
 #### Defined in
 
-js/source/jsep/jsep.ts:862
+[js/source/jsep/jsep.ts:862](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L862)
 
 ___
 
@@ -653,7 +653,7 @@ Also, this function checks if that identifier is a literal:
 
 #### Defined in
 
-js/source/jsep/jsep.ts:758
+[js/source/jsep/jsep.ts:758](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L758)
 
 ___
 
@@ -670,7 +670,7 @@ keep track of everything in the numeric literal and then calling `parseFloat` on
 
 #### Defined in
 
-js/source/jsep/jsep.ts:642
+[js/source/jsep/jsep.ts:642](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L642)
 
 ___
 
@@ -686,7 +686,7 @@ Push `index` up to the next non-space character
 
 #### Defined in
 
-js/source/jsep/jsep.ts:343
+[js/source/jsep/jsep.ts:343](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L343)
 
 ___
 
@@ -703,7 +703,7 @@ e.g. `"hello world"`, `'this is\nJSEP'`
 
 #### Defined in
 
-js/source/jsep/jsep.ts:698
+[js/source/jsep/jsep.ts:698](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L698)
 
 ___
 
@@ -720,7 +720,7 @@ e.g. `foo.bar(baz)`, `1`, `"abc"`, `(a % 2)` (because it's in parenthesis)
 
 #### Defined in
 
-js/source/jsep/jsep.ts:542
+[js/source/jsep/jsep.ts:542](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L542)
 
 ___
 
@@ -736,7 +736,7 @@ Top-level method to parse all expressions and returns compound or single node
 
 #### Defined in
 
-js/source/jsep/jsep.ts:358
+[js/source/jsep/jsep.ts:358](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L358)
 
 ___
 
@@ -760,7 +760,7 @@ throw error at index of the expression
 
 #### Defined in
 
-js/source/jsep/jsep.ts:332
+[js/source/jsep/jsep.ts:332](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L332)
 
 ___
 
@@ -783,7 +783,7 @@ typeof [`Jsep`](jsep_jsep.Jsep.md)
 
 #### Defined in
 
-js/source/jsep/jsep.ts:136
+[js/source/jsep/jsep.ts:136](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L136)
 
 ___
 
@@ -805,7 +805,7 @@ typeof [`Jsep`](jsep_jsep.Jsep.md)
 
 #### Defined in
 
-js/source/jsep/jsep.ts:147
+[js/source/jsep/jsep.ts:147](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L147)
 
 ___
 
@@ -828,7 +828,7 @@ typeof [`Jsep`](jsep_jsep.Jsep.md)
 
 #### Defined in
 
-js/source/jsep/jsep.ts:158
+[js/source/jsep/jsep.ts:158](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L158)
 
 ___
 
@@ -850,7 +850,7 @@ typeof [`Jsep`](jsep_jsep.Jsep.md)
 
 #### Defined in
 
-js/source/jsep/jsep.ts:124
+[js/source/jsep/jsep.ts:124](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L124)
 
 ___
 
@@ -872,7 +872,7 @@ Returns the precedence of a binary operator or `0` if it isn't a binary operator
 
 #### Defined in
 
-js/source/jsep/jsep.ts:303
+[js/source/jsep/jsep.ts:303](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L303)
 
 ___
 
@@ -900,7 +900,7 @@ Get the longest key length of any object
 
 #### Defined in
 
-js/source/jsep/jsep.ts:285
+[js/source/jsep/jsep.ts:285](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L285)
 
 ___
 
@@ -922,7 +922,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:294
+[js/source/jsep/jsep.ts:294](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L294)
 
 ___
 
@@ -942,7 +942,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:323
+[js/source/jsep/jsep.ts:323](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L323)
 
 ___
 
@@ -964,7 +964,7 @@ Looks for start of identifier
 
 #### Defined in
 
-js/source/jsep/jsep.ts:312
+[js/source/jsep/jsep.ts:312](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L312)
 
 ___
 
@@ -986,7 +986,7 @@ static top-level parser
 
 #### Defined in
 
-js/source/jsep/jsep.ts:276
+[js/source/jsep/jsep.ts:276](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L276)
 
 ___
 
@@ -1002,7 +1002,7 @@ typeof [`Jsep`](jsep_jsep.Jsep.md)
 
 #### Defined in
 
-js/source/jsep/jsep.ts:216
+[js/source/jsep/jsep.ts:216](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L216)
 
 ___
 
@@ -1018,7 +1018,7 @@ typeof [`Jsep`](jsep_jsep.Jsep.md)
 
 #### Defined in
 
-js/source/jsep/jsep.ts:237
+[js/source/jsep/jsep.ts:237](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L237)
 
 ___
 
@@ -1034,7 +1034,7 @@ typeof [`Jsep`](jsep_jsep.Jsep.md)
 
 #### Defined in
 
-js/source/jsep/jsep.ts:180
+[js/source/jsep/jsep.ts:180](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L180)
 
 ___
 
@@ -1056,7 +1056,7 @@ typeof [`Jsep`](jsep_jsep.Jsep.md)
 
 #### Defined in
 
-js/source/jsep/jsep.ts:202
+[js/source/jsep/jsep.ts:202](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L202)
 
 ___
 
@@ -1078,7 +1078,7 @@ typeof [`Jsep`](jsep_jsep.Jsep.md)
 
 #### Defined in
 
-js/source/jsep/jsep.ts:192
+[js/source/jsep/jsep.ts:192](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L192)
 
 ___
 
@@ -1100,7 +1100,7 @@ typeof [`Jsep`](jsep_jsep.Jsep.md)
 
 #### Defined in
 
-js/source/jsep/jsep.ts:228
+[js/source/jsep/jsep.ts:228](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L228)
 
 ___
 
@@ -1122,7 +1122,7 @@ typeof [`Jsep`](jsep_jsep.Jsep.md)
 
 #### Defined in
 
-js/source/jsep/jsep.ts:168
+[js/source/jsep/jsep.ts:168](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L168)
 
 ___
 
@@ -1136,4 +1136,4 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:114
+[js/source/jsep/jsep.ts:114](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L114)

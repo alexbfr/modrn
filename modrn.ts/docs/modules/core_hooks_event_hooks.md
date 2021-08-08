@@ -21,7 +21,7 @@
 
 #### Defined in
 
-js/source/core/hooks/event-hooks.ts:22
+[js/source/core/hooks/event-hooks.ts:22](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/event-hooks.ts#L22)
 
 ___
 
@@ -51,4 +51,4 @@ ___
 
 #### Defined in
 
-js/source/core/hooks/event-hooks.ts:28
+[js/source/core/hooks/event-hooks.ts:28](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/event-hooks.ts#L28)

@@ -28,7 +28,7 @@
 
 #### Defined in
 
-js/source/core/types/component-builder.ts:26
+[js/source/core/types/component-builder.ts:26](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/component-builder.ts#L26)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/component-builder.ts:8
+[js/source/core/types/component-builder.ts:8](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/component-builder.ts#L8)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/component-builder.ts:18
+[js/source/core/types/component-builder.ts:18](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/component-builder.ts#L18)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/component-builder.ts:22
+[js/source/core/types/component-builder.ts:22](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/component-builder.ts#L22)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/component-builder.ts:10
+[js/source/core/types/component-builder.ts:10](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/component-builder.ts#L10)
 
 ___
 
@@ -108,4 +108,4 @@ ___
 
 #### Defined in
 
-js/source/core/types/component-builder.ts:14
+[js/source/core/types/component-builder.ts:14](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/component-builder.ts#L14)

@@ -34,7 +34,7 @@ inside a render cycle.
 
 #### Defined in
 
-js/source/core/modrn-base.ts:149
+[js/source/core/modrn-base.ts:149](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/modrn-base.ts#L149)
 
 ___
 
@@ -57,7 +57,7 @@ Component has connected callback function. This function may be called multiple 
 
 #### Defined in
 
-js/source/core/modrn-base.ts:109
+[js/source/core/modrn-base.ts:109](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/modrn-base.ts#L109)
 
 ___
 
@@ -79,7 +79,7 @@ Called when the component unmounts. Calls disconnect functions
 
 #### Defined in
 
-js/source/core/modrn-base.ts:134
+[js/source/core/modrn-base.ts:134](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/modrn-base.ts#L134)
 
 ___
 
@@ -102,4 +102,4 @@ Mostly to help tests: this method registers *and* initializes the provided compo
 
 #### Defined in
 
-js/source/core/modrn-base.ts:162
+[js/source/core/modrn-base.ts:162](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/modrn-base.ts#L162)

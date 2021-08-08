@@ -32,7 +32,7 @@ Looks for special attributes, that is, attributes which have been registered as 
 
 #### Defined in
 
-js/source/core/variable-analysis/find-special-attributes.ts:18
+[js/source/core/variable-analysis/find-special-attributes.ts:18](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/find-special-attributes.ts#L18)
 
 ___
 
@@ -52,4 +52,4 @@ ___
 
 #### Defined in
 
-js/source/core/variable-analysis/find-special-attributes.ts:44
+[js/source/core/variable-analysis/find-special-attributes.ts:44](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/find-special-attributes.ts#L44)

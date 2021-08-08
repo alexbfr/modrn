@@ -27,7 +27,7 @@
 
 #### Defined in
 
-js/source/util/tagify.ts:10
+[js/source/util/tagify.ts:10](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/util/tagify.ts#L10)
 
 ___
 
@@ -48,4 +48,4 @@ ___
 
 #### Defined in
 
-js/source/util/tagify.ts:27
+[js/source/util/tagify.ts:27](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/util/tagify.ts#L27)

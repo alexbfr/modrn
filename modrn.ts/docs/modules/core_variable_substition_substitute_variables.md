@@ -28,7 +28,7 @@
 
 #### Defined in
 
-js/source/core/variable-substition/substitute-variables.ts:234
+[js/source/core/variable-substition/substitute-variables.ts:234](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-substition/substitute-variables.ts#L234)
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 #### Defined in
 
-js/source/core/variable-substition/substitute-variables.ts:238
+[js/source/core/variable-substition/substitute-variables.ts:238](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-substition/substitute-variables.ts#L238)
 
 ## Functions
 
@@ -82,7 +82,7 @@ the cost right now. Should this ever be used with large(ish) apps, it shouldn't 
 
 #### Defined in
 
-js/source/core/variable-substition/substitute-variables.ts:59
+[js/source/core/variable-substition/substitute-variables.ts:59](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-substition/substitute-variables.ts#L59)
 
 ___
 
@@ -103,4 +103,4 @@ ___
 
 #### Defined in
 
-js/source/core/variable-substition/substitute-variables.ts:240
+[js/source/core/variable-substition/substitute-variables.ts:240](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-substition/substitute-variables.ts#L240)

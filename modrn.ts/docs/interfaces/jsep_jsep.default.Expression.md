@@ -44,4 +44,4 @@
 
 #### Defined in
 
-js/source/jsep/jsep.ts:13
+[js/source/jsep/jsep.ts:13](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L13)

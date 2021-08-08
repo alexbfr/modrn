@@ -24,7 +24,7 @@ Reset tainted flags
 
 #### Defined in
 
-js/source/core/change-tracking/mark-changed.ts:27
+[js/source/core/change-tracking/mark-changed.ts:27](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/change-tracking/mark-changed.ts#L27)
 
 ___
 
@@ -53,7 +53,7 @@ past rendering cycle)
 
 #### Defined in
 
-js/source/core/change-tracking/mark-changed.ts:17
+[js/source/core/change-tracking/mark-changed.ts:17](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/change-tracking/mark-changed.ts#L17)
 
 ___
 
@@ -83,4 +83,4 @@ components reference this specific object currently, and marks those as requirin
 
 #### Defined in
 
-js/source/core/change-tracking/mark-changed.ts:38
+[js/source/core/change-tracking/mark-changed.ts:38](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/change-tracking/mark-changed.ts#L38)

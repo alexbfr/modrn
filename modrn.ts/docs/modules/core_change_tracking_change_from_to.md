@@ -32,4 +32,4 @@ underlying DOM data model.
 
 #### Defined in
 
-js/source/core/change-tracking/change-from-to.ts:24
+[js/source/core/change-tracking/change-from-to.ts:24](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/change-tracking/change-from-to.ts#L24)

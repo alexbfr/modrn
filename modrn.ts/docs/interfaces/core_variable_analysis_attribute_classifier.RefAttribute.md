@@ -28,4 +28,4 @@
 
 #### Defined in
 
-js/source/core/variable-analysis/attribute-classifier.ts:15
+[js/source/core/variable-analysis/attribute-classifier.ts:15](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/attribute-classifier.ts#L15)

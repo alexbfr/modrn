@@ -30,7 +30,7 @@
 
 #### Defined in
 
-js/source/core/types/registered-component.ts:10
+[js/source/core/types/registered-component.ts:10](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/registered-component.ts#L10)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/registered-component.ts:12
+[js/source/core/types/registered-component.ts:12](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/registered-component.ts#L12)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/registered-component.ts:26
+[js/source/core/types/registered-component.ts:26](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/registered-component.ts#L26)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/registered-component.ts:30
+[js/source/core/types/registered-component.ts:30](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/registered-component.ts#L30)
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/registered-component.ts:16
+[js/source/core/types/registered-component.ts:16](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/registered-component.ts#L16)
 
 ## Variables
 
@@ -117,4 +117,4 @@ js/source/core/types/registered-component.ts:16
 
 #### Defined in
 
-js/source/core/types/registered-component.ts:8
+[js/source/core/types/registered-component.ts:8](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/registered-component.ts#L8)

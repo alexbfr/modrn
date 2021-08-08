@@ -29,7 +29,7 @@ Extract an expression from the provided text content
 
 #### Defined in
 
-js/source/core/variable-analysis/extract-expression.ts:31
+[js/source/core/variable-analysis/extract-expression.ts:31](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/extract-expression.ts#L31)
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 #### Defined in
 
-js/source/core/variable-analysis/extract-expression.ts:94
+[js/source/core/variable-analysis/extract-expression.ts:94](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/extract-expression.ts#L94)

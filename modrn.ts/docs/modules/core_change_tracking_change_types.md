@@ -37,7 +37,7 @@
 
 #### Defined in
 
-js/source/core/change-tracking/change-types.ts:12
+[js/source/core/change-tracking/change-types.ts:12](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/change-tracking/change-types.ts#L12)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-js/source/core/change-tracking/change-types.ts:8
+[js/source/core/change-tracking/change-types.ts:8](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/change-tracking/change-types.ts#L8)
 
 ## Variables
 
@@ -63,7 +63,7 @@ js/source/core/change-tracking/change-types.ts:8
 
 #### Defined in
 
-js/source/core/change-tracking/change-types.ts:16
+[js/source/core/change-tracking/change-types.ts:16](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/change-tracking/change-types.ts#L16)
 
 ## Functions
 
@@ -84,7 +84,7 @@ js/source/core/change-tracking/change-types.ts:16
 
 #### Defined in
 
-js/source/core/change-tracking/change-types.ts:35
+[js/source/core/change-tracking/change-types.ts:35](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/change-tracking/change-types.ts#L35)
 
 ___
 
@@ -98,7 +98,7 @@ ___
 
 #### Defined in
 
-js/source/core/change-tracking/change-types.ts:29
+[js/source/core/change-tracking/change-types.ts:29](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/change-tracking/change-types.ts#L29)
 
 ___
 
@@ -119,4 +119,4 @@ ___
 
 #### Defined in
 
-js/source/core/change-tracking/change-types.ts:24
+[js/source/core/change-tracking/change-types.ts:24](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/change-tracking/change-types.ts#L24)

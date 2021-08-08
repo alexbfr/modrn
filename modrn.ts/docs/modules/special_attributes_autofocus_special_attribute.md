@@ -16,4 +16,4 @@
 
 #### Defined in
 
-js/source/special-attributes/autofocus-special-attribute.ts:12
+[js/source/special-attributes/autofocus-special-attribute.ts:12](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/special-attributes/autofocus-special-attribute.ts#L12)

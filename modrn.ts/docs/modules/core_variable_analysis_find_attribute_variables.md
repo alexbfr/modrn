@@ -32,4 +32,4 @@ Searches for attribute variables
 
 #### Defined in
 
-js/source/core/variable-analysis/find-attribute-variables.ts:21
+[js/source/core/variable-analysis/find-attribute-variables.ts:21](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/find-attribute-variables.ts#L21)

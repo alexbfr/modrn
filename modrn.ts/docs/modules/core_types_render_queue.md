@@ -33,7 +33,7 @@
 
 #### Defined in
 
-js/source/core/types/render-queue.ts:8
+[js/source/core/types/render-queue.ts:8](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/render-queue.ts#L8)
 
 ## Functions
 
@@ -47,7 +47,7 @@ js/source/core/types/render-queue.ts:8
 
 #### Defined in
 
-js/source/core/types/render-queue.ts:57
+[js/source/core/types/render-queue.ts:57](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/render-queue.ts#L57)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/render-queue.ts:16
+[js/source/core/types/render-queue.ts:16](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/render-queue.ts#L16)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/render-queue.ts:36
+[js/source/core/types/render-queue.ts:36](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/render-queue.ts#L36)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/render-queue.ts:43
+[js/source/core/types/render-queue.ts:43](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/render-queue.ts#L43)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/render-queue.ts:23
+[js/source/core/types/render-queue.ts:23](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/render-queue.ts#L23)
 
 ___
 
@@ -123,7 +123,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/render-queue.ts:51
+[js/source/core/types/render-queue.ts:51](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/render-queue.ts#L51)
 
 ___
 
@@ -143,7 +143,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/render-queue.ts:64
+[js/source/core/types/render-queue.ts:64](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/render-queue.ts#L64)
 
 ___
 
@@ -157,4 +157,4 @@ ___
 
 #### Defined in
 
-js/source/core/types/render-queue.ts:47
+[js/source/core/types/render-queue.ts:47](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/render-queue.ts#L47)

@@ -26,7 +26,7 @@
 
 #### Defined in
 
-js/source/core/variable-substition/unsafe-html.ts:6
+[js/source/core/variable-substition/unsafe-html.ts:6](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-substition/unsafe-html.ts#L6)
 
 ## Functions
 
@@ -46,4 +46,4 @@ js/source/core/variable-substition/unsafe-html.ts:6
 
 #### Defined in
 
-js/source/core/variable-substition/unsafe-html.ts:8
+[js/source/core/variable-substition/unsafe-html.ts:8](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-substition/unsafe-html.ts#L8)

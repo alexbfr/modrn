@@ -32,4 +32,4 @@ The text node is later upgraded to a element, if required {@see substituteVariab
 
 #### Defined in
 
-js/source/core/variable-analysis/split-text-content-at-variables.ts:18
+[js/source/core/variable-analysis/split-text-content-at-variables.ts:18](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/split-text-content-at-variables.ts#L18)

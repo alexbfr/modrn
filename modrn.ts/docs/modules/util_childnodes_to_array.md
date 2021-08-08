@@ -26,4 +26,4 @@
 
 #### Defined in
 
-js/source/util/childnodes-to-array.ts:6
+[js/source/util/childnodes-to-array.ts:6](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/util/childnodes-to-array.ts#L6)

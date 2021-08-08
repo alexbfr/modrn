@@ -18,7 +18,7 @@
 
 #### Defined in
 
-js/source/special-attributes/for-special-attribute.ts:31
+[js/source/special-attributes/for-special-attribute.ts:31](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/special-attributes/for-special-attribute.ts#L31)
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 #### Defined in
 
-js/source/special-attributes/for-special-attribute.ts:30
+[js/source/special-attributes/for-special-attribute.ts:30](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/special-attributes/for-special-attribute.ts#L30)
 
 ___
 
@@ -38,4 +38,4 @@ ___
 
 #### Defined in
 
-js/source/special-attributes/for-special-attribute.ts:32
+[js/source/special-attributes/for-special-attribute.ts:32](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/special-attributes/for-special-attribute.ts#L32)

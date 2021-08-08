@@ -46,7 +46,7 @@
 
 #### Defined in
 
-js/source/core/hooks/change-hooks.ts:22
+[js/source/core/hooks/change-hooks.ts:22](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/change-hooks.ts#L22)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-js/source/core/hooks/change-hooks.ts:15
+[js/source/core/hooks/change-hooks.ts:15](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/change-hooks.ts#L15)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-js/source/core/hooks/change-hooks.ts:20
+[js/source/core/hooks/change-hooks.ts:20](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/change-hooks.ts#L20)
 
 ## Functions
 
@@ -95,7 +95,7 @@ Creates a change hook. depth specifies the maximum recursion depth to compare th
 
 #### Defined in
 
-js/source/core/hooks/change-hooks.ts:28
+[js/source/core/hooks/change-hooks.ts:28](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/change-hooks.ts#L28)
 
 ___
 
@@ -119,7 +119,7 @@ Gets or creates an element-attached change hook-
 
 #### Defined in
 
-js/source/core/hooks/change-hooks.ts:38
+[js/source/core/hooks/change-hooks.ts:38](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/change-hooks.ts#L38)
 
 ___
 
@@ -149,7 +149,7 @@ Gets or creates a change hook attached on another state
 
 #### Defined in
 
-js/source/core/hooks/change-hooks.ts:48
+[js/source/core/hooks/change-hooks.ts:48](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/change-hooks.ts#L48)
 
 ___
 
@@ -184,4 +184,4 @@ creating the state token.
 
 #### Defined in
 
-js/source/core/hooks/change-hooks.ts:62
+[js/source/core/hooks/change-hooks.ts:62](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/change-hooks.ts#L62)

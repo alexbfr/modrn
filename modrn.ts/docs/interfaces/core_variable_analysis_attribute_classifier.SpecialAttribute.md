@@ -27,7 +27,7 @@
 
 #### Defined in
 
-js/source/core/variable-analysis/attribute-classifier.ts:26
+[js/source/core/variable-analysis/attribute-classifier.ts:26](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/attribute-classifier.ts#L26)
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 #### Defined in
 
-js/source/core/variable-analysis/attribute-classifier.ts:25
+[js/source/core/variable-analysis/attribute-classifier.ts:25](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/attribute-classifier.ts#L25)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-js/source/core/variable-analysis/attribute-classifier.ts:27
+[js/source/core/variable-analysis/attribute-classifier.ts:27](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/attribute-classifier.ts#L27)
 
 ___
 
@@ -61,4 +61,4 @@ ___
 
 #### Defined in
 
-js/source/core/variable-analysis/attribute-classifier.ts:24
+[js/source/core/variable-analysis/attribute-classifier.ts:24](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/attribute-classifier.ts#L24)

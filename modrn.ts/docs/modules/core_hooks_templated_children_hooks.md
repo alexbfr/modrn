@@ -28,7 +28,7 @@
 
 #### Defined in
 
-js/source/core/hooks/templated-children-hooks.ts:150
+[js/source/core/hooks/templated-children-hooks.ts:150](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/templated-children-hooks.ts#L150)
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 #### Defined in
 
-js/source/core/hooks/templated-children-hooks.ts:156
+[js/source/core/hooks/templated-children-hooks.ts:156](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/templated-children-hooks.ts#L156)
 
 ## Functions
 
@@ -52,7 +52,7 @@ js/source/core/hooks/templated-children-hooks.ts:156
 
 #### Defined in
 
-js/source/core/hooks/templated-children-hooks.ts:152
+[js/source/core/hooks/templated-children-hooks.ts:152](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/templated-children-hooks.ts#L152)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-js/source/core/hooks/templated-children-hooks.ts:158
+[js/source/core/hooks/templated-children-hooks.ts:158](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/templated-children-hooks.ts#L158)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-js/source/core/hooks/templated-children-hooks.ts:240
+[js/source/core/hooks/templated-children-hooks.ts:240](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/templated-children-hooks.ts#L240)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-js/source/core/hooks/templated-children-hooks.ts:282
+[js/source/core/hooks/templated-children-hooks.ts:282](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/templated-children-hooks.ts#L282)
 
 ___
 
@@ -146,7 +146,7 @@ ___
 
 #### Defined in
 
-js/source/core/hooks/templated-children-hooks.ts:248
+[js/source/core/hooks/templated-children-hooks.ts:248](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/templated-children-hooks.ts#L248)
 
 ___
 
@@ -175,7 +175,7 @@ ___
 
 #### Defined in
 
-js/source/core/hooks/templated-children-hooks.ts:266
+[js/source/core/hooks/templated-children-hooks.ts:266](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/templated-children-hooks.ts#L266)
 
 ___
 
@@ -197,7 +197,7 @@ ___
 
 #### Defined in
 
-js/source/core/hooks/templated-children-hooks.ts:199
+[js/source/core/hooks/templated-children-hooks.ts:199](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/templated-children-hooks.ts#L199)
 
 ___
 
@@ -233,4 +233,4 @@ template or number of children change, and if so, to re-render those accordingly
 
 #### Defined in
 
-js/source/core/hooks/templated-children-hooks.ts:30
+[js/source/core/hooks/templated-children-hooks.ts:30](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/templated-children-hooks.ts#L30)

@@ -16,4 +16,4 @@
 
 #### Defined in
 
-js/source/special-attributes/if-special-attribute.ts:25
+[js/source/special-attributes/if-special-attribute.ts:25](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/special-attributes/if-special-attribute.ts#L25)

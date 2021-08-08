@@ -36,4 +36,4 @@
 
 #### Defined in
 
-js/source/core/hooks/localstorage-backed-state-hooks.ts:11
+[js/source/core/hooks/localstorage-backed-state-hooks.ts:11](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/localstorage-backed-state-hooks.ts#L11)

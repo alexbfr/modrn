@@ -32,4 +32,4 @@ Searches for child variables
 
 #### Defined in
 
-js/source/core/variable-analysis/find-child-variables.ts:20
+[js/source/core/variable-analysis/find-child-variables.ts:20](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/find-child-variables.ts#L20)

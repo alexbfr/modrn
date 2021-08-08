@@ -26,4 +26,4 @@
 
 #### Defined in
 
-js/source/util/check-is-shown.ts:6
+[js/source/util/check-is-shown.ts:6](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/util/check-is-shown.ts#L6)

@@ -22,7 +22,7 @@
 
 #### Defined in
 
-js/source/special-attributes/change-special-attribute.ts:16
+[js/source/special-attributes/change-special-attribute.ts:16](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/special-attributes/change-special-attribute.ts#L16)
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 #### Defined in
 
-js/source/special-attributes/change-special-attribute.ts:14
+[js/source/special-attributes/change-special-attribute.ts:14](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/special-attributes/change-special-attribute.ts#L14)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-js/source/special-attributes/change-special-attribute.ts:15
+[js/source/special-attributes/change-special-attribute.ts:15](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/special-attributes/change-special-attribute.ts#L15)
 
 ## Functions
 
@@ -63,4 +63,4 @@ js/source/special-attributes/change-special-attribute.ts:15
 
 #### Defined in
 
-js/source/special-attributes/change-special-attribute.ts:23
+[js/source/special-attributes/change-special-attribute.ts:23](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/special-attributes/change-special-attribute.ts#L23)

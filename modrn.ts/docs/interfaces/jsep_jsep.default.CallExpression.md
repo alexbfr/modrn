@@ -26,7 +26,7 @@
 
 #### Defined in
 
-js/source/jsep/jsep.ts:30
+[js/source/jsep/jsep.ts:30](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L30)
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:31
+[js/source/jsep/jsep.ts:31](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L31)
 
 ___
 
@@ -50,4 +50,4 @@ ___
 
 #### Defined in
 
-js/source/jsep/jsep.ts:29
+[js/source/jsep/jsep.ts:29](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/jsep/jsep.ts#L29)

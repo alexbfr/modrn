@@ -34,4 +34,4 @@
 
 #### Defined in
 
-js/source/core/hooks/state-change-hooks.ts:10
+[js/source/core/hooks/state-change-hooks.ts:10](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/hooks/state-change-hooks.ts#L10)

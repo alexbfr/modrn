@@ -806,7 +806,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/modrn-html-element.ts:27
+[js/source/core/types/modrn-html-element.ts:27](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/modrn-html-element.ts#L27)
 
 ___
 
@@ -948,7 +948,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/modrn-html-element.ts:30
+[js/source/core/types/modrn-html-element.ts:30](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/modrn-html-element.ts#L30)
 
 ___
 
@@ -958,7 +958,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/modrn-html-element.ts:29
+[js/source/core/types/modrn-html-element.ts:29](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/modrn-html-element.ts#L29)
 
 ___
 
@@ -2930,7 +2930,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/modrn-html-element.ts:28
+[js/source/core/types/modrn-html-element.ts:28](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/modrn-html-element.ts#L28)
 
 ___
 
@@ -3453,7 +3453,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/modrn-html-element.ts:33
+[js/source/core/types/modrn-html-element.ts:33](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/modrn-html-element.ts#L33)
 
 ___
 
@@ -4303,7 +4303,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/modrn-html-element.ts:32
+[js/source/core/types/modrn-html-element.ts:32](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/modrn-html-element.ts#L32)
 
 ___
 
@@ -5138,7 +5138,7 @@ ___
 
 #### Defined in
 
-js/source/core/types/modrn-html-element.ts:31
+[js/source/core/types/modrn-html-element.ts:31](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/types/modrn-html-element.ts#L31)
 
 ___
 

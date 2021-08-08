@@ -25,7 +25,7 @@
 
 #### Defined in
 
-js/source/core/variable-analysis/register-special-attribute.ts:9
+[js/source/core/variable-analysis/register-special-attribute.ts:9](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/register-special-attribute.ts#L9)
 
 ## Functions
 
@@ -39,7 +39,7 @@ js/source/core/variable-analysis/register-special-attribute.ts:9
 
 #### Defined in
 
-js/source/core/variable-analysis/register-special-attribute.ts:24
+[js/source/core/variable-analysis/register-special-attribute.ts:24](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/register-special-attribute.ts#L24)
 
 ___
 
@@ -61,4 +61,4 @@ ___
 
 #### Defined in
 
-js/source/core/variable-analysis/register-special-attribute.ts:15
+[js/source/core/variable-analysis/register-special-attribute.ts:15](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/register-special-attribute.ts#L15)

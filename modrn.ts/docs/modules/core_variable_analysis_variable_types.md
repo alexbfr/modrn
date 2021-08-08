@@ -19,7 +19,7 @@
 
 #### Defined in
 
-js/source/core/variable-analysis/variable-types.ts:6
+[js/source/core/variable-analysis/variable-types.ts:6](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/variable-types.ts#L6)
 
 ___
 
@@ -29,7 +29,7 @@ ___
 
 #### Defined in
 
-js/source/core/variable-analysis/variable-types.ts:7
+[js/source/core/variable-analysis/variable-types.ts:7](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/variable-types.ts#L7)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-js/source/core/variable-analysis/variable-types.ts:9
+[js/source/core/variable-analysis/variable-types.ts:9](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/variable-types.ts#L9)
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 #### Defined in
 
-js/source/core/variable-analysis/variable-types.ts:10
+[js/source/core/variable-analysis/variable-types.ts:10](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/variable-types.ts#L10)

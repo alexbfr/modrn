@@ -32,4 +32,4 @@ Searches for ref attributes
 
 #### Defined in
 
-js/source/core/variable-analysis/find-attribute-ref-variables.ts:19
+[js/source/core/variable-analysis/find-attribute-ref-variables.ts:19](https://github.com/alexbfr/modrn/blob/e23b9e9/modrn.ts/js/source/core/variable-analysis/find-attribute-ref-variables.ts#L19)
