@@ -1,6 +1,6 @@
 {
   "name": "modrn",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "license": "MIT",
   "author": "alexbfr@github",
   "main": "modrn.js",
@@ -16,5 +16,5 @@
   ],
   "devDependencies": {
   },
-  "_id": "Modrn@0.1.6"
+  "_id": "Modrn@0.1.7"
 }

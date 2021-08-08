@@ -1,6 +1,6 @@
 {
   "name": "modrn",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "license": "MIT",
   "author": "alexbfr@github",
   "main": "js/index.ts",
@@ -51,7 +51,7 @@
     "build-index-ts": "cross-env NODE_ENV=production npx rollup -c ./rollup-dts.config.js",
     "build": "npm run lint && npm run clean && npm run build-js && npm run create-dist-folder && npm run copy-to-dist-folder && npm run build-index-ts && npm run copy-package.json && npm run copy-readme-to-dist-folder && cd dist && npm pack"
   },
-  "_id": "Modrn@0.1.6",
+  "_id": "Modrn@0.1.7",
   "repository": {
     "type": "git",
     "url": "https://github.com/alexbfr/modrn.git"

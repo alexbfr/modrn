@@ -30,8 +30,7 @@ function keyupSpecialAttributeHandler(): SpecialAttributeHandlerFnResult {
         function eventListener(evt: KeyboardEvent) {
             const action = value[evt.code] || value[evt.key] || value[""];
             if (typeof action === "function") {
-                const theEvt = {...evt};
-                setTimeout(() => (action as (evt: KeyboardEvent) => void)(theEvt));
+                (action as (evt: KeyboardEvent) => void)(evt);
             } else if (action) {
                 logWarn(`Not a function: ${action} for key/code ${evt.key}/${evt.code}`);
             }
